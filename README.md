@@ -68,7 +68,12 @@ new confirmed or failed key-line break; a ledger in `data/store/_alerts_sent.csv
 The release calendar is `config/reports.yaml`; check the FOMC dates each year. Run
 `pmdash reports calendar` to see what's due.
 
-After the first push, run the workflow once by hand with `backfill`.
+First-time setup on GitHub:
+
+1. Settings → Actions → General: allow actions, and set **Workflow permissions** to
+   **Read and write** (the workflow commits data back and opens alert issues).
+2. Scheduled runs only fire from the default branch.
+3. Run the workflow once by hand with `backfill` (Actions → pmdash → Run workflow).
 
 ## Layout
 
