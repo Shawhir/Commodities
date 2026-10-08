@@ -128,4 +128,4 @@ jobs:
         run: |
           [ -f reports.md ] && cat reports.md >> "$GITHUB_STEP_SUMMARY"
           [ -s alerts.md ] && cat alerts.md >> "$GITHUB_STEP_SUMMARY"
-          pmdash health >> "$GITHUB_STEP_SUMMARY" || true
+          { echo "### Data health"; echo '```'; pmdash health || true; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
