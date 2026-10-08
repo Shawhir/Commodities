@@ -97,7 +97,7 @@ def find(state: pd.DataFrame, target: str | pd.Period, groups: dict[str, list[st
          exclude_recent: int = 24, collapse: int = 18, top_n: int = 6,
          categorical_penalty: float = 1.0, standardise: str = "zscore",
          key_moments: pd.DataFrame | None = None, baseline_start: str = "1971-08",
-         horizons=(3, 6, 12, 24), key_moment_max_gap: int = 6) -> FinderResult:
+         horizons=(3, 6, 12, 24), key_moment_max_gap: int = 6, fwd: dict | None = None) -> FinderResult:
     target = pd.Period(target, "M")
     weights = weights or {}
     cutoff = target - exclude_recent
@@ -153,7 +153,7 @@ def find(state: pd.DataFrame, target: str | pd.Period, groups: dict[str, list[st
             break
 
     prices = prices or {}
-    fwd = {cur: forward_outcomes(p, horizons) for cur, p in prices.items()}
+    fwd = fwd if fwd is not None else {cur: forward_outcomes(p, horizons) for cur, p in prices.items()}
     km = key_moments.copy() if key_moments is not None else None
     if km is not None:
         km["month"] = pd.PeriodIndex(pd.to_datetime(km["date"]), freq="M")
@@ -210,13 +210,14 @@ def out_of_sample(state: pd.DataFrame, gold_usd: pd.Series, groups, start: str =
     """For each month since ``start`` with a known 12-month outcome, run the finder on earlier
     history only and record whether the matched range contained the actual outcome and whether
     the matched median was closer to it than the unconditional median."""
-    fwd = forward_outcomes(gold_usd)["fwd_12m"]
+    outcomes = {"USD": forward_outcomes(gold_usd)}                  # computed once, reused every month
+    fwd = outcomes["USD"]["fwd_12m"]
     rows = []
     last = gold_usd.index[-1] - 12
     for t in pd.period_range(start, last, freq="M"):
         if t not in state.index:
             continue
-        res = find(state, t, groups, prices={"USD": gold_usd}, **kw)
+        res = find(state, t, groups, prices={"USD": gold_usd}, fwd=outcomes, **kw)
         actual = fwd.get(t)
         if pd.isna(actual) or res.spread["n"] == 0:
             continue

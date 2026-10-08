@@ -113,10 +113,15 @@ def regime_boundaries(p: pd.Series, cfg: dict) -> dict:
     last = float(p.iloc[-1])
     nxt = p.index[-1] + 1
     grid = last * np.arange(0.60, 1.60, 0.001)
-    labels = []
-    for price in grid:
-        q = pd.concat([p.iloc[-(r["lookback_months"] + 1):], pd.Series([price], index=[nxt])])
-        labels.append(label(q, r["lookback_months"], r["er_min"], r["up_return_min"], r["down_return_max"])["regime"].iloc[-1])
+    n = r["lookback_months"]
+    # For next month's price P: 12-month return = P / p[t-11] - 1 and efficiency ratio =
+    # |P - p[t-11]| / (sum of the last 11 monthly moves + |P - p[t]|): same rule as labeller.label.
+    tail = p.iloc[-n:].to_numpy(dtype=float)              # p[t-11] .. p[t]
+    base, path = tail[0], np.abs(np.diff(tail)).sum()
+    ret = grid / base - 1
+    er = np.abs(grid - base) / (path + np.abs(grid - tail[-1]))
+    labels = np.where((er >= r["er_min"]) & (ret >= r["up_return_min"]), "Up",
+                      np.where((er >= r["er_min"]) & (ret <= r["down_return_max"]), "Down", "Sideways")).tolist()
     ranges = []
     start = 0
     for i in range(1, len(grid) + 1):

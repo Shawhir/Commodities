@@ -47,6 +47,7 @@ FEATURES = {
 
 
 def classes_from_returns(r: pd.Series, up: float = 0.10, down: float = -0.10) -> pd.Series:
+    """0 rising (>= up), 1 sideways, 2 falling (<= down). Thresholds come from the regime config."""
     out = pd.Series(np.nan, index=r.index)
     out[r >= up] = 0
     out[r <= down] = 2
@@ -54,13 +55,36 @@ def classes_from_returns(r: pd.Series, up: float = 0.10, down: float = -0.10) ->
     return out
 
 
-def feature_table(state: pd.DataFrame, gold: pd.Series) -> pd.DataFrame:
+def forward_return(p: pd.Series, h: int) -> pd.Series:
+    """Return over the next ``h`` calendar months. Gaps are kept as gaps, so a missing month never
+    turns a 12-month return into a 13-month one."""
+    if isinstance(p.index, pd.PeriodIndex):
+        full = p.reindex(pd.period_range(p.index[0], p.index[-1], freq=p.index.freq))
+        return (full.shift(-h) / full - 1).reindex(p.index)
+    return p.shift(-h) / p - 1
+
+
+PRICE_SHAPE = ("dist_10m_avg", "dist_10y_avg", "return_3y", "fall_from_24m_high", "efficiency_ratio")
+
+
+def feature_table(state: pd.DataFrame, price: pd.Series) -> pd.DataFrame:
+    """Month-end measures. Price-shape and momentum measures come from ``price`` (the currency
+    being predicted), so the franc odds are driven by gold in francs; the rest come from ``state``."""
+    from ..indicators.stretch import measures
+    from ..indicators.trend import momentum_12_1
+    from ..regime.labeller import efficiency_ratio
     X = pd.DataFrame(index=state.index)
+    full = price.reindex(pd.period_range(price.index[0], price.index[-1], freq="M")) \
+        if isinstance(price.index, pd.PeriodIndex) else price
+    shape = measures(full)
+    shape["efficiency_ratio"] = efficiency_ratio(full)
     for k in FEATURES:
-        if k in state.columns:
+        if k in PRICE_SHAPE:
+            X[k] = shape[k].reindex(state.index)
+        elif k in state.columns:
             X[k] = state[k].astype(float)
-    X["mom_12_1"] = (gold.shift(1) / gold.shift(12) - 1).reindex(state.index)
-    X["ret_3m"] = (gold / gold.shift(3) - 1).reindex(state.index)
+    X["mom_12_1"] = momentum_12_1(full).reindex(state.index)
+    X["ret_3m"] = (full / full.shift(3) - 1).reindex(state.index)
     if "fed_direction" in state.columns:
         X["fed_dir"] = state["fed_direction"].map({"hiking": 1.0, "cutting": -1.0, "on hold": 0.0})
     return X[[k for k in FEATURES if k in X.columns]]
@@ -98,45 +122,69 @@ def predict(W: np.ndarray, X: np.ndarray) -> np.ndarray:
     return _softmax(np.hstack([np.ones((len(X), 1)), X]) @ W)
 
 
+def _scaler(train: pd.DataFrame):
+    return train.mean(), train.std(ddof=0).replace(0, np.nan)
+
+
+def _apply(rows: pd.DataFrame, mu: pd.Series, sd: pd.Series) -> np.ndarray:
+    """Standardise with training statistics; a missing value (or zero spread) carries no information (0)."""
+    return _apply_arr(rows.to_numpy(dtype=float), mu.to_numpy(dtype=float), sd.to_numpy(dtype=float))
+
+
+def _apply_arr(rows: np.ndarray, mu: np.ndarray, sd: np.ndarray) -> np.ndarray:
+    z = (rows - mu) / sd
+    return np.clip(np.nan_to_num(z, nan=0.0, posinf=0.0, neginf=0.0), -4, 4)
+
+
 def _standardise(train: pd.DataFrame, rows: pd.DataFrame):
-    mu, sd = train.mean(), train.std(ddof=0).replace(0, np.nan)
-    f = lambda d: ((d - mu) / sd).fillna(0.0).clip(-4, 4).to_numpy()   # missing = no information
-    return f(train), f(rows), mu, sd
+    mu, sd = _scaler(train)
+    return _apply(train, mu, sd), _apply(rows, mu, sd), mu, sd
 
 
 def brier(P: np.ndarray, y: np.ndarray) -> float:
     return float(((P - np.eye(3)[y.astype(int)]) ** 2).sum(axis=1).mean())
 
 
+WF_COLUMNS = ["month", "p_model", "p_base", "y", "trained_to"]
+
+
 def walk_forward(X: pd.DataFrame, y: pd.Series, start: str, h: int = 12, refit_every: int = 6,
                  min_train: int = 120) -> pd.DataFrame:
-    """Out-of-sample odds for every month from ``start``: model and normal (base) odds."""
+    """Out-of-sample odds for every month from ``start``: model and normal (base) odds.
+    At month t the model only sees months up to t - h, whose outcome was already known."""
+    y = y.reindex(X.index)
+    Xv = X.to_numpy(dtype=float)
+    known = y.notna().to_numpy()
+    yv = y.to_numpy()
+    n_known = np.cumsum(known)
     rows = []
-    idx = list(X.index)
-    pos = {d: i for i, d in enumerate(idx)}
-    W = mu = sd = None
+    W = mu = sd = base = trained_to = None
     last_fit = None
-    for t in X.index[X.index >= pd.Period(start, "M")]:
-        k = pos[t] - h
-        if k < 0:
+    start_p = pd.Period(start, "M")
+    for i, t in enumerate(X.index):
+        if t < start_p:
             continue
-        train_idx = [d for d in idx[: k + 1] if not pd.isna(y.get(d))]
-        if len(train_idx) < min_train:
+        k = i - h
+        if k < 0 or n_known[k] < min_train:
             continue
-        if last_fit is None or pos[t] - last_fit >= refit_every:
-            Xt, _, mu, sd = _standardise(X.loc[train_idx], X.loc[[t]])
-            W = fit(Xt, y.loc[train_idx].to_numpy())
-            base = np.bincount(y.loc[train_idx].astype(int), minlength=3) / len(train_idx)
-            last_fit = pos[t]
-        xt = ((X.loc[[t]] - mu) / sd).fillna(0.0).clip(-4, 4).to_numpy()
-        p = predict(W, xt)[0]
-        rows.append({"month": t, "p_model": p, "p_base": base, "y": y.get(t)})
-    return pd.DataFrame(rows)
+        if last_fit is None or i - last_fit >= refit_every:
+            mask = known[: k + 1]
+            train = X.iloc[: k + 1][mask]
+            ytr = yv[: k + 1][mask].astype(int)
+            mu, sd = _scaler(train)
+            W = fit(_apply(train, mu, sd), ytr)
+            base = np.bincount(ytr, minlength=3) / len(ytr)
+            trained_to = train.index.max()
+            mu_v, sd_v = mu.to_numpy(dtype=float), sd.to_numpy(dtype=float)
+            last_fit = i
+        p = predict(W, _apply_arr(Xv[i:i + 1], mu_v, sd_v))[0]
+        rows.append({"month": t, "p_model": p, "p_base": base, "y": yv[i], "trained_to": trained_to})
+    return pd.DataFrame(rows, columns=WF_COLUMNS)
 
 
 def best_blend(wf: pd.DataFrame) -> tuple[float, dict]:
     """Blend weight on the model (0..1) that scored best on months with a known outcome."""
-    done = wf.dropna(subset=["y"])
+    done = wf.dropna(subset=["y"]) if "y" in wf.columns else wf
     if done.empty:
         return 0.0, {"n": 0}
     Pm, Pb, y = np.vstack(done.p_model), np.vstack(done.p_base), done.y.to_numpy()
@@ -149,44 +197,39 @@ def best_blend(wf: pd.DataFrame) -> tuple[float, dict]:
                       "skill": 1 - brier(Pm, y) / brier(Pb, y)}
 
 
-def contributions(W: np.ndarray, x: np.ndarray, names: list[str]) -> list[dict]:
-    """Push of each measure towards rising vs falling: x_i * (w_rising_i - w_falling_i)."""
+def contributions(W: np.ndarray, x: np.ndarray, names: list[str], raw: pd.Series | None = None) -> list[dict]:
+    """Push of each measure towards rising vs falling: x_i * (w_rising_i - w_falling_i).
+    ``raw`` is today's unstandardised value (for wording such as the Fed's actual stance)."""
     push = x * (W[1:, 0] - W[1:, 2])
-    out = [{"key": n, "plain": FEATURES[n][0], "tech": FEATURES[n][1], "z": float(xi), "push": float(p)}
+    out = [{"key": n, "plain": FEATURES[n][0], "tech": FEATURES[n][1], "z": float(xi), "push": float(p),
+            "raw": None if raw is None or pd.isna(raw.get(n)) else float(raw[n])}
            for n, xi, p in zip(names, x, push)]
     return sorted(out, key=lambda d: -abs(d["push"]))
 
 
 def build(state: pd.DataFrame, gold_usd: pd.Series, gold_chf: pd.Series, start: str = "2000-01",
-          train_from: str = "1975-01", h: int = 12) -> dict:
-    out = {"horizon_months": h, "currencies": {}}
+          train_from: str = "1975-01", h: int = 12, up: float = 0.10, down: float = -0.10) -> dict:
+    """``up``/``down`` come from the regime thresholds (config/thresholds.yaml)."""
+    out = {"horizon_months": h, "up": up, "down": down, "currencies": {}}
     for cur, p in (("USD", gold_usd), ("CHF", gold_chf)):
-        X = feature_table(state, gold_usd).loc[train_from:]
-        fwd = (p.shift(-h) / p - 1).reindex(X.index)
-        y = classes_from_returns(fwd)
+        X = feature_table(state, p).loc[train_from:]
+        y = classes_from_returns(forward_return(p, h).reindex(X.index), up, down)
         wf = walk_forward(X, y, start, h)
         w, track = best_blend(wf)
-        # today's odds: fit on everything with a known outcome
         known = y.dropna().index
+        if len(known) < 60:
+            out["currencies"][cur] = None
+            continue
         Xt, xnow, mu, sd = _standardise(X.loc[known], X.iloc[[-1]])
-        W = fit(Xt, y.loc[known].to_numpy())
+        W = fit(Xt, y.loc[known].astype(int).to_numpy())
         pm = predict(W, xnow)[0]
         pb = np.bincount(y.loc[known].astype(int), minlength=3) / len(known)
         pf = w * pm + (1 - w) * pb
-        # calibration: in months where the blended odds favoured a class, how often it happened
-        done = wf.dropna(subset=["y"])
-        Pbl = w * np.vstack(done.p_model) + (1 - w) * np.vstack(done.p_base) if len(done) else np.zeros((0, 3))
-        cal = []
-        for lo, hi in ((0, 0.3), (0.3, 0.45), (0.45, 1.01)):
-            sel = (Pbl[:, 0] >= lo) & (Pbl[:, 0] < hi) if len(done) else np.array([], bool)
-            if sel.sum():
-                cal.append({"range": f"{int(lo * 100)}-{min(int(hi * 100), 100)}%", "n": int(sel.sum()),
-                            "said": float(Pbl[sel, 0].mean()), "happened": float((done.y.to_numpy()[sel] == 0).mean())})
         out["currencies"][cur] = {
             "as_of": str(X.index[-1]), "odds": dict(zip(CLASSES, map(float, pf))),
             "model_odds": dict(zip(CLASSES, map(float, pm))), "normal_odds": dict(zip(CLASSES, map(float, pb))),
-            "blend_weight": w, "track": track, "calibration_rising": cal,
-            "drivers": contributions(W, xnow[0], list(X.columns)),
+            "blend_weight": w, "track": track,
+            "drivers": contributions(W, xnow[0], list(X.columns), X.iloc[-1]),
             "n_train": int(len(known)), "features": list(X.columns),
         }
     return out

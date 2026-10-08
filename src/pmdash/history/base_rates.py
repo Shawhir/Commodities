@@ -39,6 +39,11 @@ class Rate:
 
 
 def forward_return(p: pd.Series, h: int) -> pd.Series:
+    """Return over the next ``h`` periods. Monthly series are counted in calendar months, so a
+    missing month stays a gap instead of stretching the window."""
+    if isinstance(p.index, pd.PeriodIndex):
+        full = p.reindex(pd.period_range(p.index[0], p.index[-1], freq=p.index.freq))
+        return (full.shift(-h) / full - 1).reindex(p.index)
     return p.shift(-h) / p - 1
 
 

@@ -653,9 +653,12 @@ table.t tr:last-child td { border-bottom: 0; }
   // ---------- educated guess ----------
   // ---------- weighed-up odds ----------
   function renderOdds() {
-    var O = D.odds && D.odds.currencies[S.cur]; if (!O) return;
+    var O = D.odds && D.odds.currencies[S.cur];
+    if (!O) { $("odds").hidden = true; return; }
+    $("odds").hidden = false;
     var bars = clear($("odds-bars"));
-    var names = { rising: ["Keeps rising", "up 10% or more"], sideways: ["Goes sideways", "between down 10% and up 10%"], falling: ["Falls", "down 10% or more"] };
+    var up = Math.round((D.odds.up || 0.1) * 100), dn = Math.round(Math.abs(D.odds.down || -0.1) * 100);
+    var names = { rising: ["Keeps rising", "up " + up + "% or more"], sideways: ["Goes sideways", "between down " + dn + "% and up " + up + "%"], falling: ["Falls", "down " + dn + "% or more"] };
     ["rising", "sideways", "falling"].forEach(function (k) {
       var c = el("div", { class: "ocol " + k });
       c.appendChild(el("div", { class: "h" }, names[k][0]));
@@ -669,7 +672,8 @@ table.t tr:last-child td { border-bottom: 0; }
     var why = clear($("odds-why"));
     var ups = O.drivers.filter(function (d) { return d.push > 0.02; }).slice(0, 3), downs = O.drivers.filter(function (d) { return d.push < -0.02; }).slice(0, 3);
     function lvl(d) {
-      if (d.key === "fed_dir") return d.z > 0 ? "the Fed raising rates" : d.z < 0 ? "the Fed cutting rates" : "the Fed holding rates";
+      if (d.key === "fed_dir") return d.raw === null || d.raw === undefined ? "the Fed's direction (unknown)" :
+        d.raw > 0 ? "the Fed raising rates" : d.raw < 0 ? "the Fed cutting rates" : "the Fed holding rates";
       var a = Math.abs(d.z), w = a < 0.25 ? "about normal" : (a < 1 ? "a bit " : "") + (d.z > 0 ? "high" : "low");
       return d.plain + " (" + w + (a < 0.25 ? "" : " compared with history") + ")";
     }
@@ -682,7 +686,13 @@ table.t tr:last-child td { border-bottom: 0; }
       box.appendChild(ul); why.appendChild(box);
     });
     why.appendChild(el("p", { class: "note", style: "grid-column: 1 / -1" }, "These are the links the model learned from past years, not proven causes, so some may look surprising. For example, in 2004 to 2006 the Fed raised rates while gold rose."));
-    var t = O.track, skill = t.skill;
+    var t = O.track || {}, num = function (v) { return typeof v === "number" && isFinite(v); };
+    if (!num(t.skill) || !num(t.brier_model) || !num(t.brier_base) || !num(t.brier_blend)) {
+      setText("odds-track", "How much to rely on this: not at all yet. There isn't enough history to test these odds, so they are simply gold's normal odds.",
+        "Walk-forward test unavailable (n=" + (t.n || 0) + "); blend weight " + O.blend_weight);
+      return;
+    }
+    var skill = t.skill;
     var verdict = skill > 0.05 ? "clearly better than" : skill > 0 ? "only slightly better than" : skill > -0.01 ? "no better than" : "worse than";
     setText("odds-track", "How much to rely on this: very little. These odds weigh " + O.features.length + " measures at once: the trend, how stretched gold is, interest rates, the Fed, the dollar, inflation, oil, war and political risk, stock market fear, speculators' bets, the franc and recent price moves. " +
       "Tested on every month since 2000, using only what was known at the time, the model was " + verdict + " gold's normal odds. " +
@@ -1520,7 +1530,11 @@ table.t tr:last-child td { border-bottom: 0; }
   Array.prototype.forEach.call(document.querySelectorAll("[data-tech]"), jgWire);
 
   function renderAll() {
-    renderMast(); renderOdds(); renderGuess(); renderGlance(); renderRules(); renderPush(); renderRegime(); renderPrice(); renderLines(); renderStretch(); renderDates(); renderAnalogues(); renderAfter(); renderTech(); renderHistory(); renderFoot();
+    // each section draws on its own: one failure must not stop the rest of the page
+    [renderMast, renderOdds, renderGuess, renderGlance, renderRules, renderPush, renderRegime, renderPrice, renderLines,
+     renderStretch, renderDates, renderAnalogues, renderAfter, renderTech, renderHistory, renderFoot].forEach(function (f) {
+      try { f(); } catch (e) { if (window.console) console.error("Section failed to draw: " + (f.name || "?"), e); }
+    });
   }
 
   Array.prototype.forEach.call(document.querySelectorAll("[data-cur]"), function (b) {
