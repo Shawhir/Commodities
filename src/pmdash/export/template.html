@@ -101,6 +101,24 @@ details[open] > summary .chev { transform: rotate(-135deg); }
 .pm { gap: 14px; }
 .pm .glance-sec { margin-bottom: 10px; }
 
+/* history counts and technical picture */
+.after-list { display: grid; gap: 12px; }
+.after { display: grid; gap: 8px; }
+.after-top { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.after-top b { font-weight: 600; }
+.hbars { display: grid; gap: 6px; }
+.hbar { display: grid; grid-template-columns: 136px 1fr 48px; gap: 8px; align-items: center; font-size: 12.5px; }
+.hbar .track { position: relative; height: 12px; background: var(--grid); border-radius: 99px; overflow: hidden; }
+.hbar .fill { position: absolute; left: 0; top: 0; bottom: 0; background: var(--gold); opacity: 0.75; border-radius: 99px; }
+.hbar .base { position: absolute; top: -2px; bottom: -2px; width: 2px; background: var(--info); }
+.hbar .num { font-family: var(--font-data); text-align: right; }
+.tech-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; }
+.tread { display: grid; gap: 3px; }
+.tread .lbl { font-size: 12px; color: var(--muted); }
+.tread .val { font-family: var(--font-display); font-size: 19px; }
+.tread.up .val { color: var(--up); } .tread.down .val { color: var(--down); } .tread.warn .val { color: var(--warn); }
+.glance { grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
+
 /* plain-language text with a technical version on hover / tap */
 .jg, .jg-demo { text-decoration: underline dotted var(--faint); text-underline-offset: 3px; text-decoration-thickness: 1px; cursor: help; }
 .jg:hover, .jg:focus-visible, .jg.on { text-decoration-color: var(--gold); outline: none; }
@@ -369,6 +387,27 @@ table.t tr:last-child td { border-bottom: 0; }
     </div>
   </details>
 
+  <details class="sec fold" id="d-after">
+    <summary><div><div class="eyebrow">What happened after setups like this</div><h2 id="sum-after">—</h2></div><span class="verdict" id="after-verdict"></span><span class="chev" aria-hidden="true"></span></summary>
+    <div class="fold-body">
+      <p class="note">Counts from history, not a forecast. For each way of describing today, this shows how often gold was higher 3, 6 and 12 months later, compared with all months since 1972. "Separate spells" counts each stretch of similar months once, because neighbouring months share most of their future.</p>
+      <div id="after-list" class="after-list"></div>
+      <p class="note jg" data-tech="Honesty test (walk-forward from 2000 for monthly setups, 2010 for daily signals): at each date where the setup held, its share of rises was computed only from outcomes known at the time, and so was the baseline share. 'Useful' requires a Brier score at least 5% lower, a hit rate at least 5 points higher, and at least 15 independent spells. On simulated random prices about 1 in 25 signals still passes, so a single pass is weak evidence.">The honesty test asks: if you had used these counts at the time, using only the history available then, would they have described what came next better than "gold usually rises"? Anything that fails is labelled "for context only".</p>
+    </div>
+  </details>
+
+  <details class="sec fold" id="d-tech">
+    <summary><div><div class="eyebrow">Technical picture (daily prices)</div><h2 id="sum-tech">—</h2></div><span class="chev" aria-hidden="true"></span></summary>
+    <div class="fold-body">
+      <div class="seg" role="group" aria-label="Metal" id="metal-seg">
+        <button type="button" id="metal-gold" data-metal="gold" aria-pressed="true">Gold</button>
+        <button type="button" id="metal-silver" data-metal="silver" aria-pressed="false">Silver</button>
+      </div>
+      <div id="tech-body"></div>
+      <p class="note">These are the indicators chart traders use, in plain words. Like everything here, they describe; they don't predict. Under "What followed these signals before", each signal that holds today gets the same honesty test as the setups above.</p>
+    </div>
+  </details>
+
   <details class="sec fold" id="d-history">
     <summary><div><div class="eyebrow">Since 1971: market mood and how the rules did</div><h2 id="hist-head">—</h2></div><span class="chev" aria-hidden="true"></span></summary>
     <div class="fold-body">
@@ -549,6 +588,15 @@ table.t tr:last-child td { border-bottom: 0; }
       .sort(function (p, q) { return Math.abs(p.distance) - Math.abs(q.distance); })[0];
     if (near) host.appendChild(tile("Nearest price level", near.label, "Gold is " + pct(Math.abs(near.distance)).replace("+", "") + (near.distance >= 0 ? " above" : " below") + " it (" + money(near.line_value, cur) + ")", "d-lines",
       near.id + ": distance " + pct(near.distance, 2)));
+    var Hs = D.history && D.history.setups, combo = Hs && (Hs.filter(function (q) { return q.key === "combined"; })[0] || Hs[0]);
+    if (combo) { var y12 = combo.rates[combo.rates.length - 1];
+      host.appendChild(tile("After setups like this", Math.round(y12.share_up * 100) + "% higher a year later",
+        "All months: " + Math.round(y12.base_share_up * 100) + "%. " + y12.n_spells + " separate spells; for context only.", "d-after",
+        combo.tech + ": P(r12>0) " + y12.share_up.toFixed(2) + " vs base " + y12.base_share_up.toFixed(2))); }
+    var TG = D.technical && D.technical.gold;
+    if (TG) { var rd = {}; TG.readings.forEach(function (q) { rd[q.key] = q; });
+      host.appendChild(tile("Technical picture", rd.ma200 ? rd.ma200.value + " 200-day average" : "—",
+        (rd.rsi ? "Momentum gauge " + rd.rsi.value : "") + (rd.macd ? " · short-term trend " + rd.macd.value : ""), "d-tech", "Daily: " + (rd.ma200 ? rd.ma200.tech : ""))); }
     var nx = B.upcoming.filter(function (u) { return u.report_id !== "cftc_cot"; })[0] || B.upcoming[0];
     if (nx) host.appendChild(tile("Next date", nx.plain_name || nx.name, nx.window_start === nx.window_end ? nx.window_start : nx.window_start + " to " + nx.window_end, "d-dates",
       nx.name + " (" + nx.period + ")"));
@@ -1151,6 +1199,137 @@ table.t tr:last-child td { border-bottom: 0; }
     $("bd-head").textContent = !rows.length ? "No economic data stored yet" : parts.length ? parts.join("; ") : "Nothing unusual compared with history";
   }
 
+  // ---------- what happened after setups like this ----------
+  function hbar(label, share, base, tech) {
+    var row = jg("div", { class: "hbar" }, null, tech);
+    row.appendChild(el("span", null, label));
+    var tr = el("span", { class: "track" });
+    var f = el("span", { class: "fill" }); f.style.width = (share * 100).toFixed(1) + "%"; tr.appendChild(f);
+    var b = el("i", { class: "base" }); b.style.left = (base * 100).toFixed(1) + "%"; tr.appendChild(b);
+    row.appendChild(tr);
+    row.appendChild(el("span", { class: "num" }, Math.round(share * 100) + "%"));
+    return row;
+  }
+  function renderAfter() {
+    var H = D.history, host = clear($("after-list"));
+    if (!H || !H.setups.length) { host.appendChild(el("p", { class: "note" }, "Not enough history yet.")); return; }
+    var useful = 0;
+    H.setups.forEach(function (s) {
+      var card = el("div", { class: "panel after" });
+      var top = el("div", { class: "after-top" });
+      var nm = el("span"); nm.appendChild(jg("b", null, s.plain, s.tech)); top.appendChild(nm);
+      var lab = s.test.label === "useful" ? "passed the honesty test" : s.test.n ? "for context only" : "too few cases to test";
+      if (s.test.label === "useful") useful++;
+      top.appendChild(jg("span", { class: "tag" + (s.test.label === "useful" ? "" : " warn") }, lab,
+        s.test.n ? "Walk-forward since 2000, n=" + s.test.n + " months (" + s.test.spells + " separate spells). Brier setup " + s.test.brier_setup.toFixed(3) +
+          " vs baseline " + s.test.brier_base.toFixed(3) + "; hit rate " + Math.round(s.test.hit_setup * 100) + "% vs " + Math.round(s.test.hit_base * 100) + "%." : "Fewer than 20 earlier cases at test time."));
+      card.appendChild(top);
+      var y = s.rates[s.rates.length - 1];
+      card.appendChild(jg("p", { class: "note" },
+        "This happened in " + y.n_periods + " months since 1972 (" + y.n_spells + " separate spells). A year later gold was higher in " + Math.round(y.share_up * 100) +
+        "% of them, against " + Math.round(y.base_share_up * 100) + "% for all months. The middle result was " + updown(y.median) + "; half the results fell between " +
+        pct(y.p25, 0) + " and " + pct(y.p75, 0) + "." + (y.continuation !== null ? " The year's trend carried on in " + Math.round(y.continuation * 100) + "% of cases and turned in " + Math.round((1 - y.continuation) * 100) + "%." : ""),
+        "h=12m: n=" + y.n_periods + ", spells=" + y.n_spells + ", P(r>0)=" + y.share_up.toFixed(3) + " vs base " + y.base_share_up.toFixed(3) + " (n=" + y.base_n + "); median " + pct(y.median, 2) +
+        ", IQR " + pct(y.p25, 1) + " to " + pct(y.p75, 1) + (y.continuation !== null ? "; continuation = sign(fwd12) == sign(12-1 momentum): " + y.continuation.toFixed(3) : "")));
+      var bars = el("div", { class: "hbars" });
+      s.rates.forEach(function (r) {
+        bars.appendChild(hbar("Higher after " + r.horizon + " months", r.share_up, r.base_share_up,
+          "P(return over " + r.horizon + " months > 0) = " + r.share_up.toFixed(3) + " (n=" + r.n_periods + ", " + r.n_spells + " spells); blue mark = all months " + r.base_share_up.toFixed(3)));
+      });
+      card.appendChild(bars);
+      host.appendChild(card);
+    });
+    var combo = H.setups.filter(function (s) { return s.key === "combined"; })[0] || H.setups[0];
+    var y = combo.rates[combo.rates.length - 1];
+    $("sum-after").textContent = "Like today, gold was higher a year later in " + Math.round(y.share_up * 100) + "% of cases (all months: " + Math.round(y.base_share_up * 100) + "%)";
+    var vd = clear($("after-verdict"));
+    vd.appendChild(el("span", { class: "tag" + (useful ? "" : " warn") }, useful ? useful + " passed the test" : "For context only"));
+  }
+
+  // ---------- technical picture ----------
+  S.metal = "gold";
+  function techChart(T) {
+    var C = T.chart, host = el("div", { class: "chart-wrap" });
+    var W = Math.max(320, ($("tech-body").clientWidth || 800)), narrow = W < 560, H = narrow ? 220 : 280, m = { l: narrow ? 46 : 58, r: 12, t: 10, b: 24 };
+    var vals = [].concat(C.close, C.upper, C.lower, C.sma200).filter(function (v) { return v !== null; });
+    var lo = Math.min.apply(null, vals) * 0.98, hi = Math.max.apply(null, vals) * 1.02, n = C.close.length, iw = W - m.l - m.r, ih = H - m.t - m.b;
+    function x(i) { return m.l + (i + 0.5) * iw / n; }
+    function y(v) { return m.t + (hi - v) / (hi - lo) * ih; }
+    var svg = sv("svg", { viewBox: "0 0 " + W + " " + H, role: "img", "aria-label": "Daily price for the past year with 50- and 200-day averages and normal range" });
+    var g = sv("g", { class: "axis" });
+    niceTicks(lo, hi, narrow ? 4 : 5).forEach(function (t) {
+      g.appendChild(sv("line", { x1: m.l, x2: m.l + iw, y1: y(t), y2: y(t) }));
+      var tx = sv("text", { x: m.l - 8, y: y(t) + 4, "text-anchor": "end" }); tx.textContent = Math.round(t).toLocaleString("en-US"); g.appendChild(tx);
+    });
+    C.dates.forEach(function (d, i) { if (i && d.slice(5, 7) !== C.dates[i - 1].slice(5, 7) && (+d.slice(5, 7)) % (narrow ? 3 : 2) === 1) {
+      var tx = sv("text", { x: x(i), y: H - 6, "text-anchor": "middle" }); tx.textContent = MONTHS[+d.slice(5, 7) - 1]; g.appendChild(tx); } });
+    svg.appendChild(g);
+    function path(a) { return a.map(function (v, i) { return v === null ? "" : (i && a[i - 1] !== null ? "L" : "M") + x(i).toFixed(1) + "," + y(v).toFixed(1); }).join(""); }
+    var band = C.upper.map(function (v, i) { return v === null ? null : [x(i), y(v)]; }).filter(Boolean);
+    var bandLo = C.lower.map(function (v, i) { return v === null ? null : [x(i), y(v)]; }).filter(Boolean).reverse();
+    if (band.length) svg.appendChild(sv("path", { d: "M" + band.concat(bandLo).map(function (p) { return p[0].toFixed(1) + "," + p[1].toFixed(1); }).join("L") + "Z", fill: "var(--gold-soft)", stroke: "none" }));
+    svg.appendChild(sv("path", { d: path(C.sma200), fill: "none", stroke: "var(--info)", "stroke-width": 1.4 }));
+    svg.appendChild(sv("path", { d: path(C.sma50), fill: "none", stroke: "var(--fg)", "stroke-width": 1.2, "stroke-dasharray": "5 3", opacity: 0.6 }));
+    svg.appendChild(sv("path", { d: path(C.close), fill: "none", stroke: "var(--gold)", "stroke-width": 1.8 }));
+    host.appendChild(svg);
+    var lg = el("div", { class: "legend" });
+    [["sw", "var(--gold)", "Daily closing price"], ["sw dash", "var(--fg)", "50-day average"], ["sw", "var(--info)", "200-day average"], ["sw box", "var(--gold-soft)", "Normal daily range (20 days)"]].forEach(function (L) {
+      var sp = el("span"), i = el("i", { class: L[0] });
+      if (L[0] === "sw box") i.style.background = L[1]; else { i.style.borderTopColor = L[1]; if (L[0] === "sw dash") i.style.borderTopStyle = "dashed"; }
+      sp.appendChild(i); sp.appendChild(document.createTextNode(L[2])); lg.appendChild(sp);
+    });
+    host.appendChild(lg);
+    return host;
+  }
+  function renderTech() {
+    ["metal-gold", "metal-silver"].forEach(function (id) { var b = $(id); b.setAttribute("aria-pressed", String(b.dataset.metal === S.metal)); });
+    var host = clear($("tech-body")), all = D.technical || {}, T = all[S.metal];
+    if (!T) {
+      host.appendChild(el("p", { class: "note" }, "Daily prices for " + S.metal + " aren't loaded yet. They download on the daily GitHub run; this section fills in once they arrive."));
+      $("sum-tech").textContent = all.gold ? "Gold ready; " + S.metal + " not loaded yet" : "Waiting for daily prices";
+      return;
+    }
+    host.appendChild(jg("p", { class: "note" }, "Daily prices to " + T.as_of + ", in dollars, from " + T.first.slice(0, 4) + " (" + T.n_days.toLocaleString("en-US") + " trading days).", "Source: " + T.source));
+    var p = el("div", { class: "panel" }); p.appendChild(techChart(T)); host.appendChild(p);
+    var grid = el("div", { class: "tech-grid" });
+    T.readings.forEach(function (r) {
+      var c = el("div", { class: "panel tread " + r.tone });
+      c.appendChild(el("div", { class: "lbl" }, r.name));
+      c.appendChild(jg("div", { class: "val" }, r.value, r.tech));
+      c.appendChild(el("div", { class: "note" }, r.plain));
+      grid.appendChild(c);
+    });
+    host.appendChild(grid);
+    host.appendChild(el("div", { class: "eyebrow" }, "What followed these signals before"));
+    var lst = el("div", { class: "after-list" });
+    T.active.forEach(function (s) {
+      var card = el("div", { class: "panel after" });
+      var top = el("div", { class: "after-top" });
+      var nm = el("span"); nm.appendChild(jg("b", null, s.plain, s.tech)); top.appendChild(nm);
+      top.appendChild(jg("span", { class: "tag" + (s.test.label === "useful" ? "" : " warn") }, s.test.label === "useful" ? "passed the honesty test" : s.test.n ? "for context only" : "too few cases to test",
+        s.test.n ? "Walk-forward since 2010, n=" + s.test.n + " days (" + s.test.spells + " spells). Brier " + s.test.brier_setup.toFixed(3) + " vs " + s.test.brier_base.toFixed(3) +
+          "; hit rate " + Math.round(s.test.hit_setup * 100) + "% vs " + Math.round(s.test.hit_base * 100) + "%." : "Too few earlier cases"));
+      card.appendChild(top);
+      var bars = el("div", { class: "hbars" });
+      s.rates.forEach(function (r) {
+        var months = r.horizon === 21 ? "1 month" : r.horizon === 63 ? "3 months" : r.horizon + " days";
+        bars.appendChild(hbar("Higher after " + months, r.share_up, r.base_share_up,
+          "P(return over " + r.horizon + " trading days > 0) = " + r.share_up.toFixed(3) + " (n=" + r.n_periods + " days, " + r.n_spells + " spells); median " + pct(r.median, 2) + "; all days " + r.base_share_up.toFixed(3)));
+      });
+      card.appendChild(bars);
+      var r3 = s.rates[s.rates.length - 1];
+      card.appendChild(el("p", { class: "note" }, "Seen on " + r3.n_periods.toLocaleString("en-US") + " days (" + r3.n_spells + " separate spells). Blue mark: share of all days."));
+      lst.appendChild(card);
+    });
+    if (!T.active.length) lst.appendChild(el("p", { class: "note" }, "No signal holds today."));
+    host.appendChild(lst);
+    var rd = {}; T.readings.forEach(function (r) { rd[r.key] = r; });
+    $("sum-tech").textContent = (S.metal === "gold" ? "Gold" : "Silver") + ": " + (rd.ma200 ? "price " + rd.ma200.value + " its 200-day average" : "") + (rd.rsi ? " · momentum gauge " + rd.rsi.value + " of 100" : "");
+  }
+  Array.prototype.forEach.call(document.querySelectorAll("[data-metal]"), function (b) {
+    b.addEventListener("click", function () { S.metal = b.dataset.metal; renderTech(); });
+  });
+
   // ---------- data and gaps ----------
   function renderFoot() {
     var gp = clear($("brief-gaps"));
@@ -1176,7 +1355,7 @@ table.t tr:last-child td { border-bottom: 0; }
   }
 
   // ---------- folding ----------
-  var FOLDS = ["d-rules", "d-push", "d-price", "d-lines", "d-stretch", "d-dates", "d-analogues", "d-history", "d-data"];
+  var FOLDS = ["d-rules", "d-push", "d-price", "d-lines", "d-stretch", "d-dates", "d-analogues", "d-after", "d-tech", "d-history", "d-data"];
   function saveOpen() {
     try { localStorage.setItem("pmdash-open", JSON.stringify(FOLDS.filter(function (id) { return $(id).open; }))); } catch (e) {}
     $("toggle-all").textContent = FOLDS.every(function (id) { return $(id).open; }) ? "Close all" : "Open all";
@@ -1191,7 +1370,7 @@ table.t tr:last-child td { border-bottom: 0; }
   FOLDS.forEach(function (id) {
     $(id).addEventListener("toggle", function () {
       saveOpen();
-      if ($(id).open) { if (id === "d-price") renderPrice(); if (id === "d-analogues") renderAnalogues(); if (id === "d-history") renderHistory(); }
+      if ($(id).open) { if (id === "d-price") renderPrice(); if (id === "d-analogues") renderAnalogues(); if (id === "d-history") renderHistory(); if (id === "d-tech") renderTech(); }
     });
   });
   $("toggle-all").addEventListener("click", function () {
@@ -1202,7 +1381,7 @@ table.t tr:last-child td { border-bottom: 0; }
   Array.prototype.forEach.call(document.querySelectorAll("[data-tech]"), jgWire);
 
   function renderAll() {
-    renderMast(); renderGlance(); renderRules(); renderPush(); renderRegime(); renderPrice(); renderLines(); renderStretch(); renderDates(); renderAnalogues(); renderHistory(); renderFoot();
+    renderMast(); renderGlance(); renderRules(); renderPush(); renderRegime(); renderPrice(); renderLines(); renderStretch(); renderDates(); renderAnalogues(); renderAfter(); renderTech(); renderHistory(); renderFoot();
   }
 
   Array.prototype.forEach.call(document.querySelectorAll("[data-cur]"), function (b) {

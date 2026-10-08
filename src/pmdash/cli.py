@@ -253,7 +253,9 @@ def cmd_summary(args):
     con = _con()
     gold, fx = data.load_monthly(con, args.as_of)
     from .digest.brief import to_markdown as brief_md
-    md = brief_md(_payload(con, args, include_oos=False)["brief"]) + "\n" + \
+    from .history.base_rates import to_markdown as history_md
+    pl = _payload(con, args, include_oos=False)
+    md = brief_md(pl["brief"]) + "\n" + history_md(pl.get("history"), pl.get("technical")) + "\n" + \
         to_markdown(build(gold, fx, _health(con), data.load_macro(con, args.as_of)))
     if args.out:
         Path(args.out).write_text(md)
@@ -277,8 +279,9 @@ def _payload(con, args, include_oos: bool):
                 "plain_name": rspec.get(r.report_id, {}).get("plain_name", r.name),
                 "plain_why": rspec.get(r.report_id, {}).get("plain_why", "")} for r in rels]
     fx_daily = db.get_series(con, "usdchf_daily", as_of=args.as_of)
+    daily = {m: data.load_daily(con, m, args.as_of) for m in ("gold", "silver")}
     return build_payload(gold, fx, _health(con), data.load_macro(con, args.as_of), include_oos=include_oos,
-                         reports=reports, fx_daily=fx_daily if len(fx_daily) else None)
+                         reports=reports, fx_daily=fx_daily if len(fx_daily) else None, daily=daily)
 
 
 def cmd_export_html(args):

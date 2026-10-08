@@ -133,6 +133,42 @@ sources:
     status: candidate
     note: Daily geopolitical risk index.
 
+  # --- daily prices (technical indicators): candidates, run on GitHub Actions --------------------
+  gold_fut_daily:
+    fetcher: yahoo_chart
+    ticker: GC=F
+    prefix: gold_fut
+    start: "2000-08-30"
+    schedule: daily
+    stale_after_days: 5
+    status: candidate
+    note: COMEX gold front-month continuation (Yahoo Finance, unofficial, prototyping only). OHLC + volume.
+  silver_fut_daily:
+    fetcher: yahoo_chart
+    ticker: SI=F
+    prefix: silver_fut
+    start: "2000-08-30"
+    schedule: daily
+    stale_after_days: 5
+    status: candidate
+    note: COMEX silver front-month continuation (Yahoo Finance, unofficial).
+  gold_spot_daily:
+    fetcher: stooq_daily
+    symbol: xauusd
+    prefix: gold_spot
+    schedule: daily
+    stale_after_days: 5
+    status: candidate
+    note: Gold spot USD (stooq.com), fallback when Yahoo refuses. OHLC, no volume.
+  silver_spot_daily:
+    fetcher: stooq_daily
+    symbol: xagusd
+    prefix: silver_spot
+    schedule: daily
+    stale_after_days: 5
+    status: candidate
+    note: Silver spot USD (stooq.com).
+
   # --- reports whose terms rule out scraping: entered by hand ---------------------------------
   manual_reports:
     fetcher: manual

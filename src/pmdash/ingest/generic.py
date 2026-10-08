@@ -210,3 +210,62 @@ class ManualFile(Fetcher):
             raise SchemaError(f"manual file needs columns {sorted(need)}")
         df = df.dropna(subset=["value"])         # an empty template is fine: nothing entered yet
         return df[["series_id", "ref_date", "available_date", "value"]]
+
+
+class YahooChart(Fetcher):
+    """Daily OHLCV from Yahoo Finance's chart API (unofficial; the brief allows it for prototyping).
+
+    One download feeds five series: <prefix>_open/_high/_low/_close/_volume. Yahoo is known to
+    refuse some cloud IP ranges; the Stooq fetcher below is the fallback.
+    """
+
+    URL = "https://query2.finance.yahoo.com/v8/finance/chart/{ticker}?period1={start}&period2={end}&interval=1d&events=history"
+
+    def __post_init__(self):
+        import time as _t
+        start = int(pd.Timestamp(self.spec.get("start", "2000-01-01")).timestamp())
+        self.spec = {**self.spec, "url": self.URL.format(ticker=self.spec["ticker"], start=start, end=int(_t.time()) + 86400)}
+
+    def parse(self, raw: bytes) -> pd.DataFrame:
+        js = json.loads(raw)
+        res = (js.get("chart") or {}).get("result")
+        if not res:
+            raise SchemaError(f"Yahoo answer has no result: {str(js)[:200]}")
+        r = res[0]
+        ts = pd.to_datetime(pd.Series(r["timestamp"]), unit="s").dt.normalize()
+        q = r["indicators"]["quote"][0]
+        prefix = self.spec["prefix"]
+        out = []
+        for field in ("open", "high", "low", "close", "volume"):
+            if field not in q:
+                continue
+            f = frame(ts, q[field], {"period": "day", "release_lag_days": self.spec.get("release_lag_days", 1)})
+            f["series_id"] = f"{prefix}_{field}"
+            out.append(f)
+        df = pd.concat(out, ignore_index=True)
+        if df[df.series_id == f"{prefix}_close"].empty:
+            raise SchemaError("no closes")
+        return df
+
+
+class StooqDaily(Fetcher):
+    """Daily OHLC CSV from stooq.com (spot prices, no volume)."""
+
+    URL = "https://stooq.com/q/d/l/?s={symbol}&i=d"
+
+    def __post_init__(self):
+        self.spec = {**self.spec, "url": self.URL.format(symbol=self.spec["symbol"])}
+
+    def parse(self, raw: bytes) -> pd.DataFrame:
+        df = pd.read_csv(io.BytesIO(raw))
+        cols = {c.lower(): c for c in df.columns}
+        if not {"date", "close"} <= set(cols):
+            raise SchemaError(f"unexpected Stooq answer: {raw[:120]!r}")
+        prefix = self.spec["prefix"]
+        out = []
+        for field in ("open", "high", "low", "close", "volume"):
+            if field in cols:
+                f = frame(df[cols["date"]], df[cols[field]], {"period": "day", "release_lag_days": self.spec.get("release_lag_days", 1)})
+                f["series_id"] = f"{prefix}_{field}"
+                out.append(f)
+        return pd.concat(out, ignore_index=True)

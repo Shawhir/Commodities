@@ -141,7 +141,7 @@ def backdrop(macro: dict, fx_daily: pd.Series | None, as_of: pd.Period, since: s
 
 def build_payload(gold: pd.Series, fx: pd.Series, health: pd.DataFrame | None = None, macro: dict | None = None,
                   include_oos: bool = True, reports: list[dict] | None = None,
-                  fx_daily: pd.Series | None = None) -> dict:
+                  fx_daily: pd.Series | None = None, daily: dict | None = None) -> dict:
     th = config.load("thresholds")
     mk = config.load("markets")
     levels_cfg = config.load("levels")
@@ -285,7 +285,18 @@ def build_payload(gold: pd.Series, fx: pd.Series, health: pd.DataFrame | None = 
     bad = decision_brief.check_language(brief)
     if bad:
         raise ValueError(f"decision brief contains instruction language: {bad}")
+    # what happened after setups like this (monthly) and the daily technical picture
+    from ..history import base_rates
+    from ..indicators.stretch import measures as _measures
+    from ..indicators.trend import ma_signal as _ma_sig, momentum_signal as _mom_sig
+    history = base_rates.build_monthly(gold, reg_usd, _mom_sig(gold), _ma_sig(gold),
+                                       _measures(gold.loc[float_start:])["dist_10y_avg"])
+    technical = {}
+    for metal, (df_, src_) in (daily or {}).items():
+        if df_ is not None:
+            technical[metal] = base_rates.build_technical(df_, src_)
     return _clean({
+        "history": history, "technical": technical,
         "brief": brief,
         "as_of": str(as_of), "built": str(date.today()), "disclaimer": s["disclaimer"],
         "regime": regime, "series": series, "manual_lines": manual, "lines": lines,

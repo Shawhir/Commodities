@@ -64,3 +64,19 @@ def load_macro(con, as_of=None) -> dict[str, pd.Series]:
         t = tgt.groupby(tgt.index.to_period("M")).last()
         out["fed_rate"] = t.combine_first(out["fed_rate"]) if "fed_rate" in out else t
     return out
+
+
+def load_daily(con, metal: str = "gold", as_of=None) -> tuple[pd.DataFrame | None, str | None]:
+    """Daily OHLC(V) for ``metal``: futures (with volume) if stored, else spot. Returns (frame, source)."""
+    for prefix, label in ((f"{metal}_fut", "COMEX futures, front month (Yahoo Finance)"),
+                          (f"{metal}_spot", "spot price (stooq.com)")):
+        close = db.get_series(con, f"{prefix}_close", as_of=as_of)
+        if len(close) < 300:
+            continue
+        df = pd.DataFrame({"close": close})
+        for f in ("open", "high", "low", "volume"):
+            s = db.get_series(con, f"{prefix}_{f}", as_of=as_of)
+            if len(s):
+                df[f] = s
+        return df.dropna(subset=["close"]), label
+    return None, None
