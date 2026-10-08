@@ -54,7 +54,7 @@ def build(gold_usd: pd.Series, usdchf: pd.Series, health: pd.DataFrame | None = 
         "as_of": str(as_of), "built": str(date.today()), "disclaimer": DISCLAIMER,
         "regime": regime_df,
         "stretch": {"CHF": stretch_table(gold_chf, float_start), "USD": stretch_table(gold_usd, float_start)},
-        "level_states": states, "recent_transitions": recent, "level_notes": notes,
+        "level_states": states, "recent_transitions": recent, "transitions": trans, "level_notes": notes,
         "analogues": res, "health": health,
         "pending": [
             "Weekly-close regime reading: needs daily prices (phase 2).",

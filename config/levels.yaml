@@ -8,6 +8,7 @@ defaults:
 
 gold:
   - id: gold_jun26_low
+    label: "June 2026 low"
     type: manual_price
     value_usd: 3955
     direction: below
@@ -16,6 +17,7 @@ gold:
     active_from: 2026-07-01   # the low was only known after it happened
     note: "2026 low. A confirmed break suggests the post-peak fall has a second leg."
   - id: gold_jan26_peak
+    label: "January 2026 peak"
     type: manual_price
     value_usd: 5500
     direction: above
@@ -23,29 +25,35 @@ gold:
     active_from: 2026-02-01
     note: "2026 intraday peak (approximate)."
   - id: gold_round_4000
+    label: "Round number $4,000"
     type: manual_price
     value_usd: 4000
     direction: below
     severity: info
   - id: gold_round_5000
+    label: "Round number $5,000"
     type: manual_price
     value_usd: 5000
     direction: above
     severity: info
   - id: gold_10m_avg
+    label: "10-month average"
     type: derived_ma
     window_months: 10
     direction: both
     severity: important
   - id: gold_mom_12_1
+    label: "12-1 momentum zero line"
     type: signal_zero_cross
     signal: momentum_12_1
     direction: both
     severity: important
   - id: gold_regime
+    label: "Regime label change (USD)"
     type: regime_change
     severity: watch
   - id: gold_stretch_10y
+    label: "Stretch vs 10-year average"
     type: stretch_percentile
     measure: dist_10y_avg
     thresholds: [50, 90]
@@ -53,12 +61,14 @@ gold:
 
 macro:   # needs FRED data (phase 2); declared now, evaluated once the series exist
   - id: real_yield_jump
+    label: "10-year real yield jump"
     type: change_bp
     series: DFII10
     window_months: 3
     threshold_bp: 50
     severity: important
   - id: fed_hikes_priced
+    label: "Fed hikes priced"
     type: level
     series: fed_hikes_priced_12m
     threshold: 4

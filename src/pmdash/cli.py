@@ -8,6 +8,7 @@
     pmdash analogues          analogue finder for the latest month (or --as-of)
     pmdash oos                analogue out-of-sample test since 2000
     pmdash summary            weekly summary as markdown
+    pmdash export-html        dashboard as one self-contained HTML file
     pmdash health             data health table
 """
 from __future__ import annotations
@@ -183,6 +184,18 @@ def cmd_summary(args):
     return 0
 
 
+def cmd_export_html(args):
+    from .export.html import build_payload, render
+    con = _con()
+    gold, fx = data.load_monthly(con, args.as_of)
+    payload = build_payload(gold, fx, _health(con), include_oos=not args.no_oos)
+    out = Path(args.out)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(render(payload, fragment=args.fragment))
+    print("wrote", out)
+    return 0
+
+
 def cmd_health(args):
     print(_health(_con()).to_string(index=False))
     return 0
@@ -221,6 +234,10 @@ def main(argv=None) -> int:
     p.add_argument("--no-write", action="store_true")
     p = add("summary", cmd_summary, "weekly summary markdown")
     p.add_argument("--out")
+    p = add("export-html", cmd_export_html, "write the dashboard as one self-contained HTML file")
+    p.add_argument("--out", default=str(config.DATA_DIR / "dashboard.html"))
+    p.add_argument("--fragment", action="store_true", help="omit the <html> wrapper (for hosts that add their own)")
+    p.add_argument("--no-oos", action="store_true", help="skip the out-of-sample test (faster)")
     add("health", cmd_health, "data health")
     args = ap.parse_args(argv)
     return args.fn(args)

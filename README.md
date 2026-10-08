@@ -31,6 +31,7 @@ pmdash check-levels --alerts-only --start 2026-01
 pmdash analogues                 # add --groups price_shape for the 8.4 seed
 pmdash oos --groups price_shape  # out-of-sample test -> data/research/analogue_oos_summary.csv
 pmdash summary                   # weekly summary (markdown)
+pmdash export-html               # the dashboard as one self-contained file -> data/dashboard.html
 streamlit run src/pmdash/app/streamlit_app.py
 pytest
 ```
@@ -39,7 +40,11 @@ pytest
 to see only data that was available on that date. The database defaults to `data/pmdash.duckdb`;
 set `PMDASH_DB` to override it.
 
-Example cron line (daily at 07:10): `10 7 * * * cd /path/to/repo && pmdash fetch && pmdash check-levels > /dev/null`
+Example cron line (daily at 07:10): `10 7 * * * cd /path/to/repo && pmdash fetch && pmdash check-levels > /dev/null && pmdash export-html`
+
+The HTML dashboard needs no server: open `data/dashboard.html` in a browser. It loads fonts
+from Google Fonts when online and falls back to system fonts offline. Every number on it is
+computed by the modules above; the template only lays them out and draws the charts.
 
 ## Layout
 
@@ -55,6 +60,7 @@ src/pmdash/
   testing/         backtest, seed study, snapshot check
   digest/          weekly summary
   app/             thin Streamlit front end
+  export/          static HTML dashboard (template.html + JSON payload from the modules above)
 data/key_moments.csv, data/events.csv (header only, filled in phase 6), data/research/
 tests/             pytest; fixtures are frozen copies of the verified datasets
 ```
