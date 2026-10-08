@@ -13,7 +13,8 @@ from ..levels.lines import evaluate_market, latest_states
 from ..regime.labeller import label_from_config
 
 
-def build(gold_usd: pd.Series, usdchf: pd.Series, health: pd.DataFrame | None = None) -> dict:
+def build(gold_usd: pd.Series, usdchf: pd.Series, health: pd.DataFrame | None = None,
+          macro: dict | None = None) -> dict:
     th = config.load("thresholds")
     mk = config.load("markets")
     float_start = mk["markets"]["gold"]["float_start"]
@@ -40,7 +41,7 @@ def build(gold_usd: pd.Series, usdchf: pd.Series, health: pd.DataFrame | None = 
     recent = [t.to_dict() for t in trans if pd.Timestamp(t.date) >= as_of.to_timestamp() - pd.DateOffset(months=3)]
 
     a = th["analogues"]
-    st = state.build(gold_usd, usdchf)
+    st = state.build(gold_usd, usdchf, macro)
     km = pd.read_csv(config.DATA_DIR / "key_moments.csv")
     res = finder.find(st, as_of, a["groups"], a["group_weights"],
                       prices={"USD": gold_usd, "CHF": gold_chf},
@@ -106,5 +107,6 @@ def to_markdown(s: dict) -> str:
     if s.get("health") is not None and len(s["health"]):
         out += ["", "## Data health", "", "| Source | Latest month | Status |", "|---|---|---|"]
         for _, r in s["health"].iterrows():
-            out.append(f"| {r.source_id} | {pd.Timestamp(r.latest_ref_date):%Y-%m} | {r.status} |")
+            latest = "-" if pd.isna(r.latest_ref_date) else f"{pd.Timestamp(r.latest_ref_date):%Y-%m}"
+            out.append(f"| {r.source_id} | {latest} | {r.status} |")
     return "\n".join(out) + "\n"

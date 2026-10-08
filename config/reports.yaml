@@ -1,0 +1,158 @@
+# Release calendar (section 9.6). `pmdash reports calendar` lists what's due; `pmdash reports check`
+# fetches anything whose window is open and not yet received, then records the release.
+#
+# Timing rules
+#   cadence + window_days: release window relative to the END of the period covered
+#                          (CPI for August is released ~10-16 days after 31 August).
+#   weekday:               restrict the window to one weekday (first Friday = window [1, 7] + Fri).
+#   weekly + anchor:       period is the anchor weekday (COT reports Tuesday positions).
+#   dates:                 explicit dates for scheduled meetings (period = the date).
+#   poll_days:             keep checking this many days after the window closes, then mark overdue.
+# Usual timings are from each publisher's practice; explicit dates must be checked against the
+# publisher's own calendar each year (verify: true marks them).
+#
+# feeds: series that show the release has arrived. fetch: sources to run when it is due
+# (ids from sources.yaml). manual: figures are entered by hand (data/manual/).
+
+reports:
+  us_cpi:
+    name: US consumer prices (CPI)
+    publisher: US Bureau of Labor Statistics
+    kind: data
+    cadence: monthly
+    window_days: [9, 16]
+    time: "08:30"
+    tz: America/New_York
+    poll_days: 5
+    feeds: [us_cpi_fred, us_cpi_mirror]
+    fetch: [us_cpi_fred, us_core_cpi, us_cpi_mirror]
+    headline: {series: us_cpi_mirror, change: yoy_pct}
+    why: Inflation drives real yields, the Fed path and gold's opportunity cost.
+
+  us_jobs:
+    name: US employment report
+    publisher: US Bureau of Labor Statistics
+    kind: data
+    cadence: monthly
+    window_days: [1, 7]
+    weekday: Fri
+    time: "08:30"
+    tz: America/New_York
+    poll_days: 7
+    feeds: [us_payrolls]
+    fetch: [us_payrolls, us_unemployment]
+    headline: {series: us_payrolls, change: diff}
+    why: Labour data moves the expected Fed path; payrolls are revised for two months, so revisions matter.
+
+  fomc:
+    name: FOMC rate decision
+    publisher: Federal Reserve
+    kind: event
+    dates: [2026-01-28, 2026-03-18, 2026-04-29, 2026-06-17, 2026-07-29, 2026-09-16, 2026-10-28, 2026-12-09]
+    verify: true                # add 2027 dates when the Fed publishes them
+    time: "14:00"
+    tz: America/New_York
+    poll_days: 3
+    feeds: [fed_target_upper]
+    fetch: [fed_target_upper, fed_funds_eff, real_yield_10y]
+    headline: {series: fed_target_upper, change: event_bp}
+    why: Rate decisions and projections set real yields and the dollar.
+
+  snb:
+    name: SNB monetary policy assessment
+    publisher: Swiss National Bank
+    kind: event
+    cadence: quarterly
+    window_days: [-21, -1]      # a Thursday in the second half of Mar, Jun, Sep, Dec
+    weekday: Thu
+    time: "09:30"
+    tz: Europe/Zurich
+    poll_days: 3
+    feeds: []
+    fetch: [usdchf_daily]
+    manual: true
+    why: Sets the franc's direction and so the CHF return on gold.
+
+  cn_pmi:
+    name: China official manufacturing PMI
+    publisher: National Bureau of Statistics of China
+    kind: data
+    cadence: monthly
+    window_days: [-1, 1]
+    time: "09:30"
+    tz: Asia/Shanghai
+    poll_days: 5
+    feeds: [cn_nbs_pmi]
+    manual: true
+    why: Chinese growth and demand for physical gold and industrial silver.
+
+  cftc_cot:
+    name: CFTC Commitments of Traders
+    publisher: US Commodity Futures Trading Commission
+    kind: data
+    cadence: weekly
+    anchor: Tue
+    window_days: [3, 6]         # Friday, or Monday after a holiday
+    time: "15:30"
+    tz: America/New_York
+    poll_days: 3
+    feeds: [cftc_gold_mm_net]
+    fetch: [cftc_cot]
+    headline: {series: cftc_gold_mm_net, change: diff}
+    why: Managed-money positioning in gold and silver futures.
+
+  wgc_gdt:
+    name: WGC Gold Demand Trends
+    publisher: World Gold Council
+    kind: study
+    cadence: quarterly
+    window_days: [20, 40]
+    poll_days: 14
+    feeds: [wgc_cb_net_purchases_t]
+    manual: true
+    why: Central bank buying, ETF flows, jewellery and bar demand by quarter.
+
+  wgc_cb_survey:
+    name: WGC Central Bank Gold Reserves Survey
+    publisher: World Gold Council
+    kind: study
+    cadence: annual
+    window_days: [140, 185]     # usually June
+    poll_days: 30
+    feeds: [wgc_cb_survey_increase_pct]
+    manual: true
+    why: Central banks' stated intentions for gold reserves.
+
+  silver_survey:
+    name: World Silver Survey
+    publisher: Silver Institute
+    kind: study
+    cadence: annual
+    window_days: [95, 125]      # usually April
+    poll_days: 30
+    feeds: [si_silver_deficit_moz]
+    manual: true
+    why: Silver supply, demand and the market deficit.
+
+  imf_cofer:
+    name: IMF COFER reserve composition
+    publisher: International Monetary Fund
+    kind: study
+    cadence: quarterly
+    window_days: [80, 100]
+    poll_days: 21
+    feeds: [imf_cofer_usd_share_pct]
+    manual: true
+    why: The dollar's share of global reserves, a slow driver of official gold demand.
+
+  gpr:
+    name: Geopolitical Risk Index update
+    publisher: Caldara and Iacoviello
+    kind: data
+    cadence: monthly
+    window_days: [1, 15]
+    poll_days: 15
+    feeds: [gpr_monthly]
+    fetch: [gpr_monthly, gpr_daily]
+    headline: {series: gpr_monthly, change: diff}
+    why: Geopolitical risk gauge for the geopolitical layer.

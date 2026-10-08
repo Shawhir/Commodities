@@ -43,14 +43,27 @@ standardisation point-in-time in the out-of-sample test.
 
 ## Analogue out-of-sample test (phase 10 preview)
 
-`analogue_oos_summary.csv`: for every month from 2000-01 to 2025-09, the finder ran on
-earlier history only.
+`analogue_oos_summary.csv`: for every month from 2000-01 to 2025-09, the finder ran on earlier
+history only. The months overlap, so these are not 309 independent tests.
 
-| Groups | Months | Actual inside matched range | Matched median closer than unconditional | Direction right (matched / unconditional) | Label |
-|---|---|---|---|---|---|
-| price_shape | 309 | 84% | 36% | 50% / 69% | context only |
-| price_shape + chf | 309 | 83% | 41% | 57% / 69% | context only |
+| Measures | Actual inside matched range | Matched median closer than unconditional | Direction right (matched / unconditional) | Label |
+|---|---|---|---|---|
+| Price shape only | 84% | 36% | 50% / 69% | context only |
+| Price + rates, inflation, risk, CHF | 69% | 39% | 54% / 69% | context only |
+| Rates, inflation, risk only | 69% | 44% | 61% / 69% | context only |
 
-On price (and CHF) measures alone, the finder does **not** beat "gold usually goes up". The
-months overlap, so these are not 309 independent tests. The analogue panel is labelled
-*context only* until the macro, flow and risk groups are added and re-tested.
+Macro measures used (backfilled 8 October 2026 from public mirrors of official series): US CPI
+y/y (lagged a month for publication), a real-yield proxy (10-year Treasury minus CPI y/y) and its
+6-month change, Brent's 12-month change, and VIX percentile (from 1990). Fed direction, the
+dollar, breakevens, GPR, CFTC and central bank buying are not in yet; they arrive with the first
+GitHub Actions run or by hand.
+
+What the extra data changed:
+
+- **Today's matches agree.** With price only, the six closest months to September 2026 ranged
+  from −33% to +119% over the next 12 months. With macro added, they range from +1% to +39%
+  (median +19%, n=6), and none points down. The closest are January 2012, May 2008 and June
+  2006. The main differences from today are oil (+68% over 12 months now) and price stretch.
+- **But it still does not beat the baseline out of sample.** Macro measures improve on price
+  shape (direction right 61% against 50%), yet both lose to "gold usually rises" (69%). The
+  finder stays **context only**. Agreement among today's matches is not evidence by itself.

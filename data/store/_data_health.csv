@@ -1,0 +1,25 @@
+source_id,last_attempt,last_success,last_failure,last_error,latest_ref_date,rows_added
+breakeven_10y,2026-10-08 20:49:48.741824,,2026-10-08 20:49:48.741824,RuntimeError: breakeven_10y: download failed after 4 attempts: 'url',,
+brent_monthly,2026-10-08 20:49:19.662006,2026-10-08 20:49:19.662006,,,2026-09-01,473
+cftc_cot,2026-10-08 20:52:23.976088,,2026-10-08 20:52:23.976088,RuntimeError: cftc_cot: download failed after 4 attempts: <urlopen error Tunnel connection failed: 403 Forbidden>,,
+dollar_broad,2026-10-08 20:50:02.750182,,2026-10-08 20:50:02.750182,RuntimeError: dollar_broad: download failed after 4 attempts: 'url',,
+fed_funds_eff,2026-10-08 20:50:44.782078,,2026-10-08 20:50:44.782078,RuntimeError: fed_funds_eff: download failed after 4 attempts: 'url',,
+fed_target_upper,2026-10-08 20:50:58.789860,,2026-10-08 20:50:58.789860,RuntimeError: fed_target_upper: download failed after 4 attempts: 'url',,
+gold_usd_monthly,2026-10-08 20:49:18.090550,2026-10-08 20:49:18.090550,,,2026-09-01,2325
+gold_vol,2026-10-08 20:50:30.773107,,2026-10-08 20:50:30.773107,RuntimeError: gold_vol: download failed after 4 attempts: 'url',,
+gpr_daily,2026-10-08 20:52:54.450622,,2026-10-08 20:52:54.450622,RuntimeError: gpr_daily: download failed after 4 attempts: <urlopen error Tunnel connection failed: 403 Forbidden>,,
+gpr_monthly,2026-10-08 20:52:39.159632,,2026-10-08 20:52:39.159632,RuntimeError: gpr_monthly: download failed after 4 attempts: <urlopen error Tunnel connection failed: 403 Forbidden>,,
+manual_reports,2026-10-08 20:52:54.466157,2026-10-08 20:52:54.466157,,,,0
+real_yield_10y,2026-10-08 20:53:36.396346,,2026-10-08 20:53:36.396346,RuntimeError: real_yield_10y: download failed after 4 attempts: <urlopen error Tunnel connection failed: 403 Forbidden>,,
+us_10y_yield_monthly,2026-10-08 20:49:19.106325,2026-10-08 20:49:19.106325,,,2026-08-01,881
+us_core_cpi,2026-10-08 20:51:26.803900,,2026-10-08 20:51:26.803900,RuntimeError: us_core_cpi: download failed after 4 attempts: 'url',,
+us_cpi_fred,2026-10-08 20:51:12.796840,,2026-10-08 20:51:12.796840,RuntimeError: us_cpi_fred: download failed after 4 attempts: 'url',,
+us_cpi_mirror,2026-10-08 20:49:18.929806,2026-10-08 20:49:18.929806,,,2026-08-01,1363
+us_payrolls,2026-10-08 20:51:40.810988,,2026-10-08 20:51:40.810988,RuntimeError: us_payrolls: download failed after 4 attempts: 'url',,
+us_unemployment,2026-10-08 20:51:54.818140,,2026-10-08 20:51:54.818140,RuntimeError: us_unemployment: download failed after 4 attempts: 'url',,
+usdchf_daily,2026-10-08 20:49:20.726746,2026-10-08 20:49:20.726746,,,2026-10-02,13981
+usdchf_fred,2026-10-08 20:52:08.826436,,2026-10-08 20:52:08.826436,RuntimeError: usdchf_fred: download failed after 4 attempts: 'url',,
+usdchf_monthly,2026-10-08 20:49:18.693922,2026-10-08 20:49:18.693922,,,2026-09-01,669
+vix_daily_mirror,2026-10-08 20:49:19.417017,2026-10-08 20:49:19.417017,,,2026-09-22,9278
+vix_fred,2026-10-08 20:50:16.764561,,2026-10-08 20:50:16.764561,RuntimeError: vix_fred: download failed after 4 attempts: 'url',,
+wti_monthly,2026-10-08 20:49:19.876340,2026-10-08 20:49:19.876340,,,2026-09-01,489

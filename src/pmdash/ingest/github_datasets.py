@@ -38,7 +38,14 @@ class FxMonthly(Fetcher):
         })
 
 
+from .generic import CftcDisaggregated, CsvSeries, ExcelSeries, FredSeries, ManualFile  # noqa: E402
+
 FETCHERS = {
     "github_gold_monthly": GoldMonthly,
     "github_fx_monthly": FxMonthly,
+    "csv": CsvSeries,
+    "fred": FredSeries,
+    "excel": ExcelSeries,
+    "cftc_disagg": CftcDisaggregated,
+    "manual": ManualFile,
 }

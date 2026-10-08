@@ -15,7 +15,7 @@ from dataclasses import dataclass, field
 import numpy as np
 import pandas as pd
 
-from .state import CATEGORICAL, LABELS
+from .state import CATEGORICAL, LABELS, POINTS
 
 
 @dataclass
@@ -71,6 +71,10 @@ def _describe_diff(measure: str, then, now) -> str:
         return f"{name}: {then} then, {now} now"
     if measure == "efficiency_ratio":
         return f"{name}: {then:.2f} then vs {now:.2f} now"
+    if measure in POINTS:
+        return f"{name}: {then:+.1f} pp then vs {now:+.1f} pp now"
+    if measure.endswith("_pct"):
+        return f"{name}: {then:.0f} then vs {now:.0f} now"
     return f"{name}: {then:+.0%} then vs {now:+.0%} now"
 
 

@@ -7,4 +7,3 @@ data/raw/
 data/*.duckdb
 data/*.duckdb.wal
 .env
-data/dashboard.html

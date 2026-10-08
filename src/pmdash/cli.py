@@ -1,6 +1,10 @@
 """Command-line entry points, run by cron or a systemd timer.
 
-    pmdash fetch              download sources into DuckDB
+    pmdash fetch              download sources into DuckDB (--schedule daily|weekly|on_release)
+    pmdash backfill           fetch every source once for full history
+    pmdash store load|save    rebuild the DB from data/store/*.csv, or write it back
+    pmdash reports calendar   what is due, received or overdue
+    pmdash reports check      fetch due reports, record releases, summarise changes
     pmdash import-files G F   load the monthly gold and FX CSVs from disk (offline)
     pmdash verify-snapshot    phase 0: check section 7 figures against stored data
     pmdash study              reproduce the section 8 regime study, write data/research/
@@ -36,10 +40,61 @@ def _health(con):
 def cmd_fetch(args):
     from .ingest.runner import fetch_all
     con = _con()
-    results = fetch_all(con)
+    schedules = set(args.schedule.split(",")) if args.schedule else None
+    ids = set(args.source.split(",")) if args.source else None
+    results = fetch_all(con, schedules=schedules, ids=ids)
     for k, v in results.items():
         print(f"{k}: {v}")
     return 0 if all(not v.startswith("FAILED") for v in results.values()) else 1
+
+
+def cmd_backfill(args):
+    """Fetch every configured source once, including report sources, for full history."""
+    from .ingest import runner
+    con = _con()
+    cfg = config.load("sources")
+    if args.cftc_years is not None:
+        cfg["sources"]["cftc_cot"]["years_back"] = args.cftc_years
+    results = runner.fetch_all(con)
+    for k, v in results.items():
+        print(f"{k}: {v}")
+    ok = sum(not v.startswith("FAILED") for v in results.values())
+    print(f"\n{ok} of {len(results)} sources fetched. Failures are recorded in data health and do not stop the rest.")
+    return 0
+
+
+def cmd_store(args):
+    from .storage import store
+    con = _con()
+    d = config.DATA_DIR / "store"
+    if args.action == "load":
+        print(f"loaded {store.load(con, d)} series from {d}")
+    else:
+        print(f"saved {store.save(con, d)} series to {d}")
+    return 0
+
+
+def cmd_reports(args):
+    from datetime import date as _date, timedelta
+    from .reports import calendar as cal
+    from .reports.check import check, to_markdown
+    con = _con()
+    rcfg = config.load("reports")
+    today = _date.fromisoformat(args.today) if args.today else _date.today()
+    if args.action == "calendar":
+        rows = cal.calendar(con, rcfg, today, back_days=args.back, ahead_days=args.days)
+        print(f"{'window':<25} {'status':<10} {'period':<11} report")
+        for r in rows:
+            when = str(r.window_start) if r.window_start == r.window_end else f"{r.window_start} to {r.window_end}"
+            print(f"{when:<25} {r.status:<10} {r.period:<11} {r.name}" + (f"  [{r.detail}]" if r.detail else ""))
+        return 0
+    rows = check(con, rcfg, today, fetch=not args.no_fetch)
+    upcoming = [r for r in cal.calendar(con, rcfg, today, back_days=0, ahead_days=30) if r.status == "upcoming"]
+    md = to_markdown(rows, upcoming)
+    if args.out:
+        Path(args.out).write_text(md)
+    print(md)
+    return 0
 
 
 def cmd_import(args):
@@ -88,6 +143,8 @@ def cmd_levels(args):
              t.severity, t.alert, t.monthly_close, now],
         )
     df = pd.DataFrame([t.to_dict() for t in trans])
+    if args.new_alerts_out:
+        _write_new_alerts(df, args.start, Path(args.new_alerts_out))
     if args.alerts_only and len(df):
         df = df[df.alert]
     if args.start and len(df):
@@ -103,6 +160,30 @@ def cmd_levels(args):
     for n in notes:
         print("note:", n)
     return 0
+
+
+def _write_new_alerts(df: pd.DataFrame, start: str | None, out: Path) -> None:
+    """Write alerts not sent before (ledger: data/store/_alerts_sent.csv) as markdown; append them."""
+    ledger = config.DATA_DIR / "store" / "_alerts_sent.csv"
+    sent = set(pd.read_csv(ledger)["trigger_id"]) if ledger.exists() else set()
+    new = df[df.alert & ~df.trigger_id.isin(sent)] if len(df) else df
+    if start is not None and len(new):
+        new = new[new.date >= pd.Timestamp(start)]
+    out.write_text("")
+    if not len(new):
+        return
+    lines = ["## Key line alerts", "", "Descriptive, not predictive. Alerts fire only on confirmed or failed breaks, judged on closes.", "",
+             "| Close | Line | Currency | Change | Close value | Line value | Severity |", "|---|---|---|---|---|---|---|"]
+    for r in new.itertuples():
+        cur = r.currency if isinstance(r.currency, str) else "-"
+        close = "-" if pd.isna(r.close) else f"{r.close:,.4g}"
+        line = "-" if pd.isna(r.line_value) else f"{r.line_value:,.4g}"
+        lines.append(f"| {pd.Timestamp(r.date).date()} | {r.line_id} | {cur} | {r.prev_state} to {r.state} "
+                     f"| {close} | {line} | {r.severity} |")
+    out.write_text("\n".join(lines) + "\n")
+    ledger.parent.mkdir(parents=True, exist_ok=True)
+    rows = pd.DataFrame({"trigger_id": new.trigger_id, "sent_on": str(pd.Timestamp.today().date())})
+    rows.to_csv(ledger, mode="a", header=not ledger.exists(), index=False)
 
 
 def _finder_args():
@@ -123,7 +204,7 @@ def cmd_analogues(args):
     from .regime.labeller import label_from_config
     gold, fx = data.load_monthly(_con(), args.as_of)
     kw, groups = _finder_args()
-    st = state.build(gold, fx)
+    st = state.build(gold, fx, data.load_macro(_con(), args.as_of))
     target = args.month or str(gold.index[-1])
     res = finder.find(st, target, _groups(args.groups, groups), prices={"USD": gold, "CHF": (gold * fx).dropna()},
                       regime=label_from_config(gold, config.load("thresholds"))["regime"],
@@ -144,7 +225,7 @@ def cmd_oos(args):
     from .analogues import finder, state
     gold, fx = data.load_monthly(_con(), args.as_of)
     kw, groups = _finder_args()
-    st = state.build(gold, fx)
+    st = state.build(gold, fx, data.load_macro(_con(), args.as_of))
     df = finder.out_of_sample(st, gold, _groups(args.groups, groups), start=args.start, **kw)
     from .analogues.finder import oos_summary
     summ = oos_summary(df)
@@ -175,7 +256,7 @@ def cmd_summary(args):
     from .digest.summary import build, to_markdown
     con = _con()
     gold, fx = data.load_monthly(con, args.as_of)
-    md = to_markdown(build(gold, fx, _health(con)))
+    md = to_markdown(build(gold, fx, _health(con), data.load_macro(con, args.as_of)))
     if args.out:
         Path(args.out).write_text(md)
         print("wrote", args.out)
@@ -188,7 +269,15 @@ def cmd_export_html(args):
     from .export.html import build_payload, render
     con = _con()
     gold, fx = data.load_monthly(con, args.as_of)
-    payload = build_payload(gold, fx, _health(con), include_oos=not args.no_oos)
+    from datetime import date as _date
+    from .reports import calendar as cal
+    today = _date.fromisoformat(args.as_of) if args.as_of else _date.today()
+    rels = cal.calendar(con, config.load("reports"), today, back_days=45, ahead_days=45)
+    stored = {(r[0], r[1]): r[2] for r in con.execute("SELECT report_id, period, detail FROM releases").fetchall()}
+    reports = [{**r.as_dict(), "detail": stored.get((r.report_id, r.period)) or r.detail} for r in rels]
+    fx_daily = db.get_series(con, "usdchf_daily", as_of=args.as_of)
+    payload = build_payload(gold, fx, _health(con), data.load_macro(con, args.as_of), include_oos=not args.no_oos,
+                            reports=reports, fx_daily=fx_daily if len(fx_daily) else None)
     out = Path(args.out)
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(render(payload, fragment=args.fragment))
@@ -211,7 +300,20 @@ def main(argv=None) -> int:
         p.set_defaults(fn=fn)
         return p
 
-    add("fetch", cmd_fetch, "download all sources")
+    p = add("fetch", cmd_fetch, "download sources")
+    p.add_argument("--schedule", help="comma-separated: daily, weekly, on_release (default: all)")
+    p.add_argument("--source", help="comma-separated source ids")
+    p = add("backfill", cmd_backfill, "fetch every source once for full history")
+    p.add_argument("--cftc-years", type=int, default=None, help="years of CFTC history (disaggregated starts 2006)")
+    p = add("store", cmd_store, "load the DB from data/store/*.csv, or save it there")
+    p.add_argument("action", choices=["load", "save"])
+    p = add("reports", cmd_reports, "release calendar and report checks")
+    p.add_argument("action", choices=["calendar", "check"])
+    p.add_argument("--days", type=int, default=60, help="calendar: days ahead")
+    p.add_argument("--back", type=int, default=14, help="calendar: days back")
+    p.add_argument("--today", help="pretend today is YYYY-MM-DD")
+    p.add_argument("--no-fetch", action="store_true")
+    p.add_argument("--out", help="also write the markdown summary here")
     p = add("import-files", cmd_import, "load monthly CSVs from disk")
     p.add_argument("gold")
     p.add_argument("fx")
@@ -224,6 +326,7 @@ def main(argv=None) -> int:
     p.add_argument("--start")
     p.add_argument("--end")
     p.add_argument("--alerts-only", action="store_true")
+    p.add_argument("--new-alerts-out", help="write alerts not sent before as markdown (and record them)")
     p = add("analogues", cmd_analogues, "analogue finder")
     p.add_argument("--month")
     p.add_argument("--groups", help="comma-separated groups, e.g. price_shape")

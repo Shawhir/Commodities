@@ -151,6 +151,18 @@ table.t tr:last-child td { border-bottom: 0; }
 .diff li { margin: 0; }
 .diff ul { margin: 0; padding-left: 16px; }
 
+/* backdrop tiles */
+.tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+.tile { display: grid; gap: 4px; align-content: start; }
+.tile .lbl { font-size: 12px; color: var(--muted); }
+.tile .val { font-family: var(--font-display); font-size: 24px; font-weight: 500; font-variant-numeric: tabular-nums; line-height: 1.15; }
+.tile .meta { font-size: 12px; color: var(--muted); }
+.tile .src { font-size: 11px; color: var(--faint); }
+.tile svg { width: 100%; height: 34px; display: block; }
+.st-received, .st-happened { color: var(--up); } .st-due, .st-late { color: var(--warn); }
+.st-overdue { color: var(--down); } .st-enter { color: var(--info); } .st-upcoming { color: var(--side); }
+#rep-table { min-width: 640px; }
+
 /* regime strip */
 .episodes { display: flex; flex-wrap: wrap; gap: 6px; }
 .episodes span { font-size: 12px; font-family: var(--font-data); border: 1px solid var(--line); border-radius: 4px; padding: 2px 8px; color: var(--muted); background: var(--panel); }
@@ -214,6 +226,14 @@ table.t tr:last-child td { border-bottom: 0; }
     </div>
   </section>
 
+  <section class="sec" id="backdrop">
+    <div class="sec-head">
+      <div><div class="eyebrow">Backdrop</div><h2 id="bd-head">—</h2></div>
+    </div>
+    <div class="tiles" id="bd-tiles"></div>
+    <p class="note">Percentiles are against each series' own monthly history since August 1971, or since it starts if later. Sample sizes are shown. The real yield is a proxy (10-year Treasury minus trailing CPI inflation) so that one definition covers the whole history.</p>
+  </section>
+
   <div class="two">
     <section class="sec" id="lines">
       <div class="sec-head">
@@ -237,6 +257,14 @@ table.t tr:last-child td { border-bottom: 0; }
       <div><div class="eyebrow">Triggers</div><h2 id="trig-head">—</h2></div>
     </div>
     <div class="panel tbl-wrap"><table class="t" id="trig-table"></table></div>
+  </section>
+
+  <section class="sec" id="reports">
+    <div class="sec-head">
+      <div><div class="eyebrow">Reports and releases</div><h2 id="rep-head">—</h2></div>
+    </div>
+    <div class="panel tbl-wrap"><table class="t" id="rep-table"></table></div>
+    <p class="note">From the release calendar. "Enter" means the figures come from a report whose terms rule out automated download, so they are typed in by hand. With no consensus-forecast feed, changes are compared with the prior release and the 12-month trend, not with expectations.</p>
   </section>
 
   <section class="sec" id="analogues">
@@ -758,6 +786,73 @@ table.t tr:last-child td { border-bottom: 0; }
     p.appendChild(tb2);
   }
 
+  // ---------- backdrop ----------
+  function fmtVal(r, v) {
+    if (v === null || v === undefined) return "n/a";
+    if (r.unit === "%") return v.toFixed(2) + "%";
+    if (r.unit === "pp") return (v > 0 ? "+" : "") + v.toFixed(2) + " pp";
+    if (r.unit === "$") return "$" + v.toFixed(2);
+    return v.toFixed(v < 10 ? 4 : 2);
+  }
+  function fmtChg(r, v) {
+    if (v === null || v === undefined) return "n/a";
+    var sign = v > 0 ? "+" : v < 0 ? "−" : "";
+    if (r.unit === "%" || r.unit === "pp") return sign + Math.abs(v).toFixed(2) + " pp";
+    if (r.unit === "$") return sign + "$" + Math.abs(v).toFixed(2);
+    return sign + Math.abs(v).toFixed(v < 10 && v > -10 ? 4 : 2);
+  }
+  function renderBackdrop() {
+    var host = clear($("bd-tiles"));
+    var rows = D.backdrop || [];
+    rows.forEach(function (r) {
+      var t = el("div", { class: "panel tile" });
+      t.appendChild(el("div", { class: "lbl" }, r.label));
+      t.appendChild(el("div", { class: "val" }, fmtVal(r, r.value)));
+      var pts = r.spark.filter(function (v) { return v !== null; });
+      if (pts.length > 2) {
+        var lo = Math.min.apply(null, pts), hi = Math.max.apply(null, pts), w = 200, h = 34;
+        var svg = sv("svg", { viewBox: "0 0 " + w + " " + h, preserveAspectRatio: "none", "aria-hidden": "true" });
+        var d = r.spark.map(function (v, i) { return v === null ? "" : (i ? "L" : "M") + (i / (r.spark.length - 1) * w).toFixed(1) + "," + (3 + (hi - v) / ((hi - lo) || 1) * (h - 6)).toFixed(1); }).join("");
+        svg.appendChild(sv("path", { d: d, fill: "none", stroke: "var(--fg)", "stroke-width": 1.4, opacity: 0.7, "vector-effect": "non-scaling-stroke" }));
+        t.appendChild(svg);
+      }
+      t.appendChild(el("div", { class: "meta" }, monthName(r.month) + " · 12m change " + fmtChg(r, r.chg_12m)));
+      if (r.pct !== null) t.appendChild(el("div", { class: "meta" }, ord(r.pct) + " percentile since " + monthName(r.since) + " (n=" + r.n + ")"));
+      if (r.note) t.appendChild(el("div", { class: "src" }, r.note));
+      t.appendChild(el("div", { class: "src" }, r.source));
+      host.appendChild(t);
+    });
+    var hi = rows.filter(function (r) { return r.pct !== null && r.pct >= 90; }).map(function (r) { return r.label.split(" (")[0]; });
+    $("bd-head").textContent = !rows.length ? "No macro data stored yet"
+      : hi.length ? hi.join(" and ") + (hi.length > 1 ? " are" : " is") + " in the top decile of history" : "No macro reading in the top decile of history";
+  }
+
+  // ---------- reports ----------
+  function renderReports() {
+    var t = clear($("rep-table"));
+    var rows = (D.reports || []).slice();
+    var hr = el("tr");
+    [["Expected", ""], ["Report", ""], ["Period", ""], ["Status", ""], ["Latest / note", ""]].forEach(function (h) { hr.appendChild(el("th", { class: h[1] }, h[0])); });
+    var th = el("thead"); th.appendChild(hr); t.appendChild(th);
+    var tb = el("tbody");
+    rows.forEach(function (r) {
+      var tr = el("tr");
+      var when = r.window_start === r.window_end ? r.window_start : r.window_start + " to " + r.window_end;
+      tr.appendChild(el("td", { class: "num" }, when));
+      tr.appendChild(el("td", null, r.name));
+      tr.appendChild(el("td", { class: "num" }, r.period));
+      var c = el("td"); c.appendChild(el("span", { class: "pill st-" + r.status }, r.status)); tr.appendChild(c);
+      tr.appendChild(el("td", { class: "line-note" }, r.detail || ""));
+      tb.appendChild(tr);
+    });
+    if (!rows.length) { var tr = el("tr"); tr.appendChild(el("td", { colspan: 5 }, "No releases in the calendar window.")); tb.appendChild(tr); }
+    t.appendChild(tb);
+    var next = rows.filter(function (r) { return r.status === "upcoming"; })[0];
+    var waiting = rows.filter(function (r) { return ["due", "late", "overdue", "enter"].indexOf(r.status) >= 0; }).length;
+    $("rep-head").textContent = (next ? "Next: " + next.name + " (" + next.period + "), " + (next.window_start === next.window_end ? next.window_start : "from " + next.window_start) : "Nothing scheduled in the next 45 days") +
+      (waiting ? " · " + waiting + " waiting" : "");
+  }
+
   // ---------- footer ----------
   function renderFoot() {
     var ul = clear($("pending"));
@@ -772,7 +867,7 @@ table.t tr:last-child td { border-bottom: 0; }
   }
 
   function renderAll() {
-    renderMast(); renderRegime(); renderPrice(); renderLines(); renderTriggers(); renderStretch(); renderAnalogues(); renderHistory(); renderFoot();
+    renderMast(); renderRegime(); renderPrice(); renderBackdrop(); renderLines(); renderTriggers(); renderReports(); renderStretch(); renderAnalogues(); renderHistory(); renderFoot();
   }
 
   Array.prototype.forEach.call(document.querySelectorAll("[data-cur]"), function (b) {

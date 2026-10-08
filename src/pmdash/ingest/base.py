@@ -29,6 +29,9 @@ class Fetcher:
     retry: dict = field(default_factory=dict)
     raw_dir: Path = field(default_factory=lambda: config.DATA_DIR / "raw")
 
+    def __post_init__(self):
+        """Hook for subclasses (e.g. to derive the URL from the spec)."""
+
     # --- subclasses implement ---
     def parse(self, raw: bytes) -> pd.DataFrame:
         """Return columns ref_date, available_date, value."""
@@ -74,15 +77,24 @@ class Fetcher:
         return df
 
     def run(self, con, raw: bytes | None = None) -> int:
-        """Fetch (or use given raw bytes), store, record health. Re-raises on failure."""
+        """Fetch (or use given raw bytes), store, record health. Re-raises on failure.
+
+        ``parse`` may return a ``series_id`` column to feed several series from one download;
+        otherwise everything is stored under ``self.source_id``.
+        """
         try:
             if raw is None:
                 raw = self.download()
                 self.cache_raw(raw)
-            df = self.validate(self.parse(raw))
-            added = db.upsert_observations(con, self.source_id, df, source=self.spec.get("url", "file"))
-            db.record_health(con, self.source_id, ok=True,
-                             latest_ref_date=pd.to_datetime(df["ref_date"]).max().date(), rows_added=added)
+            df = self.parse(raw)
+            groups = df.groupby("series_id") if "series_id" in df.columns else [(self.source_id, df)]
+            added, latest = 0, None
+            for sid, part in groups:
+                part = self.validate(part.drop(columns=["series_id"], errors="ignore").reset_index(drop=True))
+                added += db.upsert_observations(con, sid, part, source=self.spec.get("url", "file"))
+                m = pd.to_datetime(part["ref_date"]).max().date()
+                latest = m if latest is None or m > latest else latest
+            db.record_health(con, self.source_id, ok=True, latest_ref_date=latest, rows_added=added)
             return added
         except Exception as exc:
             db.record_health(con, self.source_id, ok=False, error=f"{type(exc).__name__}: {exc}")

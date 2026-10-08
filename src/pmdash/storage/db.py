@@ -30,6 +30,16 @@ CREATE TABLE IF NOT EXISTS data_health (
     latest_ref_date DATE,
     rows_added    INTEGER
 );
+CREATE TABLE IF NOT EXISTS releases (
+    report_id      VARCHAR NOT NULL,
+    period         VARCHAR NOT NULL,     -- the period the release covers, e.g. 2026-08 or 2026-Q3
+    expected_start DATE,
+    expected_end   DATE,
+    received_at    TIMESTAMP,
+    status         VARCHAR NOT NULL,     -- expected | received | overdue | manual
+    detail         VARCHAR,
+    PRIMARY KEY (report_id, period)
+);
 CREATE TABLE IF NOT EXISTS triggers (
     trigger_id   VARCHAR PRIMARY KEY,
     line_id      VARCHAR NOT NULL,

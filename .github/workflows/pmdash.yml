@@ -1,0 +1,131 @@
+# Scheduled data runs for the precious metals dashboard.
+#
+# GitHub cron is UTC only and can start late (often by 5-15 minutes), so each release slot has
+# two entries, one for each side of the daylight-saving switch:
+#   US 08:30 ET (CPI, jobs)   = 12:30 UTC in summer, 13:30 UTC in winter   -> runs 12:50 and 13:50
+#   US 14:00 ET (FOMC)        = 18:00 / 19:00 UTC                          -> runs 18:20 and 19:20
+#   US 15:30 ET Fri (CFTC)    = 19:30 / 20:30 UTC                          -> runs 20:50 and 21:50 Fri
+#   China PMI 09:30 Beijing   = 01:30 UTC (no DST)                         -> covered by the 05:10 daily
+#   SNB 09:30 Zurich          = 07:30 / 08:30 UTC                          -> covered by the release runs
+# Release runs are cheap: `pmdash reports check` exits quickly when nothing is due.
+#
+# State lives in data/store/*.csv (committed back after each run), so every run starts from
+# the full point-in-time history.
+
+name: pmdash
+
+on:
+  schedule:
+    - cron: "10 5 * * *"          # daily: prices, macro, key lines, dashboard
+    - cron: "50 12 * * 1-5"       # US 08:30 ET releases (summer time)
+    - cron: "50 13 * * 1-5"       # US 08:30 ET releases (winter time)
+    - cron: "20 18 * * 1-5"       # FOMC 14:00 ET (summer time)
+    - cron: "20 19 * * 1-5"       # FOMC 14:00 ET (winter time)
+    - cron: "50 20,21 * * 5"      # CFTC Commitments of Traders, Friday 15:30 ET
+    - cron: "30 6 * * 1"          # weekly: GPR index, weekly summary
+  workflow_dispatch:
+    inputs:
+      job:
+        description: "What to run"
+        type: choice
+        options: [daily, release, weekly, backfill]
+        default: daily
+
+permissions:
+  contents: write                 # commit data/store and the dashboard back
+  issues: write                   # open an issue for confirmed or failed line breaks
+
+concurrency:
+  group: pmdash-data              # never two runs writing the store at once
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      PMDASH_DB: ${{ github.workspace }}/data/pmdash.duckdb
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install
+        run: pip install -e ".[fetch]"
+
+      - name: Pick job
+        id: job
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "job=${{ inputs.job }}" >> "$GITHUB_OUTPUT"
+          else
+            case "${{ github.event.schedule }}" in
+              "10 5 * * *") echo "job=daily" >> "$GITHUB_OUTPUT" ;;
+              "30 6 * * 1") echo "job=weekly" >> "$GITHUB_OUTPUT" ;;
+              *)            echo "job=release" >> "$GITHUB_OUTPUT" ;;
+            esac
+          fi
+
+      - name: Load store
+        run: pmdash store load
+
+      - name: Backfill (manual only)
+        if: steps.job.outputs.job == 'backfill'
+        continue-on-error: true
+        run: pmdash backfill --cftc-years 20
+
+      - name: Daily fetch
+        if: steps.job.outputs.job == 'daily'
+        continue-on-error: true   # one failing source must not stop the rest; data health records it
+        run: pmdash fetch --schedule daily
+
+      - name: Weekly fetch
+        if: steps.job.outputs.job == 'weekly'
+        continue-on-error: true
+        run: pmdash fetch --schedule weekly,daily
+
+      - name: Report check
+        run: pmdash reports check --out reports.md
+
+      - name: Key lines and alerts
+        run: pmdash check-levels --alerts-only --start "$(date -u -d '-45 days' +%F)" --new-alerts-out alerts.md
+
+      - name: Dashboard and summary
+        if: steps.job.outputs.job != 'release'
+        run: |
+          pmdash export-html --out data/dashboard.html
+          pmdash summary --out data/weekly_summary.md
+
+      - name: Save store
+        if: always()
+        run: pmdash store save
+
+      - name: Commit data
+        if: always()
+        run: |
+          git config user.name "pmdash bot"
+          git config user.email "pmdash-bot@users.noreply.github.com"
+          for f in data/store data/dashboard.html data/weekly_summary.md; do [ -e "$f" ] && git add "$f"; done
+          if git diff --cached --quiet; then echo "No data changes"; exit 0; fi
+          git commit -m "data: ${{ steps.job.outputs.job }} run $(date -u +%F)"
+          for i in 1 2 3; do git pull --rebase --autostash && git push && break; sleep 5; done
+
+      - name: Open issue for new alerts
+        if: hashFiles('alerts.md') != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ -s alerts.md ]; then
+            gh issue create --title "pmdash: key line alert $(date -u +%F)" --body-file alerts.md --label pmdash-alert \
+              || gh issue create --title "pmdash: key line alert $(date -u +%F)" --body-file alerts.md
+          fi
+
+      - name: Run summary
+        if: always()
+        run: |
+          [ -f reports.md ] && cat reports.md >> "$GITHUB_STEP_SUMMARY"
+          [ -s alerts.md ] && cat alerts.md >> "$GITHUB_STEP_SUMMARY"
+          pmdash health >> "$GITHUB_STEP_SUMMARY" || true

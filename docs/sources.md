@@ -8,34 +8,53 @@ machine that will run the tool.
 
 ## Verified
 
+All sources are configured in `config/sources.yaml`.
+
 | Series id | Source | URL | Notes |
 |---|---|---|---|
+| `us_cpi_mirror` | BLS CPI-U via GitHub `datasets/cpi-us` | .../cpi-us/main/data/cpiai.csv | 1913-01 to 2026-08. Available 15 days after month end. |
+| `us_10y_yield_monthly` | FRED GS10 via `datasets/bond-yields-us-10y` | .../monthly.csv | 1953-04 to 2026-08, monthly average |
+| `vix_daily_mirror` | CBOE VIX via `datasets/finance-vix` | .../vix-daily.csv | 1990 to 2026-09-22 |
+| `brent_monthly`, `wti_monthly` | EIA via `datasets/oil-prices` | .../brent-monthly.csv | From 1987 / 1986 |
+| `usdchf_daily` | Fed H.10 via `datasets/exchange-rates` daily | .../daily.csv | 1971 to 2026-10-02. Available 7 days later (weekly release). |
 | `gold_usd_monthly` | GitHub `datasets/gold-prices` | https://raw.githubusercontent.com/datasets/gold-prices/main/data/monthly.csv | 1833-01 to 2026-09, 2,325 rows. Columns `Date` (YYYY-MM), `Price`. Monthly averages; pre-1968 values are official fixed prices. Treated as available on the first day after month end. Research baseline only. |
 | `usdchf_monthly` | GitHub `datasets/exchange-rates` | https://raw.githubusercontent.com/datasets/exchange-rates/main/data/monthly.csv | `Country == Switzerland`, 1971-01 to 2026-09, 669 rows. CHF per USD. Same availability rule. |
 
 Frozen copies of both files as fetched on 2026-10-08 are in `tests/fixtures/` so the tests
 and the seed study are reproducible offline.
 
-## Candidates (not yet verified)
+## Candidates: run on GitHub Actions
 
-| Data | Candidate | Planned phase | Notes |
-|---|---|---|---|
-| Daily futures, all contract months | Databento (CME Globex) | 2 | Paid; open decision 2 |
-| Prototype daily prices | yfinance | 2 | Unofficial; prototyping only |
-| Daily FX | SNB data portal, FRED `DEXSZUS` | 2 | |
-| Real yield, breakeven, dollar, VIX, GVZ | FRED `DFII10`, `T10YIE`, `DTWEXBGS`, `VIXCLS`, `GVZCLS` | 2 | `fredgraph.csv?id=` endpoint unreachable from the sandbox |
-| CPI (purchasing-power view) | FRED `CPIAUCNS`; historical CPI before 1913 | 9 | Pre-1913 coverage to check |
-| Fed funds futures path | CME FedWatch or derived from futures | 2 | Access to check |
-| SNB policy rate, CHF indices, intervention | SNB data portal | 2 | |
-| CFTC disaggregated COT | cftc.gov yearly zip files | 2 | |
-| ETF holdings | Issuer pages, WGC | 2 | Check terms |
-| COMEX stocks, margins | CME daily reports / notices | 2 | Check terms |
-| Central bank purchases | WGC Goldhub, IMF IFS | 2 | Check terms |
-| Swiss exports by destination | Swiss-Impex | 2 | |
-| Shanghai premium | SGE and LBMA prices | 2 | LBMA licensing |
-| GPR index (daily) | matteoiacoviello.com | 6 | |
-| EPU index | policyuncertainty.com | 6 | |
-| GDELT, curated RSS | | 6 | |
+The build sandbox's network policy blocks these hosts (proxy 403), so their first live run will
+be the scheduled workflow. Parsers follow the documented formats and are tested on synthetic
+samples. A format surprise shows up in data health and does not stop the other sources.
+
+| Data | Source id(s) | Endpoint |
+|---|---|---|
+| Real yield, breakeven, broad dollar, VIX, GVZ | `real_yield_10y`, `breakeven_10y`, `dollar_broad`, `vix_fred`, `gold_vol` | FRED `fredgraph.csv?id=DFII10` etc. (no key) |
+| Fed funds effective and target upper bound | `fed_funds_eff`, `fed_target_upper` | FRED `DFF`, `DFEDTARU` |
+| US CPI, core CPI, payrolls, unemployment | `us_cpi_fred`, `us_core_cpi`, `us_payrolls`, `us_unemployment` | FRED `CPIAUCNS`, `CPILFESL`, `PAYEMS`, `UNRATE` |
+| Daily USD/CHF (official) | `usdchf_fred` | FRED `DEXSZUS` |
+| CFTC disaggregated COT (gold, silver, platinum, copper) | `cftc_cot` | cftc.gov `fut_disagg_txt_{year}.zip`; history from 2006 with `pmdash backfill --cftc-years 20` |
+| Geopolitical Risk Index, monthly and daily | `gpr_monthly`, `gpr_daily` | matteoiacoviello.com `.xls` files (needs `xlrd`) |
+
+## Entered by hand
+
+WGC Gold Demand Trends, the WGC central bank survey, the Silver Institute World Silver Survey,
+IMF COFER and China's official PMI: see `data/manual/README.md`. Their terms rule out automated
+download, or they come only as PDFs or web pages.
+
+## Not configured yet
+
+| Data | Candidate | Planned phase |
+|---|---|---|
+| Daily futures, all contract months | Databento (CME Globex) | 2; paid, open decision 2 |
+| Fed funds futures path | CME FedWatch or derived from futures | 2 |
+| SNB policy rate, CHF indices, intervention | SNB data portal (cube ids to confirm) | 2 |
+| ETF holdings, COMEX stocks, margins | Issuer pages, WGC, CME | 2; check terms |
+| Swiss exports by destination | Swiss-Impex | 2 |
+| Shanghai premium | SGE and LBMA prices | 2; LBMA licensing |
+| EPU index, GDELT, curated RSS | | 6 |
 
 TradingView is not used: it has no public data API.
 

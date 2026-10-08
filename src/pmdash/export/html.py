@@ -37,6 +37,8 @@ def _clean(x):
         return {str(k): _clean(v) for k, v in x.items()}
     if isinstance(x, (list, tuple)):
         return [_clean(v) for v in x]
+    if isinstance(x, date) and not isinstance(x, pd.Timestamp):
+        return x.isoformat()
     if isinstance(x, (pd.Period, pd.Timestamp)):
         return str(x.date()) if isinstance(x, pd.Timestamp) else str(x)
     if hasattr(x, "item") and not isinstance(x, (str, bytes)):
@@ -56,19 +58,67 @@ def _series(s: pd.Series, index) -> list:
 def _oos(st, gold, groups, kw) -> list[dict]:
     rows = []
     price = {"price_shape": groups["price_shape"]}
-    for name, g in (("Price shape only", price), ("Price shape + CHF", groups)):
+    others = [g for g in groups if g != "price_shape"]
+    macro_only = {g: ms for g, ms in groups.items() if g in ("rates_money", "inflation", "risk")}
+    variants = [("Price shape only", price), ("Price + " + ", ".join(o.replace("_", " ") for o in others), groups)]
+    if macro_only:
+        variants.append(("Macro only (" + ", ".join(g.replace("_", " ") for g in macro_only) + ")", macro_only))
+    for name, g in variants:
         df = finder.out_of_sample(st, gold, g, start="2000-01", **kw)
         rows.append({"groups": name, **finder.oos_summary(df)})
     return rows
 
 
-def build_payload(gold: pd.Series, fx: pd.Series, health: pd.DataFrame | None = None,
-                  include_oos: bool = True) -> dict:
+def backdrop(macro: dict, fx_daily: pd.Series | None, as_of: pd.Period, since: str) -> list[dict]:
+    """Macro readings at the latest month, with 12-month change and percentile since the float."""
+    rows = []
+
+    def add(label, s, unit, source, note=""):
+        s = s.dropna()
+        s = s[s.index <= as_of]
+        if s.empty:
+            return
+        hist = s[since:]
+        last = s.iloc[-1]
+        prev = s.get(s.index[-1] - 12)
+        rows.append({"label": label, "value": float(last), "unit": unit, "month": str(s.index[-1]),
+                     "chg_12m": None if prev is None or pd.isna(prev) else float(last - prev),
+                     "pct": float((hist < last).mean() * 100) if len(hist) > 1 else None,
+                     "n": int(len(hist)), "since": str(hist.index[0]) if len(hist) else None,
+                     "source": source, "note": note,
+                     "spark": [None if pd.isna(v) else round(float(v), 4) for v in s.iloc[-60:]]})
+
+    if "cpi" in macro:
+        c = macro["cpi"]
+        add("US inflation (CPI, y/y)", (c / c.shift(12) - 1) * 100, "%", "BLS CPI-U via datasets/cpi-us")
+        if "yield_10y" in macro:
+            ry = macro["yield_10y"] - ((c / c.shift(12) - 1) * 100).reindex(macro["yield_10y"].index)
+            add("Real yield proxy (10y minus CPI)", ry, "pp", "10y Treasury minus CPI y/y",
+                "Proxy: TIPS start 1997. Not the market real yield.")
+    if "yield_10y" in macro:
+        add("US 10-year yield", macro["yield_10y"], "%", "FRED GS10 via datasets/bond-yields-us-10y")
+    if "real_yield_tips" in macro:
+        add("10-year TIPS real yield", macro["real_yield_tips"], "%", "FRED DFII10")
+    if "vix" in macro:
+        add("VIX (monthly average)", macro["vix"], "", "CBOE via datasets/finance-vix")
+    if "brent" in macro:
+        add("Brent crude", macro["brent"], "$", "EIA via datasets/oil-prices")
+    if fx_daily is not None and len(fx_daily):
+        m = fx_daily.groupby(fx_daily.index.to_period("M")).mean()
+        add("USD/CHF (francs per dollar)", m, "", "Fed H.10 via datasets/exchange-rates")
+    if "gpr" in macro:
+        add("Geopolitical risk index", macro["gpr"], "", "Caldara and Iacoviello")
+    return rows
+
+
+def build_payload(gold: pd.Series, fx: pd.Series, health: pd.DataFrame | None = None, macro: dict | None = None,
+                  include_oos: bool = True, reports: list[dict] | None = None,
+                  fx_daily: pd.Series | None = None) -> dict:
     th = config.load("thresholds")
     mk = config.load("markets")
     levels_cfg = config.load("levels")
     float_start = mk["markets"]["gold"]["float_start"]
-    s = build_summary(gold, fx, health)
+    s = build_summary(gold, fx, health, macro)
     chf = (gold * fx).dropna()
     as_of = gold.index[-1]
 
@@ -126,7 +176,7 @@ def build_payload(gold: pd.Series, fx: pd.Series, health: pd.DataFrame | None = 
 
     # --- analogues --------------------------------------------------------------------------
     res = s["analogues"]
-    st = state.build(gold, fx)
+    st = state.build(gold, fx, macro)
     now = st.loc[as_of]
     an = {
         "target": str(res.target), "summary": res.summary(), "spread": res.spread, "baseline": res.baseline,
@@ -161,6 +211,8 @@ def build_payload(gold: pd.Series, fx: pd.Series, health: pd.DataFrame | None = 
         "line_notes": s["level_notes"], "triggers": trig, "stretch": stretch, "analogues": an,
         "study": {"summary": summ, "per_regime": per, "episodes": eps, "window": list(study["window"]),
                   "shares": study["regime_shares_since_float"].to_dict()},
+        "backdrop": backdrop(macro or {}, fx_daily, as_of, float_start),
+        "reports": reports or [],
         "health": [] if health is None or health.empty else [
             {"source": r.source_id, "latest": str(pd.Timestamp(r.latest_ref_date).date())
              if not pd.isna(r.latest_ref_date) else None, "status": r.status} for r in health.itertuples()],

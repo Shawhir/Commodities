@@ -12,6 +12,7 @@ dependencies = [
 
 [project.optional-dependencies]
 app = ["streamlit>=1.30"]
+fetch = ["xlrd>=2.0", "openpyxl>=3.1"]
 dev = ["pytest>=7"]
 
 [project.scripts]

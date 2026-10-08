@@ -1,10 +1,13 @@
-# One entry per fetcher. Status: verified | candidate (see docs/sources.md).
+# One entry per fetcher. status: verified (fetched and parsed by this code) | candidate (written to
+# the documented format, first live run happens on GitHub Actions) | manual (figures entered by hand).
+# schedule: daily | weekly | on_release (fetched by `pmdash reports check` when a report is due).
+# period + release_lag_days set available_date (see ingest/generic.py).
 sources:
+  # --- prices: verified -------------------------------------------------------------------
   gold_usd_monthly:
     fetcher: github_gold_monthly
     url: https://raw.githubusercontent.com/datasets/gold-prices/main/data/monthly.csv
-    frequency: monthly
-    schedule: daily            # cheap to re-check; new month appears after month end
+    schedule: daily
     stale_after_days: 45
     status: verified
     note: Monthly averages; pre-1968 values are official fixed prices. Research baseline only.
@@ -12,11 +15,131 @@ sources:
     fetcher: github_fx_monthly
     url: https://raw.githubusercontent.com/datasets/exchange-rates/main/data/monthly.csv
     country: Switzerland
-    frequency: monthly
     schedule: daily
     stale_after_days: 45
     status: verified
     note: CHF per USD, from 1971.
+
+  # --- history backfill from public mirrors of official series: verified -------------------
+  us_cpi_mirror:
+    fetcher: csv
+    url: https://raw.githubusercontent.com/datasets/cpi-us/main/data/cpiai.csv
+    date_col: Date
+    value_col: Index
+    period: month
+    release_lag_days: 15          # BLS publishes CPI around mid-month for the prior month
+    schedule: daily
+    stale_after_days: 50
+    status: verified
+    note: US CPI-U, all items, not seasonally adjusted, from 1913 (BLS via datasets/cpi-us).
+  us_10y_yield_monthly:
+    fetcher: csv
+    url: https://raw.githubusercontent.com/datasets/bond-yields-us-10y/main/data/monthly.csv
+    date_col: Date
+    value_col: Rate
+    period: month
+    release_lag_days: 1
+    schedule: daily
+    stale_after_days: 45
+    status: verified
+    note: 10-year Treasury constant maturity, monthly average, from 1953 (FRED GS10 via datasets).
+  vix_daily_mirror:
+    fetcher: csv
+    url: https://raw.githubusercontent.com/datasets/finance-vix/main/data/vix-daily.csv
+    date_col: DATE
+    value_col: CLOSE
+    period: day
+    release_lag_days: 0
+    schedule: daily
+    stale_after_days: 7
+    status: verified
+    note: CBOE VIX daily close from 1990.
+  brent_monthly:
+    fetcher: csv
+    url: https://raw.githubusercontent.com/datasets/oil-prices/main/data/brent-monthly.csv
+    date_col: Date
+    value_col: Price
+    period: month
+    release_lag_days: 1
+    schedule: daily
+    stale_after_days: 45
+    status: verified
+    note: Brent crude, USD per barrel, monthly (EIA via datasets/oil-prices), from 1987.
+  wti_monthly:
+    fetcher: csv
+    url: https://raw.githubusercontent.com/datasets/oil-prices/main/data/wti-monthly.csv
+    date_col: Date
+    value_col: Price
+    period: month
+    release_lag_days: 1
+    schedule: daily
+    stale_after_days: 45
+    status: verified
+    note: WTI crude, USD per barrel, monthly, from 1986.
+  usdchf_daily:
+    fetcher: csv
+    url: https://raw.githubusercontent.com/datasets/exchange-rates/main/data/daily.csv
+    date_col: Date
+    value_col: Exchange rate
+    filter: {Country: Switzerland}
+    period: day
+    release_lag_days: 7           # Fed H.10 rates are published weekly
+    schedule: daily
+    stale_after_days: 14
+    status: verified
+    note: CHF per USD, daily noon buying rate, from 1971.
+
+  # --- official sources: candidates, run on GitHub Actions -----------------------------------
+  real_yield_10y:     {fetcher: fred, fred_id: DFII10,   period: day,   release_lag_days: 1,  schedule: daily, stale_after_days: 7,  status: candidate, note: "10-year TIPS real yield, from 2003"}
+  breakeven_10y:      {fetcher: fred, fred_id: T10YIE,   period: day,   release_lag_days: 1,  schedule: daily, stale_after_days: 7,  status: candidate, note: "10-year breakeven inflation"}
+  dollar_broad:       {fetcher: fred, fred_id: DTWEXBGS, period: day,   release_lag_days: 7,  schedule: daily, stale_after_days: 14, status: candidate, note: "Broad trade-weighted dollar (weekly H.10 release)"}
+  vix_fred:           {fetcher: fred, fred_id: VIXCLS,   period: day,   release_lag_days: 1,  schedule: daily, stale_after_days: 7,  status: candidate, note: "VIX, FRED copy"}
+  gold_vol:           {fetcher: fred, fred_id: GVZCLS,   period: day,   release_lag_days: 1,  schedule: daily, stale_after_days: 7,  status: candidate, note: "CBOE gold ETF volatility index"}
+  fed_funds_eff:      {fetcher: fred, fred_id: DFF,      period: day,   release_lag_days: 1,  schedule: daily, stale_after_days: 7,  status: candidate, note: "Effective fed funds rate; shows FOMC decisions"}
+  fed_target_upper:   {fetcher: fred, fred_id: DFEDTARU, period: day,   release_lag_days: 0,  schedule: on_release, stale_after_days: 60, status: candidate, note: "Fed funds target range, upper bound"}
+  us_cpi_fred:        {fetcher: fred, fred_id: CPIAUCNS, period: month, release_lag_days: 15, schedule: on_release, stale_after_days: 50, status: candidate, note: "US CPI-U NSA (official source for the mirror above)"}
+  us_core_cpi:        {fetcher: fred, fred_id: CPILFESL, period: month, release_lag_days: 15, schedule: on_release, stale_after_days: 50, status: candidate, note: "US core CPI, SA"}
+  us_payrolls:        {fetcher: fred, fred_id: PAYEMS,   period: month, release_lag_days: 7,  schedule: on_release, stale_after_days: 45, status: candidate, note: "Nonfarm payrolls, thousands, SA; revised for two months"}
+  us_unemployment:    {fetcher: fred, fred_id: UNRATE,   period: month, release_lag_days: 7,  schedule: on_release, stale_after_days: 45, status: candidate, note: "Unemployment rate"}
+  usdchf_fred:        {fetcher: fred, fred_id: DEXSZUS,  period: day,   release_lag_days: 7,  schedule: daily, stale_after_days: 14, status: candidate, note: "CHF per USD (official H.10 source)"}
+  cftc_cot:
+    fetcher: cftc_disagg
+    markets: {gold: "088691", silver: "084691", platinum: "076651", copper: "085692"}
+    years_back: 0                 # set to 20 once (or run `pmdash backfill --cftc-years 20`) for history from 2006
+    schedule: on_release
+    stale_after_days: 10
+    status: candidate
+    note: CFTC disaggregated futures-only COT; managed money, producers, open interest.
+  gpr_monthly:
+    fetcher: excel
+    url: https://www.matteoiacoviello.com/gpr_files/data_gpr_export.xls
+    date_col: month
+    value_col: GPR
+    period: month
+    release_lag_days: 10
+    schedule: weekly
+    stale_after_days: 45
+    status: candidate
+    note: Caldara-Iacoviello geopolitical risk index, monthly from 1985 (historical GPRH from 1900).
+  gpr_daily:
+    fetcher: excel
+    url: https://www.matteoiacoviello.com/gpr_files/data_gpr_daily_recent.xls
+    date_col: date
+    value_col: GPRD
+    period: day
+    release_lag_days: 7
+    schedule: weekly
+    stale_after_days: 21
+    status: candidate
+    note: Daily geopolitical risk index.
+
+  # --- reports whose terms rule out scraping: entered by hand ---------------------------------
+  manual_reports:
+    fetcher: manual
+    path: data/manual/report_figures.csv
+    schedule: daily
+    status: manual
+    note: WGC Gold Demand Trends, WGC central bank survey, Silver Institute World Silver Survey, IMF COFER, China PMI. See data/manual/README.md.
 
 retry:
   attempts: 4

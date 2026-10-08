@@ -1,0 +1,15 @@
+# Figures entered by hand from reports whose terms do not allow automated download.
+# One row per figure. Do not type estimates: copy the published number and name the edition.
+# available_date = the report's publication date (so backtests only see it from then on).
+# If a later edition revises a figure, add a new row with the same series_id and ref_date and the
+# new available_date. Both vintages are kept.
+#
+# Suggested series_id values (see data/manual/README.md):
+#   wgc_cb_net_purchases_t   quarterly central bank net purchases, tonnes (ref_date = quarter start)
+#   wgc_etf_flows_t          quarterly gold ETF flows, tonnes
+#   wgc_total_demand_t       quarterly total gold demand incl. OTC, tonnes
+#   wgc_cb_survey_increase_pct  share of central banks expecting to raise gold reserves, % (ref_date = survey year start)
+#   si_silver_deficit_moz    Silver Institute market balance, million oz (negative = deficit; ref_date = year start)
+#   imf_cofer_usd_share_pct  IMF COFER US dollar share of allocated reserves, % (ref_date = quarter start)
+#   cn_nbs_pmi               China official manufacturing PMI (ref_date = month start)
+series_id,ref_date,value,available_date,source

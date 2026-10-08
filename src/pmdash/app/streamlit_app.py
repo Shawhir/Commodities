@@ -36,7 +36,7 @@ except RuntimeError as e:
 
 stale = {k: v.get("stale_after_days") for k, v in config.load("sources")["sources"].items()}
 health = db.health_table(con, stale)
-summary = build(gold, fx, health)
+summary = build(gold, fx, health, data.load_macro(con))
 
 pages = ["Weekly summary", "Market detail", "Triggers", "Regime history", "Analogues", "Data health"]
 page = st.sidebar.radio("Page", pages)   # opens to the weekly summary, not live prices
