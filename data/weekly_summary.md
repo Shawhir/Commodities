@@ -53,13 +53,13 @@ _Descriptive, not predictive. This tool does not forecast prices or give instruc
 
 ## Closest past months (groups with data)
 
-6 matches; next-12-month USD outcomes from -26% to +41%, median +15%. Unconditional median since 1971: +5% (n=638). The closest matches point in opposite directions; the measures used do not separate them. Dropped (no data): fed_direction, dollar_chg_6m, breakeven_10y, cb_purchases_12m, etf_holdings_chg_6m, cftc_mm_pct.
+6 matches; next-12-month USD outcomes from -10% to +41%, median +21%. Unconditional median since 1971: +5% (n=638). The closest matches point in opposite directions; the measures used do not separate them. Dropped (no data): breakeven_10y, cb_purchases_12m, etf_holdings_chg_6m, cftc_mm_pct.
 
 | Month | Distance | Key moment | Next 12m USD | Next 12m CHF | Main differences |
 |---|---|---|---|---|---|
-| 2006-07 | 2.51 |  | +4.9% | +2.3% | distance from 10-month average: +13% then vs -5% now; oil (Brent) 12-month change: +28% then vs +68% now |
-| 2011-03 | 2.71 | 2011 peak (6 months away) | +17.8% | +17.1% | USD/CHF 12-month change: -14% then vs +3% now; distance from 10-month average: +8% then vs -5% now |
-| 2008-08 | 2.78 | Financial crisis liquidation (2 months away) | +13.1% | +11.5% | geopolitical risk percentile (10y): 41 then vs 85 now; USD/CHF 12-month change: -10% then vs +3% now |
+| 2006-07 | 2.79 |  | +4.9% | +2.3% | distance from 10-month average: +13% then vs -5% now; oil (Brent) 12-month change: +28% then vs +68% now; Fed direction: nan then, hiking now |
+| 2008-08 | 2.97 | Financial crisis liquidation (2 months away) | +13.1% | +11.5% | geopolitical risk percentile (10y): 41 then vs 85 now; USD/CHF 12-month change: -10% then vs +3% now; Fed direction: nan then, hiking now |
+| 2012-04 | 3.01 |  | -9.8% | -7.5% | oil (Brent) 12-month change: -3% then vs +68% now; 6-month change in real yield: +1.1 pp then vs -0.6 pp now; Fed direction: on hold then, hiking now |
 
 ## Not yet available
 
@@ -71,27 +71,27 @@ _Descriptive, not predictive. This tool does not forecast prices or give instruc
 
 | Source | Latest month | Status |
 |---|---|---|
-| breakeven_10y | - | never succeeded |
+| breakeven_10y | 2026-10 | ok |
 | brent_monthly | 2026-09 | ok |
 | cftc_cot | 2026-09 | ok |
-| dollar_broad | - | never succeeded |
-| fed_funds_eff | - | never succeeded |
-| fed_target_upper | - | never succeeded |
+| dollar_broad | 2026-10 | ok |
+| fed_funds_eff | 2026-10 | ok |
+| fed_target_upper | 2026-10 | ok |
 | gold_usd_monthly | 2026-09 | ok |
-| gold_vol | - | never succeeded |
+| gold_vol | 2026-10 | ok |
 | gpr_daily | 2026-10 | ok |
 | gpr_monthly | 2026-09 | ok |
 | manual_reports | - | ok |
-| real_yield_10y | - | never succeeded |
+| real_yield_10y | 2026-10 | ok |
 | us_10y_yield_monthly | 2026-08 | stale (68 days) |
-| us_core_cpi | - | never succeeded |
-| us_cpi_fred | - | never succeeded |
+| us_core_cpi | 2026-08 | stale (68 days) |
+| us_cpi_fred | 2026-08 | stale (68 days) |
 | us_cpi_mirror | 2026-08 | stale (68 days) |
-| us_payrolls | - | never succeeded |
-| us_unemployment | - | never succeeded |
+| us_payrolls | 2026-09 | ok |
+| us_unemployment | 2026-09 | ok |
 | usdchf_daily | 2026-10 | ok |
-| usdchf_fred | - | never succeeded |
+| usdchf_fred | 2026-10 | ok |
 | usdchf_monthly | 2026-09 | ok |
 | vix_daily_mirror | 2026-09 | stale (16 days) |
-| vix_fred | - | never succeeded |
+| vix_fred | 2026-10 | ok |
 | wti_monthly | 2026-09 | ok |
