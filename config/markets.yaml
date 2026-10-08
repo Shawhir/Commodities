@@ -1,0 +1,29 @@
+# Markets are configuration. Promoting a metal = change its tier + add fetchers.
+# tiers: core (full treatment), watch (signals and charts only), context, excluded
+base_currency: CHF          # primary view
+currencies: [CHF, USD]
+
+markets:
+  gold:
+    tier: core
+    price_series: gold_usd_monthly       # long research history (monthly averages)
+    float_start: "1971-08"               # end of the fixed-price era
+    fixed_price_era: ["1833-01", "1971-08"]
+    contract: {exchange: COMEX, root: GC, unit: troy_oz, size: 100}
+  silver:
+    tier: core
+    price_series: null                   # pending: daily futures source (phase 2)
+    contract: {exchange: COMEX, root: SI, unit: troy_oz, size: 5000}
+  platinum:
+    tier: watch
+    price_series: null
+    contract: {exchange: NYMEX, root: PL, unit: troy_oz, size: 50}
+  copper:
+    tier: context
+    price_series: null
+    contract: {exchange: COMEX, root: HG, unit: lb, size: 25000}
+  palladium:
+    tier: excluded
+
+fx:
+  usdchf: usdchf_monthly                 # CHF per USD

@@ -1,0 +1,45 @@
+# Section 8.1 rules. Fixed before results; change only in yearly review.
+regime:
+  lookback_months: 12
+  er_min: 0.30
+  up_return_min: 0.10
+  down_return_max: -0.10
+  sideways_episode_min_months: 12
+  sideways_gap_merge_months: 2
+
+backtest:
+  start: "1972-08"            # first month with a full 12-month lookback after the float
+  cost_per_switch: 0.002
+  cash_return: zero           # TODO phase 4: T-bill (USD) and SARON (CHF)
+  chop_filter_label_lag_months: 1
+
+stretch:
+  percentile_since: "1971-08" # windows use floating-era prices only
+  windows_months: {ma_10m: 10, avg_3y: 36, avg_10y: 120}
+  rolling_percentile_years: [5, 10]
+
+analogues:
+  standardise: zscore         # zscore | rank
+  candidate_start: "1975-01"
+  exclude_recent_months: 24
+  collapse_months: 18
+  top_n: 6
+  categorical_penalty: 1.0
+  group_weights:              # default equal by group
+    price_shape: 1.0
+    rates_money: 1.0
+    inflation: 1.0
+    demand_flow: 1.0
+    risk: 1.0
+    chf: 1.0
+  groups:
+    price_shape: [fall_from_24m_high, dist_10y_avg, return_3y, dist_10m_avg]
+    rates_money: [real_yield_10y, real_yield_10y_chg_6m, fed_direction, dollar_chg_6m]
+    inflation: [cpi_yoy, breakeven_10y]
+    demand_flow: [cb_purchases_12m, etf_holdings_chg_6m, cftc_mm_pct]
+    risk: [gpr_pct, vix_pct]
+    chf: [chf_dist_10y_avg, usdchf_chg_12m]
+  # proxies used where a measure did not exist at the time (never invented values)
+  proxies:
+    real_yield_10y: null      # TIPS start 1997; proxy to be chosen in phase 10
+  outcome_horizons_months: [3, 6, 12, 24]

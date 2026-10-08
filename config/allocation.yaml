@@ -1,0 +1,12 @@
+# User-set (open decision 3). Placeholders only; phase 5.
+targets: {}
+bands: {}
+risk:
+  sleeve_risk_per_trade_pct: 1.0
+  sleeve_risk_cap_pct: 2.0
+  leverage_core_max: 1.0
+  leverage_sleeve_default: 1.5
+  min_asymmetry: 2.0
+stamp_duty:
+  swiss_pct: 0.075
+  foreign_pct: 0.15

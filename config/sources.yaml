@@ -1,0 +1,24 @@
+# One entry per fetcher. Status: verified | candidate (see docs/sources.md).
+sources:
+  gold_usd_monthly:
+    fetcher: github_gold_monthly
+    url: https://raw.githubusercontent.com/datasets/gold-prices/main/data/monthly.csv
+    frequency: monthly
+    schedule: daily            # cheap to re-check; new month appears after month end
+    stale_after_days: 45
+    status: verified
+    note: Monthly averages; pre-1968 values are official fixed prices. Research baseline only.
+  usdchf_monthly:
+    fetcher: github_fx_monthly
+    url: https://raw.githubusercontent.com/datasets/exchange-rates/main/data/monthly.csv
+    country: Switzerland
+    frequency: monthly
+    schedule: daily
+    stale_after_days: 45
+    status: verified
+    note: CHF per USD, from 1971.
+
+retry:
+  attempts: 4
+  backoff_seconds: [2, 4, 8, 16]
+  timeout_seconds: 30

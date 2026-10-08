@@ -1,0 +1,4 @@
+regime,share_of_months,months,buy_hold_ann,strategy_ann,strategy_switches
+Up,0.3877,252,0.2069,0.2069,1
+Sideways,0.4615,300,0.0340,0.0313,51
+Down,0.1508,98,-0.0714,-0.0002,1

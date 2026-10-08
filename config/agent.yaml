@@ -1,0 +1,6 @@
+# Analyst agent (phase 7). Not implemented yet.
+model: claude-opus-5-5
+prompt_version: none
+monthly_cost_cap_usd: 20
+run_on: [confirmed, failed]
+min_severity: watch

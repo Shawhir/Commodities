@@ -1,0 +1,65 @@
+# Key lines. Manual lines carry active_from so history replays never judge a line before it existed.
+# User-set; edit only in yearly review. Seeded from the Oct 2026 snapshot (section 7).
+defaults:
+  buffer_pct: 1.0
+  approach_multiple: 2.0
+  fail_window_closes: 10      # daily closes back inside within this many closes => failed
+  fail_window_monthly_closes: 2   # same rule when only monthly closes exist (research history)
+
+gold:
+  - id: gold_jun26_low
+    type: manual_price
+    value_usd: 3955
+    direction: below
+    buffer_pct: 1.0
+    severity: important
+    active_from: 2026-07-01   # the low was only known after it happened
+    note: "2026 low. A confirmed break suggests the post-peak fall has a second leg."
+  - id: gold_jan26_peak
+    type: manual_price
+    value_usd: 5500
+    direction: above
+    severity: watch
+    active_from: 2026-02-01
+    note: "2026 intraday peak (approximate)."
+  - id: gold_round_4000
+    type: manual_price
+    value_usd: 4000
+    direction: below
+    severity: info
+  - id: gold_round_5000
+    type: manual_price
+    value_usd: 5000
+    direction: above
+    severity: info
+  - id: gold_10m_avg
+    type: derived_ma
+    window_months: 10
+    direction: both
+    severity: important
+  - id: gold_mom_12_1
+    type: signal_zero_cross
+    signal: momentum_12_1
+    direction: both
+    severity: important
+  - id: gold_regime
+    type: regime_change
+    severity: watch
+  - id: gold_stretch_10y
+    type: stretch_percentile
+    measure: dist_10y_avg
+    thresholds: [50, 90]
+    severity: watch
+
+macro:   # needs FRED data (phase 2); declared now, evaluated once the series exist
+  - id: real_yield_jump
+    type: change_bp
+    series: DFII10
+    window_months: 3
+    threshold_bp: 50
+    severity: important
+  - id: fed_hikes_priced
+    type: level
+    series: fed_hikes_priced_12m
+    threshold: 4
+    severity: watch

@@ -1,0 +1,10 @@
+# Geopolitical themes (phase 6). Status is set by the user; the agent may only propose.
+themes:
+  fed_real_rates:      {label: "Fed and real rates", drivers: [real_yields, dollar], usual_effect: "hawkish -> negative", confirm_with: [DFII10, fed_hikes_priced_12m]}
+  cb_diversification:  {label: "Central bank reserve diversification", drivers: [official_demand], usual_effect: "rising buying -> positive", confirm_with: [cb_purchases_12m]}
+  middle_east_iran:    {label: "Middle East / Iran conflict", drivers: [safe_haven, oil, inflation, fed], usual_effect: "escalation -> short-term positive; via oil and Fed can turn negative", confirm_with: [gpr_daily]}
+  sanctions_freezes:   {label: "Sanctions and reserve freezes", drivers: [official_demand], usual_effect: "positive, structural", confirm_with: [cb_purchases_12m]}
+  fiscal_dominance:    {label: "Fiscal dominance and debt", drivers: [policy_easing, debasement], usual_effect: "positive, slow", confirm_with: [breakeven_10y]}
+  trade_tariffs:       {label: "Trade wars and tariffs", drivers: [dollar, growth, physical_flows], usual_effect: mixed, confirm_with: [swiss_exports]}
+  china_demand:        {label: "China demand", drivers: [physical_demand, etf_demand, sge_premium], usual_effect: "rising -> positive", confirm_with: [sge_premium]}
+  chf_snb:             {label: "Swiss franc and SNB", drivers: [chf_returns], usual_effect: "strong franc -> lower CHF returns", confirm_with: [usdchf_monthly]}
