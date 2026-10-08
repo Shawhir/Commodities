@@ -1,66 +1,112 @@
-## Decision brief (data to 2026-09)
+## This month at a glance (prices to 2026-09)
 
-**Gold reads Up in francs and Sideways in dollars. The trend rules disagree (momentum In, 10-month Out). The backdrop has 2 usual headwinds and 1 support.**
+**In francs, gold has been rising steadily; in dollars it has been going sideways. Your two trend rules disagree. Of the outside influences, 2 usually push gold down and 1 usually pushes it up.**
 
-Conditions, not instructions. Monthly averages stand in for closes.
+What your rules say and what would change them. Not advice.
 
-### Rules
-- **CHF, 12-1 momentum: In** (+22.0%). October 2026 close: already fixed at +9.4% (In), from September 2026's average. November 2026 close: turns Out if October 2026's average is below 3,285. December 2026 close: turns Out if November 2026's average is below 3,434. If prices stay at 3,541, it turns Out on the January 2027 close.
-- **CHF, 10-month rule: Out.** Turns In if October 2026's average is above 3,617 (today's 10-month average: 3,598).
-- **USD, 12-1 momentum: In** (+20.3%). October 2026 close: already fixed at +6.4% (In), from September 2026's average. November 2026 close: turns Out if October 2026's average is below 4,087. December 2026 close: turns Out if November 2026's average is below 4,309. If prices stay at 4,319, it turns Out on the January 2027 close.
-- **USD, 10-month rule: Out.** Turns In if October 2026's average is above 4,552 (today's 10-month average: 4,528).
+### Your two trend rules
+- **CHF, Rule 1: the 12-month trend: ON.** ON when gold costs more than it did a year ago (leaving out the latest month). Right now it is 22% higher, so the rule is ON.
+  - End of October 2026: stays ON whatever happens (already set by September 2026's average price).
+  - End of November 2026: switches OFF if gold's average price in October 2026 is below 3,285.
+  - End of December 2026: switches OFF if gold's average price in November 2026 is below 3,434.
+  - If gold stays around 3,541, this rule switches OFF at the end of January 2027.
+- **CHF, Rule 2: the 10-month average: OFF.** ON when gold's price is above its average of the last 10 months. Now gold is 3,541, below its average of 3,598, so the rule is OFF.
+  - Switches ON if gold's average price in October 2026 is above 3,617.
+- **USD, Rule 1: the 12-month trend: ON.** ON when gold costs more than it did a year ago (leaving out the latest month). Right now it is 20% higher, so the rule is ON.
+  - End of October 2026: stays ON whatever happens (already set by September 2026's average price).
+  - End of November 2026: switches OFF if gold's average price in October 2026 is below 4,087.
+  - End of December 2026: switches OFF if gold's average price in November 2026 is below 4,309.
+  - If gold stays around 4,319, this rule switches OFF at the end of January 2027.
+- **USD, Rule 2: the 10-month average: OFF.** ON when gold's price is above its average of the last 10 months. Now gold is 4,319, below its average of 4,528, so the rule is OFF.
+  - Switches ON if gold's average price in October 2026 is above 4,552.
 
-### Regime
-- **CHF: Up** (12m +21.3%, ER 0.34). October 2026 average: Down below 2,459; Sideways 2,459 to 3,752; Up above 3,752.
-- **USD: Sideways** (12m +17.7%, ER 0.24). October 2026 average: Down below 2,943; Sideways 2,943 to 4,947; Up above 4,947.
+### Market mood
+- **In francs: rising steadily.** Depending on gold's average price in October 2026: falling steadily if below 2,459; going sideways if between 2,459 and 3,752; rising steadily if above 3,752.
+- **In dollars: going sideways.** Depending on gold's average price in October 2026: falling steadily if below 2,943; going sideways if between 2,943 and 4,947; rising steadily if above 4,947.
 
-### Nearest key lines
+### Price levels to watch
 
-| Line | Currency | State | Gap | Note |
+| Level | Currency | Status | Gold vs level | What it means |
 |---|---|---|---|---|
-| 10-month average | CHF | intact | -1.6% |  |
-| 10-month average | USD | intact | -4.6% |  |
-| June 2026 low | CHF | intact | +9.2% | 2026 low. A confirmed break suggests the post-peak fall has a second leg. |
-| June 2026 low | USD | intact | +9.2% | 2026 low. A confirmed break suggests the post-peak fall has a second leg. |
-| January 2026 peak | CHF | intact | -21.5% | 2026 intraday peak (approximate). |
-| January 2026 peak | USD | intact | -21.5% | 2026 intraday peak (approximate). |
+| 10-month average (rule 2 switch point) | CHF | not crossed | -1.6% |  |
+| 10-month average (rule 2 switch point) | USD | not crossed | -4.6% |  |
+| June 2026 low | CHF | not crossed | +9.2% | 2026 low. A confirmed break suggests the post-peak fall has a second leg. |
+| June 2026 low | USD | not crossed | +9.2% | 2026 low. A confirmed break suggests the post-peak fall has a second leg. |
+| January 2026 peak | CHF | not crossed | -21.5% | 2026 intraday peak (approximate). |
+| January 2026 peak | USD | not crossed | -21.5% | 2026 intraday peak (approximate). |
 
-### Pressures
+### What is pushing gold up or down
 
-| Factor | Reading | Usually | Why |
+| What | Now | Usually pushes gold | Why |
 |---|---|---|---|
-| Fed direction | hiking (policy rate 4.00%) | headwind | Higher policy rates raise the cost of holding a non-yielding asset |
-| 10-year real yield (TIPS) | 2.92%, +0.98 pp over 6 months | headwind | Rising real yields usually weigh on gold; falling ones help |
-| Broad dollar | -0.6% over 6 months | neutral | A stronger dollar usually lowers the dollar price of gold |
-| Geopolitical risk | 85th percentile of 10 years | support | High geopolitical risk tends to lift safe-haven demand; the effect often fades when tensions ease |
-| Oil (Brent) | +68% over 12 months | mixed | An oil surge lifts inflation hedging demand, but can also push the Fed to hike |
-| Speculative positioning (CFTC managed money) | 51st percentile of 3 years, falling vs last month | neutral | Crowded longs can unwind sharply; washed-out positioning leaves room to rebuild |
-| Equity stress (VIX) | 37th percentile of 10 years | neutral | Stress can lift safe-haven demand, or force selling of gold to raise cash |
-| Swiss franc vs dollar | USD/CHF +3.0% over 12 months | neutral | A stronger franc cuts the CHF value of dollar-priced gold |
-| US inflation | 3.4% y/y (published a month late) | mixed | High inflation supports gold as a hedge, but keeps the Fed hawkish |
+| US interest rates (the Fed) | raising rates, now 4.00% | down | Gold pays no interest, so higher rates make it less attractive to hold |
+| Interest rates after inflation | 2.92%, up 0.98 points in 6 months | down | This is the return on safe bonds after inflation; when it rises, gold usually struggles |
+| US dollar | down 0.6% in 6 months | little effect now | Gold is priced in dollars; a stronger dollar usually means a lower gold price |
+| War and political risk | higher than 85% of the last 10 years | up | People turn to gold as a safe place in times of conflict; the effect often fades when tensions ease |
+| Oil price | up 68% in 12 months | either way | Expensive oil raises inflation, which helps gold, but can make the Fed raise rates, which hurts it |
+| Speculators' bets on gold | middling (higher than 51% of the last 3 years), shrinking this month | little effect now | When almost everyone has already bet on gold, a rush to exit can cause sharp drops |
+| Stock market fear | calm (higher than 37% of the last 10 years) | little effect now | Panic can send people to gold, or force them to cash in gold to raise money |
+| Swiss franc | franc weaker against the dollar by 3.0% in 12 months | little effect now | A stronger franc lowers what your gold is worth in francs, even if gold's dollar price is unchanged |
+| US inflation | 3.4% a year (figures arrive a month late) | either way | High inflation makes gold attractive as protection, but keeps the Fed raising rates |
 
-### Conflicts
-- In CHF, the two trend rules disagree: 12-1 momentum is In, the 10-month rule is Out.
-- In USD, the two trend rules disagree: 12-1 momentum is In, the 10-month rule is Out.
-- The regime label differs by currency: Up in CHF, Sideways in USD. The section 8 study labels on USD.
-- In CHF, gold is stretched (97th percentile vs its 10-year average) while the 10-month rule is Out: far above the long-run trend, below the short-run one.
-- In USD, gold is stretched (91st percentile vs its 10-year average) while the 10-month rule is Out: far above the long-run trend, below the short-run one.
-- Backdrop pulls both ways. Usual headwinds: Fed direction, 10-year real yield (TIPS). Usual supports: Geopolitical risk.
+### Mixed signals
+- In CHF, your two trend rules disagree: rule 1 (12-month trend) is ON, rule 2 (10-month average) is OFF.
+- In USD, your two trend rules disagree: rule 1 (12-month trend) is ON, rule 2 (10-month average) is OFF.
+- The market mood depends on the currency: rising steadily in francs but going sideways in dollars. The franc's moves against the dollar make the difference.
+- In CHF, gold is far above its 10-year average (higher than 97% of the time since 1971), yet below its 10-month average: high over the long run, slipping in the short run.
+- In USD, gold is far above its 10-year average (higher than 91% of the time since 1971), yet below its 10-month average: high over the long run, slipping in the short run.
+- Outside influences pull both ways. Usually pushing gold down: US interest rates (the Fed), Interest rates after inflation. Usually pushing gold up: War and political risk.
 
-### Coming up
-- 2026-10-09 to 2026-10-12: CFTC Commitments of Traders (2026-10-06). Managed-money positioning in gold and silver futures.
-- 2026-10-09 to 2026-10-16: US consumer prices (CPI) (2026-09). Inflation drives real yields, the Fed path and gold's opportunity cost.
-- 2026-10-20 to 2026-11-09: WGC Gold Demand Trends (2026-Q3). Central bank buying, ETF flows, jewellery and bar demand by quarter.
-- 2026-10-28: FOMC rate decision (2026-10-28). Rate decisions and projections set real yields and the dollar.
-- 2026-10-30 to 2026-11-01: China official manufacturing PMI (2026-10). Chinese growth and demand for physical gold and industrial silver.
-- 2026-11-01 to 2026-11-15: Geopolitical Risk Index update (2026-10). Geopolitical risk gauge for the geopolitical layer.
-- 2026-11-06: US employment report (2026-10). Labour data moves the expected Fed path; payrolls are revised for two months, so revisions matter.
+### Dates to know
+- 2026-10-09 to 2026-10-12: Speculators' positions report (CFTC). Shows how heavily speculators are betting on gold and silver.
+- 2026-10-09 to 2026-10-16: US inflation figures. Shows whether prices are rising faster or slower, which steers US interest rates.
+- 2026-10-20 to 2026-11-09: World Gold Council demand report. Who bought gold last quarter: central banks, funds, jewellers, investors.
+- 2026-10-28: US central bank (Fed) rate decision. Sets US interest rates, one of the biggest influences on gold.
+- 2026-10-30 to 2026-11-01: China factory survey. A guide to Chinese demand for gold jewellery and for silver in industry.
+- 2026-11-01 to 2026-11-15: War and political risk index update. Monthly update of the index that measures geopolitical tension.
+- 2026-11-06: US jobs report. A strong jobs market makes rate rises more likely; earlier months often get revised.
 
-### Not covered yet
-- No allocation targets or bands set (config/allocation.yaml), so the brief cannot say whether holdings are inside their bands.
-- No decision journal yet, so no open theses or invalidation conditions are checked against the lines.
-- Prices are monthly averages; daily closes (phase 2) will make line breaks and rule flips exact.
-- Central bank buying and ETF flows are not in yet (WGC figures entered by hand, data/manual/).
+### What this page can't tell you yet
+- You haven't written down your plan yet (how much gold and silver you want), so this page can't tell you whether you've drifted from it.
+- There's no decision diary yet, so the page can't check your past decisions against these price levels.
+- Prices here are monthly averages, not daily closing prices, so the switch levels are close but not exact.
+- Gold buying by central banks and by funds isn't included yet; those figures have to be typed in from World Gold Council reports.
+
+## What happened after setups like this
+
+Counts from history, not a forecast. Each line: how often gold was higher a year later, against all months.
+
+- **Rule 1 ON and rule 2 OFF**: higher a year later in 48% of 65 months (22 separate spells), against 60% for all months. For context only.
+- **Market mood going sideways**: higher a year later in 52% of 299 months (37 separate spells), against 60% for all months. For context only.
+- **Gold vs its 10-year average in the top 10% of history**: higher a year later in 84% of 86 months (10 separate spells), against 60% for all months. For context only.
+- **Rule 1 ON and rule 2 OFF, mood going sideways**: higher a year later in 40% of 57 months (19 separate spells), against 60% for all months. For context only.
+
+## Technical picture (daily prices)
+
+**Gold** (to 2026-10-08, COMEX futures, front month (Yahoo Finance)):
+- Momentum gauge (0 to 100): 37. On the low side of normal. Above 70 is often called overbought, below 30 oversold.
+- Short-term trend gauge: pointing down. The short-term trend has pointed down for 27 trading days.
+- Daily range: inside its normal range. Price is inside its normal range for the last 20 days. The range is wide compared with usual, meaning bigger daily swings.
+- 200-day average: 8.5% below. Price is 8.5% below its average of the last 200 trading days ($4,549), a common long-term trend line.
+- 50-day vs 200-day average: 50 below 200. The 50-day average is below the 200-day average, and has been for 69 trading days. Traders call this a death cross.
+- Typical daily move: 2.1% a day. Gold has been moving about 2.1% a day, more than its usual 1.2%.
+- Past year's range: 22% below the high. Price is 22% below the past year's highest close ($5,318) and 5% above the lowest ($3,960).
+- After "Short-term trend gauge pointing down": higher 3 months later in 65% of 3096 days (96 spells), against 64% for all days. For context only.
+- After "Price below its 200-day average": higher 3 months later in 62% of 1708 days (44 spells), against 64% for all days. For context only.
+- After "50-day average below the 200-day (often called a death cross)": higher 3 months later in 65% of 1681 days (34 spells), against 64% for all days. For context only.
+
+**Silver** (to 2026-10-08, COMEX futures, front month (Yahoo Finance)):
+- Momentum gauge (0 to 100): 37. On the low side of normal. Above 70 is often called overbought, below 30 oversold.
+- Short-term trend gauge: pointing down. The short-term trend has pointed down for 26 trading days.
+- Daily range: near the bottom of its normal range. Price is near the bottom of its normal range for the last 20 days. The range is wide compared with usual, meaning bigger daily swings.
+- 200-day average: 17.8% below. Price is 17.8% below its average of the last 200 trading days ($73), a common long-term trend line.
+- 50-day vs 200-day average: 50 below 200. The 50-day average is below the 200-day average, and has been for 59 trading days. Traders call this a death cross.
+- Typical daily move: 2.3% a day. Gold has been moving about 2.3% a day, more than its usual 1.7%.
+- Past year's range: 48% below the high. Price is 48% below the past year's highest close ($115) and 28% above the lowest ($47).
+- After "Short-term trend gauge pointing down": higher 3 months later in 59% of 3032 days (95 spells), against 56% for all days. For context only.
+- After "Price below its 200-day average": higher 3 months later in 61% of 2530 days (64 spells), against 56% for all days. For context only.
+- After "50-day average below the 200-day (often called a death cross)": higher 3 months later in 57% of 2573 days (50 spells), against 56% for all days. For context only.
+
 
 # Weekly summary (data to 2026-09)
 
@@ -112,8 +158,8 @@ _Descriptive, not predictive. This tool does not forecast prices or give instruc
 | gold_regime | - | Sideways | - | 2026-09-30 | nan | nan | watch |
 | gold_10m_avg | USD | intact | above | 2026-09-30 | 4,319 | 4,528 | important |
 | gold_10m_avg | CHF | intact | above | 2026-09-30 | 3,541 | 3,598 | important |
-- real_yield_jump: needs series DFII10 (not ingested yet)
-- fed_hikes_priced: needs series fed_hikes_priced_12m (not ingested yet)
+- real_yield_jump: macro line type change_bp on DFII10 not evaluated yet
+- fed_hikes_priced: macro line type level on fed_hikes_priced_12m not evaluated yet
 
 ## Closest past months (groups with data)
 
@@ -121,9 +167,9 @@ _Descriptive, not predictive. This tool does not forecast prices or give instruc
 
 | Month | Distance | Key moment | Next 12m USD | Next 12m CHF | Main differences |
 |---|---|---|---|---|---|
-| 2006-07 | 2.76 |  | +4.9% | +2.3% | distance from 10-month average: +13% then vs -5% now; oil (Brent) 12-month change: +28% then vs +68% now |
-| 2008-08 | 2.98 | Financial crisis liquidation (2 months away) | +13.1% | +11.5% | geopolitical risk percentile (10y): 41 then vs 85 now; USD/CHF 12-month change: -10% then vs +3% now; Fed direction: cutting then, hiking now |
-| 2012-02 | 3.01 | 2011 peak (5 months away) | -6.7% | -5.7% | oil (Brent) 12-month change: +15% then vs +68% now; geopolitical risk percentile (10y): 46 then vs 85 now; Fed direction: on hold then, hiking now |
+| 2006-07 | 2.76 | ['cftc_mm_pct'] | +4.9% | +2.3% | gold vs its 10-month average: +13% then vs -5% now; oil price change over 12 months: +28% then vs +68% now |
+| 2008-08 | 2.98 |  | +13.1% | +11.5% | war and political risk (0 to 100 scale): 41 then vs 85 now; francs per dollar, change over 12 months: -10% then vs +3% now; US interest rates: falling then, rising now |
+| 2012-02 | 3.01 |  | -6.7% | -5.7% | oil price change over 12 months: +15% then vs +68% now; war and political risk (0 to 100 scale): 46 then vs 85 now; US interest rates: steady then, rising now |
 
 ## Not yet available
 
@@ -141,12 +187,16 @@ _Descriptive, not predictive. This tool does not forecast prices or give instruc
 | dollar_broad | 2026-10 | ok |
 | fed_funds_eff | 2026-10 | ok |
 | fed_target_upper | 2026-10 | ok |
+| gold_fut_daily | 2026-10 | ok |
+| gold_spot_daily | - | never succeeded |
 | gold_usd_monthly | 2026-09 | ok |
 | gold_vol | 2026-10 | ok |
 | gpr_daily | 2026-10 | ok |
 | gpr_monthly | 2026-09 | ok |
 | manual_reports | - | ok |
 | real_yield_10y | 2026-10 | ok |
+| silver_fut_daily | 2026-10 | ok |
+| silver_spot_daily | - | never succeeded |
 | us_10y_yield_monthly | 2026-08 | stale (68 days) |
 | us_core_cpi | 2026-08 | stale (68 days) |
 | us_cpi_fred | 2026-08 | stale (68 days) |
