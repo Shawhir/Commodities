@@ -16,6 +16,8 @@
 
 reports:
   us_cpi:
+    plain_name: "US inflation figures"
+    plain_why: "Shows whether prices are rising faster or slower, which steers US interest rates."
     name: US consumer prices (CPI)
     publisher: US Bureau of Labor Statistics
     kind: data
@@ -30,6 +32,8 @@ reports:
     why: Inflation drives real yields, the Fed path and gold's opportunity cost.
 
   us_jobs:
+    plain_name: "US jobs report"
+    plain_why: "A strong jobs market makes rate rises more likely; earlier months often get revised."
     name: US employment report
     publisher: US Bureau of Labor Statistics
     kind: data
@@ -45,6 +49,8 @@ reports:
     why: Labour data moves the expected Fed path; payrolls are revised for two months, so revisions matter.
 
   fomc:
+    plain_name: "US central bank (Fed) rate decision"
+    plain_why: "Sets US interest rates, one of the biggest influences on gold."
     name: FOMC rate decision
     publisher: Federal Reserve
     kind: event
@@ -59,6 +65,8 @@ reports:
     why: Rate decisions and projections set real yields and the dollar.
 
   snb:
+    plain_name: "Swiss National Bank rate decision"
+    plain_why: "Moves the franc, which changes what your gold is worth in francs."
     name: SNB monetary policy assessment
     publisher: Swiss National Bank
     kind: event
@@ -74,6 +82,8 @@ reports:
     why: Sets the franc's direction and so the CHF return on gold.
 
   cn_pmi:
+    plain_name: "China factory survey"
+    plain_why: "A guide to Chinese demand for gold jewellery and for silver in industry."
     name: China official manufacturing PMI
     publisher: National Bureau of Statistics of China
     kind: data
@@ -87,6 +97,8 @@ reports:
     why: Chinese growth and demand for physical gold and industrial silver.
 
   cftc_cot:
+    plain_name: "Speculators' positions report (CFTC)"
+    plain_why: "Shows how heavily speculators are betting on gold and silver."
     name: CFTC Commitments of Traders
     publisher: US Commodity Futures Trading Commission
     kind: data
@@ -102,6 +114,8 @@ reports:
     why: Managed-money positioning in gold and silver futures.
 
   wgc_gdt:
+    plain_name: "World Gold Council demand report"
+    plain_why: "Who bought gold last quarter: central banks, funds, jewellers, investors."
     name: WGC Gold Demand Trends
     publisher: World Gold Council
     kind: study
@@ -113,6 +127,8 @@ reports:
     why: Central bank buying, ETF flows, jewellery and bar demand by quarter.
 
   wgc_cb_survey:
+    plain_name: "Central bank gold survey (World Gold Council)"
+    plain_why: "What central banks say they plan to do with their gold reserves."
     name: WGC Central Bank Gold Reserves Survey
     publisher: World Gold Council
     kind: study
@@ -124,6 +140,8 @@ reports:
     why: Central banks' stated intentions for gold reserves.
 
   silver_survey:
+    plain_name: "World Silver Survey"
+    plain_why: "The yearly picture of silver supply and demand."
     name: World Silver Survey
     publisher: Silver Institute
     kind: study
@@ -135,6 +153,8 @@ reports:
     why: Silver supply, demand and the market deficit.
 
   imf_cofer:
+    plain_name: "IMF report on central bank reserves"
+    plain_why: "How much of the world's reserves are held in dollars, a slow influence on gold."
     name: IMF COFER reserve composition
     publisher: International Monetary Fund
     kind: study
@@ -146,6 +166,8 @@ reports:
     why: The dollar's share of global reserves, a slow driver of official gold demand.
 
   gpr:
+    plain_name: "War and political risk index update"
+    plain_why: "Monthly update of the index that measures geopolitical tension."
     name: Geopolitical Risk Index update
     publisher: Caldara and Iacoviello
     kind: data

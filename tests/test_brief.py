@@ -57,3 +57,16 @@ def test_brief_has_no_instruction_language(gold, fx, thresholds):
 def test_language_check_catches_instructions():
     fake = {"headline": "You should buy now.", "conflicts": [], "gaps": [], "rules": {}, "regimes": {}, "pressures": []}
     assert set(brief.check_language(fake)) >= {"should", "buy"}
+
+
+def test_every_plain_item_has_a_technical_version(gold, fx, thresholds):
+    from pmdash import data  # noqa: F401
+    st = state.build(gold, fx)
+    b = brief.build(gold, fx, st, {}, [], [], {"CHF": 97, "USD": 91}, thresholds, date(2026, 10, 8))
+    assert b["headline_tech"]
+    for r in b["rules"].values():
+        assert r["momentum"]["tech"] and r["ma"]["tech"] and r["momentum"]["if_flat_tech"]
+        assert all(s["tech"] for s in r["momentum"]["steps"])
+    assert all(x["tech"] for x in b["regimes"].values())
+    assert all(c["tech"] for c in b["conflicts"]) and all(g["tech"] for g in b["gaps"])
+    assert all(p["tech"] for p in b["pressures"])

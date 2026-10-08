@@ -273,7 +273,9 @@ def _payload(con, args, include_oos: bool):
     stored = {(r[0], r[1]): r[2] for r in con.execute("SELECT report_id, period, detail FROM releases").fetchall()}
     rspec = config.load("reports")["reports"]
     reports = [{**r.as_dict(), "detail": stored.get((r.report_id, r.period)) or r.detail,
-                "why": rspec.get(r.report_id, {}).get("why", "")} for r in rels]
+                "why": rspec.get(r.report_id, {}).get("why", ""),
+                "plain_name": rspec.get(r.report_id, {}).get("plain_name", r.name),
+                "plain_why": rspec.get(r.report_id, {}).get("plain_why", "")} for r in rels]
     fx_daily = db.get_series(con, "usdchf_daily", as_of=args.as_of)
     return build_payload(gold, fx, _health(con), data.load_macro(con, args.as_of), include_oos=include_oos,
                          reports=reports, fx_daily=fx_daily if len(fx_daily) else None)

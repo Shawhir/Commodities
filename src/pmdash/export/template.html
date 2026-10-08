@@ -75,6 +75,14 @@ body { background: var(--bg); color: var(--fg); font-family: var(--font-body); f
 .note { color: var(--muted); font-size: 13px; max-width: 75ch; }
 .panel { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; min-width: 0; }
 
+/* plain-language text with a technical version on hover / tap */
+.jg, .jg-demo { text-decoration: underline dotted var(--faint); text-underline-offset: 3px; text-decoration-thickness: 1px; cursor: help; }
+.jg:hover, .jg:focus-visible, .jg.on { text-decoration-color: var(--gold); outline: none; }
+.jgtip { box-sizing: border-box; position: fixed; z-index: 10; max-width: min(420px, calc(100vw - 32px)); background: var(--panel); color: var(--fg);
+  border: 1px solid var(--line); border-left: 3px solid var(--gold); border-radius: var(--radius); padding: 8px 10px;
+  font: 12px/1.45 var(--font-data); box-shadow: 0 6px 18px rgba(0,0,0,0.16); pointer-events: none; }
+.jgtip b { display: block; font: 600 10px var(--font-body); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 3px; }
+
 /* decision brief */
 .brief { display: grid; gap: 14px; }
 .brief-head { font-family: var(--font-display); font-size: 19px; line-height: 1.35; max-width: 70ch; }
@@ -227,38 +235,39 @@ table.t tr:last-child td { border-bottom: 0; }
 
   <section class="sec" id="brief">
     <div class="sec-head">
-      <div><div class="eyebrow">Decision brief · conditions, not instructions</div><h2 id="brief-head">—</h2></div>
+      <div><div class="eyebrow">This month at a glance · what your rules say, not advice</div><h2 id="brief-head">—</h2></div>
     </div>
+    <p class="note">Hover over (or tap) any <span class="jg-demo">underlined text</span> to see the technical version.</p>
     <div class="brief">
       <div class="brief-grid">
         <div class="panel brief-card">
-          <div class="eyebrow">Your trend rules and what would flip them</div>
+          <div class="eyebrow">Your two trend rules: where they stand and what would switch them</div>
           <div id="brief-rules"></div>
         </div>
         <div class="panel brief-card">
-          <div class="eyebrow">Regime next month, by next month's average price</div>
+          <div class="eyebrow">Market mood next month, depending on gold's average price</div>
           <div id="brief-regime"></div>
-          <div class="eyebrow" style="margin-top:6px">Nearest key lines</div>
+          <div class="eyebrow" style="margin-top:6px">Price levels to watch</div>
           <div class="tbl-wrap"><table class="t" id="brief-lines"></table></div>
         </div>
       </div>
       <div class="panel brief-card">
-        <div class="eyebrow">What is pulling on gold</div>
+        <div class="eyebrow">What is pushing gold up or down</div>
         <div class="tbl-wrap"><table class="t" id="press-table"></table></div>
       </div>
       <div class="brief-grid">
         <div class="panel brief-card">
-          <div class="eyebrow">Conflicts between readings</div>
+          <div class="eyebrow">Mixed signals</div>
           <ul class="blist" id="brief-conflicts"></ul>
         </div>
         <div class="panel brief-card">
-          <div class="eyebrow">Coming up</div>
+          <div class="eyebrow">Dates to know</div>
           <ul class="blist" id="brief-upcoming"></ul>
-          <div class="eyebrow" style="margin-top:6px">Not covered yet</div>
+          <div class="eyebrow" style="margin-top:6px">What this page can't tell you yet</div>
           <ul class="blist muted" id="brief-gaps"></ul>
         </div>
       </div>
-      <p class="note">Monthly averages stand in for closes until daily prices are ingested. "Usually" describes how a factor has tended to act on gold, not what it will do. Rules and lines come from your config; the brief shows where they stand and never says what to do.</p>
+      <p class="note">Prices are monthly averages, so "end of the month" means that month's average price. "Usually" describes how something has tended to affect gold in the past, not what it will do next. The rules and price levels come from your own settings; this section shows where they stand and never tells you what to do.</p>
     </div>
   </section>
 
@@ -917,94 +926,141 @@ table.t tr:last-child td { border-bottom: 0; }
   }
 
   // ---------- decision brief ----------
-  function money0(x, cur) { return money(x, cur); }
+  // Plain text on the page; the technical version shows in a pop-up on hover, keyboard focus or tap.
+  var jgTip = null, jgPinned = null;
+  function jgShow(node) {
+    if (!jgTip) { jgTip = el("div", { class: "jgtip", role: "tooltip", hidden: "" }); document.body.appendChild(jgTip); }
+    clear(jgTip); jgTip.appendChild(el("b", null, "Technical version")); jgTip.appendChild(document.createTextNode(node.dataset.tech));
+    jgTip.hidden = false;
+    var r = node.getBoundingClientRect(), tw = jgTip.offsetWidth, th = jgTip.offsetHeight;
+    var left = Math.min(Math.max(16, r.left), window.innerWidth - tw - 16);
+    var top = r.bottom + 6; if (top + th > window.innerHeight - 8) top = Math.max(8, r.top - th - 6);
+    jgTip.style.left = left + "px"; jgTip.style.top = top + "px";
+  }
+  function jgHide() { if (jgTip) jgTip.hidden = true; if (jgPinned) jgPinned.classList.remove("on"); jgPinned = null; }
+  function jg(tag, attrs, text, tech) {
+    var e = el(tag, attrs, text);
+    if (tech) {
+      e.classList.add("jg"); e.dataset.tech = tech; e.tabIndex = 0;
+      e.addEventListener("mouseenter", function () { if (!jgPinned) jgShow(e); });
+      e.addEventListener("mouseleave", function () { if (!jgPinned) jgHide(); });
+      e.addEventListener("focus", function () { jgShow(e); });
+      e.addEventListener("blur", function () { if (jgPinned !== e) jgHide(); });
+      e.addEventListener("click", function (ev) {
+        ev.stopPropagation();
+        if (jgPinned === e) { jgHide(); return; }
+        jgHide(); jgPinned = e; e.classList.add("on"); jgShow(e);
+      });
+    }
+    return e;
+  }
+  document.addEventListener("click", function () { if (jgPinned) jgHide(); });
+  document.addEventListener("keydown", function (ev) { if (ev.key === "Escape") jgHide(); });
+  window.addEventListener("scroll", function () { if (!jgPinned) { if (jgTip) jgTip.hidden = true; } else jgShow(jgPinned); }, { passive: true });
+
+  var MOOD = { Up: "Rising steadily", Sideways: "Going sideways", Down: "Falling steadily" };
+  var STATE_PLAIN = { intact: "not crossed", approaching: "getting close", broken: "crossed", confirmed: "crossed and held", failed: "crossed, then recovered" };
+  var EFFECT_PLAIN = { headwind: "down", support: "up", mixed: "either way", neutral: "little effect now", crowded: "risk of a sharp drop",
+    "washed out": "room to recover", "lowers CHF returns": "down, in francs", "raises CHF returns": "up, in francs" };
+
   function renderBrief() {
     var B = D.brief; if (!B) return;
-    $("brief-head").textContent = B.headline;
+    var h = $("brief-head"); h.textContent = B.headline;
+    if (!h.dataset.tech) { h.remove(); var nh = jg("h2", { id: "brief-head" }, B.headline, B.headline_tech); document.querySelector("#brief .sec-head > div").appendChild(nh); }
     var cur = S.cur, R = B.rules[cur];
     var host = clear($("brief-rules"));
-    [["12-1 momentum", R.momentum], ["10-month average", R.ma]].forEach(function (pair) {
-      var r = pair[1], box = el("div", { class: "rule" });
+    [R.momentum, R.ma].forEach(function (r) {
+      var box = el("div", { class: "rule" });
       var top = el("div", { class: "rule-top" });
-      var name = el("span"); name.appendChild(el("b", null, pair[0])); name.appendChild(document.createTextNode(" · " + cur));
+      var name = el("span"); name.appendChild(el("b", null, r.name)); name.appendChild(document.createTextNode(" · " + cur));
       top.appendChild(name);
-      top.appendChild(el("span", { class: "pill " + (r.state === "In" ? "in" : "out") }, r.state));
+      top.appendChild(jg("span", { class: "pill " + (r.state === "In" ? "in" : "out") }, r.onoff, "Rule state: " + r.state));
       box.appendChild(top);
+      box.appendChild(jg("p", { class: "note" }, r.explain, r.tech));
       var ul = el("ul", { class: "steps" });
       if (r.steps) {
-        r.steps.forEach(function (st) { ul.appendChild(el("li", { class: st.known ? "known" : "" }, st.text)); });
-        ul.appendChild(el("li", null, r.if_flat));
+        r.steps.forEach(function (st) { ul.appendChild(jg("li", { class: st.known ? "known" : "" }, st.text, st.tech)); });
+        ul.appendChild(jg("li", null, r.if_flat, r.if_flat_tech));
       } else {
-        ul.appendChild(el("li", { class: "known" }, r.text));
+        ul.appendChild(jg("li", { class: "known" }, r.text, "Breakeven next-month price = mean of the last 9 monthly averages = " +
+          r.threshold.toFixed(2) + "; SMA10 now " + r.average.toFixed(2)));
       }
       box.appendChild(ul);
       host.appendChild(box);
     });
 
     var rg = clear($("brief-regime")), X = B.regimes[cur];
-    rg.appendChild(el("div", { class: "rule-top" }, null));
-    var t = rg.lastChild; var nm = el("span"); nm.appendChild(el("b", null, "Now: " + X.now));
-    nm.appendChild(document.createTextNode(" · 12m " + pct(X.ret) + ", ER " + X.er.toFixed(2))); t.appendChild(nm);
-    t.appendChild(el("span", { class: "pill r-" + X.now }, X.now));
+    var t = el("div", { class: "rule-top" });
+    var nm = el("span"); nm.appendChild(el("b", null, "Now: " + MOOD[X.now].toLowerCase()));
+    nm.appendChild(document.createTextNode(" · " + (X.ret >= 0 ? "up " : "down ") + pct(Math.abs(X.ret)).replace("+", "") + " on a year ago"));
+    t.appendChild(nm);
+    t.appendChild(jg("span", { class: "pill r-" + X.now }, MOOD[X.now], "Regime label: " + X.now + " (r12 " + pct(X.ret) + ", efficiency ratio " + X.er.toFixed(2) + ")"));
+    rg.appendChild(t);
     var last = D.regime.filter(function (r) { return r.currency === cur; })[0].close;
     var cuts = [];
     X.ranges.forEach(function (z) { if (z.high_cut) cuts.push(z.high_cut); });
     var lo = Math.min(last, cuts.length ? cuts[0] : last) * 0.8, hi = Math.max(last, cuts.length ? cuts[cuts.length - 1] : last) * 1.12;
-    var wrap = el("div", { class: "zone-wrap" }), bar = el("div", { class: "zone", role: "img",
-      "aria-label": X.text });
+    var wrap = el("div", { class: "zone-wrap" }), bar = el("div", { class: "zone", role: "img", "aria-label": X.text });
     X.ranges.forEach(function (z) {
       var a = Math.max(lo, z.low_cut || lo), b = Math.min(hi, z.high_cut || hi);
       if (b <= a) return;
-      var sp = el("span", { class: "z-" + z.regime, title: z.regime }); sp.style.width = ((b - a) / (hi - lo) * 100) + "%"; bar.appendChild(sp);
+      var sp = el("span", { class: "z-" + z.regime, title: MOOD[z.regime] }); sp.style.width = ((b - a) / (hi - lo) * 100) + "%"; bar.appendChild(sp);
     });
     var mk = el("i", { class: "mark" }); mk.style.left = ((last - lo) / (hi - lo) * 100) + "%"; bar.appendChild(mk);
     wrap.appendChild(bar);
-    var tl = el("span", { class: "zone-lbl top" }, "Sep " + Math.round(last).toLocaleString("en-US")); tl.style.left = ((last - lo) / (hi - lo) * 100) + "%"; wrap.appendChild(tl);
+    var tl = el("span", { class: "zone-lbl top" }, "Now " + Math.round(last).toLocaleString("en-US")); tl.style.left = ((last - lo) / (hi - lo) * 100) + "%"; wrap.appendChild(tl);
     cuts.forEach(function (c) { var l = el("span", { class: "zone-lbl bot" }, Math.round(c).toLocaleString("en-US")); l.style.left = ((c - lo) / (hi - lo) * 100) + "%"; wrap.appendChild(l); });
     rg.appendChild(wrap);
-    rg.appendChild(el("p", { class: "note" }, X.text + ". Green Up, grey Sideways, red Down; the gold mark is the latest monthly average."));
+    rg.appendChild(jg("p", { class: "note" }, X.text + ". Green: rising steadily. Grey: going sideways. Red: falling steadily. The gold mark is the latest monthly average.", X.tech));
 
     var lt = clear($("brief-lines"));
     var rows = B.near_lines.filter(function (L) { return L.currency === cur; });
-    var hr = el("tr"); [["Line", ""], ["State", ""], ["Gap", "n"]].forEach(function (h) { hr.appendChild(el("th", { class: h[1] }, h[0])); });
+    var hr = el("tr"); [["Level", ""], ["Status", ""], ["Gold vs level", "n"]].forEach(function (h) { hr.appendChild(el("th", { class: h[1] }, h[0])); });
     var th = el("thead"); th.appendChild(hr); lt.appendChild(th);
     var tb = el("tbody");
     rows.forEach(function (L) {
       var tr = el("tr"), c0 = el("td");
-      c0.appendChild(el("div", { class: "line-name" }, L.label));
+      c0.appendChild(jg("div", { class: "line-name" }, L.label + " (" + money(L.line_value, cur) + ")",
+        "Line " + L.id + " (" + (L.type || "") + ", severity " + L.severity + "): value " + L.line_value.toFixed(2) + " " + cur +
+        "; judged on closes with a 1% buffer; state machine intact > approaching > broken > confirmed > failed."));
       if (L.note) c0.appendChild(el("div", { class: "line-note" }, L.note));
       tr.appendChild(c0);
-      var c1 = el("td"); c1.appendChild(el("span", { class: "pill s-" + L.state }, L.state)); tr.appendChild(c1);
-      tr.appendChild(el("td", { class: "n " + cls(L.distance) }, pct(L.distance)));
+      var c1 = el("td"); c1.appendChild(jg("span", { class: "pill s-" + L.state }, STATE_PLAIN[L.state] || L.state, "Line state: " + L.state + (L.watching ? ", watching for a break " + L.watching : ""))); tr.appendChild(c1);
+      tr.appendChild(jg("td", { class: "n " + cls(L.distance) }, pct(Math.abs(L.distance)).replace("+", "") + (L.distance >= 0 ? " above" : " below"),
+        "Distance = close / line - 1 = " + pct(L.distance, 2)));
       tb.appendChild(tr);
     });
     lt.appendChild(tb);
 
     var pt = clear($("press-table"));
-    var h2 = el("tr"); [["Factor", ""], ["Reading", ""], ["Usually", ""], ["Why", ""]].forEach(function (h) { h2.appendChild(el("th", { class: h[1] }, h[0])); });
+    var h2 = el("tr"); [["What", ""], ["Now", ""], ["Usually pushes gold", ""], ["Why", ""]].forEach(function (h) { h2.appendChild(el("th", { class: h[1] }, h[0])); });
     var th2 = el("thead"); th2.appendChild(h2); pt.appendChild(th2);
     var tb2 = el("tbody");
     B.pressures.forEach(function (p) {
       var tr = el("tr");
       tr.appendChild(el("td", { class: "line-name" }, p.factor));
-      tr.appendChild(el("td", { class: "num" }, p.reading));
-      var c = el("td"); c.appendChild(el("span", { class: "fx fx-" + p.usual_effect.split(" ")[0] }, p.usual_effect)); tr.appendChild(c);
+      tr.appendChild(jg("td", null, p.reading, p.tech));
+      var c = el("td"); c.appendChild(jg("span", { class: "fx fx-" + p.usual_effect.split(" ")[0] }, EFFECT_PLAIN[p.usual_effect] || p.usual_effect,
+        "Classification: " + p.usual_effect + " (theme " + p.theme + ")")); tr.appendChild(c);
       tr.appendChild(el("td", { class: "line-note" }, p.why));
       tb2.appendChild(tr);
     });
     pt.appendChild(tb2);
 
     var cf = clear($("brief-conflicts"));
-    (B.conflicts.length ? B.conflicts : ["No conflicting readings."]).forEach(function (c) { cf.appendChild(el("li", null, c)); });
+    if (!B.conflicts.length) cf.appendChild(el("li", null, "No mixed signals right now."));
+    B.conflicts.forEach(function (c) { cf.appendChild(jg("li", null, c.text, c.tech)); });
     var up = clear($("brief-upcoming"));
     B.upcoming.forEach(function (r) {
       var when = r.window_start === r.window_end ? r.window_start : r.window_start + " to " + r.window_end;
-      var li = el("li"); li.appendChild(el("b", null, r.name)); li.appendChild(document.createTextNode(" (" + r.period + "), " + when + (r.why ? ". " + r.why : "")));
+      var li = jg("li", null, null, r.name + " (" + r.period + "), window " + when + ". " + (r.why || ""));
+      li.appendChild(el("b", null, r.plain_name || r.name));
+      li.appendChild(document.createTextNode(", " + when + (r.plain_why ? ". " + r.plain_why : "")));
       up.appendChild(li);
     });
-    if (!B.upcoming.length) up.appendChild(el("li", null, "Nothing scheduled in the calendar window."));
+    if (!B.upcoming.length) up.appendChild(el("li", null, "Nothing scheduled in the next few weeks."));
     var gp = clear($("brief-gaps"));
-    B.gaps.forEach(function (g) { gp.appendChild(el("li", null, g)); });
+    B.gaps.forEach(function (g) { gp.appendChild(jg("li", null, g.text, g.tech)); });
   }
 
   // ---------- footer ----------
