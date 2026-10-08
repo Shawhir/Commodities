@@ -749,8 +749,11 @@ table.t tr:last-child td { border-bottom: 0; }
     var H = narrow ? 260 : 340, m = { l: narrow ? 46 : 58, r: narrow ? 10 : 132, t: 12, b: 26 };
     var lines = D.manual_lines.map(function (L) {
       var from = L.active_from ? L.active_from.slice(0, 7) : "";
-      return { label: L.label, id: L.id, vals: fx.map(function (f, i) {
+      var recent = months.length > 36 ? months[months.length - 36] : months[0];   // levels are current references: last 3 years only
+      var short = L.label.replace("Round number ", "").replace("2026 ", "").replace(" (approximate)", "");
+      return { label: L.label, short: short, id: L.id, vals: fx.map(function (f, i) {
         if (from && months[i] < from) return null;           // a line is not drawn before it existed
+        if (months[i] < recent) return null;
         return cur === "USD" ? L.value_usd : (f ? L.value_usd * f : null); }) };
     });
     var vals = px.concat(ma).filter(function (v) { return v !== null; });
@@ -798,6 +801,13 @@ table.t tr:last-child td { border-bottom: 0; }
       var d = L.vals.map(function (v, i) { return v ? (i && L.vals[i - 1] ? "L" : "M") + x(i).toFixed(1) + "," + y(v).toFixed(1) : ""; }).join("");
       svg.appendChild(sv("path", { d: d, fill: "none", stroke: "var(--muted)", "stroke-width": 1, "stroke-dasharray": "2 4", "clip-path": "url(#" + clipId + ")" }));
       labels.push({ text: L.label, y: y(L.vals[L.vals.length - 1]) + 4 });
+      if (narrow) {                                           // no right margin on phones: label inside the plot
+        var i0 = L.vals.findIndex(function (v) { return v; });
+        var atEdge = x(i0) - m.l < 50;                      // line starts at the left edge: label inside, above it
+        var lt = sv("text", { x: atEdge ? x(i0) + 2 : x(i0) - 4, y: atEdge ? y(L.vals[i0]) - 4 : y(L.vals[i0]) + 3,
+          "text-anchor": atEdge ? "start" : "end", fill: "var(--muted)", "font-size": 10, "font-family": "var(--font-body)" });
+        lt.textContent = L.short; svg.appendChild(lt);
+      }
     });
     if (!narrow) {
       var pxLast = y(px[k - 1]);
@@ -844,7 +854,7 @@ table.t tr:last-child td { border-bottom: 0; }
     hit.addEventListener("pointermove", move); hit.addEventListener("pointerdown", move); hit.addEventListener("pointerleave", leave);
 
     var lg = clear($("price-legend"));
-    [["sw", "var(--gold)", "Average price each month"], ["sw dash", "var(--fg)", "Average of the last 10 months"], ["sw dot", "var(--muted)", "Price levels to watch" + (cur === "CHF" ? " (dollar levels in francs at each month's rate)" : "")],
+    [["sw", "var(--gold)", "Average price each month"], ["sw dash", "var(--fg)", "Average of the last 10 months"], ["sw dot", "var(--muted)", "Price levels to watch, last 3 years" + (cur === "CHF" ? " (dollar levels converted to francs each month, so they wobble with the exchange rate)" : "")],
      ["sw box", "var(--up-band)", "Rising steadily"], ["sw box", "var(--side-band)", "Going sideways"], ["sw box", "var(--down-band)", "Falling steadily"]].forEach(function (L) {
       var s = el("span"), i = el("i", { class: L[0] });
       if (L[0] === "sw box") i.style.background = L[1]; else { i.style.borderTopColor = L[1]; if (L[0] !== "sw") i.style.borderTopStyle = L[0] === "sw dash" ? "dashed" : "dotted"; }
