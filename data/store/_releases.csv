@@ -1,19 +1,19 @@
 report_id,period,expected_start,expected_end,received_at,status,detail
-cftc_cot,2026-08-04,2026-08-07,2026-08-10,,overdue,Source not ingested yet (needs a run where the official source is reachable)
-cftc_cot,2026-08-11,2026-08-14,2026-08-17,,overdue,Source not ingested yet (needs a run where the official source is reachable)
-cftc_cot,2026-08-18,2026-08-21,2026-08-24,,overdue,Source not ingested yet (needs a run where the official source is reachable)
-cftc_cot,2026-08-25,2026-08-28,2026-08-31,,overdue,Source not ingested yet (needs a run where the official source is reachable)
-cftc_cot,2026-09-01,2026-09-04,2026-09-07,,overdue,Source not ingested yet (needs a run where the official source is reachable)
-cftc_cot,2026-09-08,2026-09-11,2026-09-14,,overdue,Source not ingested yet (needs a run where the official source is reachable)
-cftc_cot,2026-09-15,2026-09-18,2026-09-21,,overdue,Source not ingested yet (needs a run where the official source is reachable)
-cftc_cot,2026-09-22,2026-09-25,2026-09-28,,overdue,Source not ingested yet (needs a run where the official source is reachable)
-cftc_cot,2026-09-29,2026-10-02,2026-10-05,,late,Source not ingested yet (needs a run where the official source is reachable)
+cftc_cot,2026-08-04,2026-08-07,2026-08-10,2026-10-08 21:39:54.357959,received,"cftc_gold_mm_net 2026-08-04: 130,766.00, change vs prior +10,971.00, vs 12-period average +19,281.33 (no consensus feed: compared with prior and trend only)"
+cftc_cot,2026-08-11,2026-08-14,2026-08-17,2026-10-08 21:39:54.357959,received,"cftc_gold_mm_net 2026-08-11: 137,662.00, change vs prior +6,896.00, vs 12-period average +23,448.08 (no consensus feed: compared with prior and trend only)"
+cftc_cot,2026-08-18,2026-08-21,2026-08-24,2026-10-08 21:39:54.357959,received,"cftc_gold_mm_net 2026-08-18: 141,648.00, change vs prior +3,986.00, vs 12-period average +23,757.25 (no consensus feed: compared with prior and trend only)"
+cftc_cot,2026-08-25,2026-08-28,2026-08-31,2026-10-08 21:39:54.357959,received,"cftc_gold_mm_net 2026-08-25: 144,747.00, change vs prior +3,099.00, vs 12-period average +23,172.75 (no consensus feed: compared with prior and trend only)"
+cftc_cot,2026-09-01,2026-09-04,2026-09-07,2026-10-08 21:39:54.357959,received,"cftc_gold_mm_net 2026-09-01: 136,771.00, change vs prior -7,976.00, vs 12-period average +12,482.75 (no consensus feed: compared with prior and trend only)"
+cftc_cot,2026-09-08,2026-09-11,2026-09-14,2026-10-08 21:39:54.357959,received,"cftc_gold_mm_net 2026-09-08: 134,972.00, change vs prior -1,799.00, vs 12-period average +8,108.08 (no consensus feed: compared with prior and trend only)"
+cftc_cot,2026-09-15,2026-09-18,2026-09-21,2026-10-08 21:39:54.357959,received,"cftc_gold_mm_net 2026-09-15: 133,116.00, change vs prior -1,856.00, vs 12-period average +4,481.17 (no consensus feed: compared with prior and trend only)"
+cftc_cot,2026-09-22,2026-09-25,2026-09-28,2026-10-08 21:39:54.357959,received,"cftc_gold_mm_net 2026-09-22: 127,389.00, change vs prior -5,727.00, vs 12-period average -2,722.58 (no consensus feed: compared with prior and trend only)"
+cftc_cot,2026-09-29,2026-10-02,2026-10-05,2026-10-08 21:39:54.357959,received,"cftc_gold_mm_net 2026-09-29: 120,318.00, change vs prior -7,071.00, vs 12-period average -10,401.75 (no consensus feed: compared with prior and trend only)"
 cn_pmi,2026-08,2026-08-30,2026-09-01,,enter,Enter figures by hand (data/manual/)
 cn_pmi,2026-09,2026-09-29,2026-10-01,,enter,Enter figures by hand (data/manual/)
 fomc,2026-09-16,2026-09-16,2026-09-16,,overdue,Source not ingested yet (needs a run where the official source is reachable)
-gpr,2026-07,2026-08-01,2026-08-15,,overdue,Source not ingested yet (needs a run where the official source is reachable)
-gpr,2026-08,2026-09-01,2026-09-15,,overdue,Source not ingested yet (needs a run where the official source is reachable)
-gpr,2026-09,2026-10-01,2026-10-15,,due,Source not ingested yet (needs a run where the official source is reachable)
+gpr,2026-07,2026-08-01,2026-08-15,2026-10-08 21:39:54.357959,received,"gpr_monthly 2026-07-01: 167.87, change vs prior -10.13, vs 12-period average -1.84 (no consensus feed: compared with prior and trend only)"
+gpr,2026-08,2026-09-01,2026-09-15,2026-10-08 21:39:54.357959,received,"gpr_monthly 2026-08-01: 125.62, change vs prior -42.25, vs 12-period average -46.89 (no consensus feed: compared with prior and trend only)"
+gpr,2026-09,2026-10-01,2026-10-15,2026-10-08 21:39:54.357959,received,"gpr_monthly 2026-09-01: 146.21, change vs prior +20.59, vs 12-period average -25.18 (no consensus feed: compared with prior and trend only)"
 imf_cofer,2026-Q2,2026-09-18,2026-10-08,,enter,Enter figures by hand (data/manual/)
 snb,2026-Q3,2026-09-10,2026-09-24,,enter,Check the publisher's release
 us_cpi,2026-07,2026-08-09,2026-08-16,2026-10-08 20:55:51.969276,received,"us_cpi_mirror 2026-07-01: 333.92, +3.5% y/y (prior +3.9%) (no consensus feed: compared with prior and trend only)"

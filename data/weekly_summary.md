@@ -53,13 +53,13 @@ _Descriptive, not predictive. This tool does not forecast prices or give instruc
 
 ## Closest past months (groups with data)
 
-6 matches; next-12-month USD outcomes from +1% to +39%, median +19%. Unconditional median since 1971: +5% (n=638). Dropped (no data): fed_direction, dollar_chg_6m, breakeven_10y, cb_purchases_12m, etf_holdings_chg_6m, cftc_mm_pct, gpr_pct.
+6 matches; next-12-month USD outcomes from -26% to +41%, median +15%. Unconditional median since 1971: +5% (n=638). The closest matches point in opposite directions; the measures used do not separate them. Dropped (no data): fed_direction, dollar_chg_6m, breakeven_10y, cb_purchases_12m, etf_holdings_chg_6m, cftc_mm_pct.
 
 | Month | Distance | Key moment | Next 12m USD | Next 12m CHF | Main differences |
 |---|---|---|---|---|---|
-| 2012-01 | 2.08 | 2011 peak (4 months away) | +1.1% | -0.4% | oil (Brent) 12-month change: +15% then vs +68% now; real yield (10y minus inflation): -1.0 pp then vs +1.3 pp now |
-| 2008-05 | 2.20 | First move above $1000 (2 months away) | +4.5% | +10.8% | USD/CHF 12-month change: -14% then vs +3% now; distance from 10-month average: +7% then vs -5% now |
-| 2006-06 | 2.33 |  | +10.1% | +10.1% | distance from 10-month average: +9% then vs -5% now; gold in CHF vs its 10-year average: +50% then vs +90% now |
+| 2006-07 | 2.51 |  | +4.9% | +2.3% | distance from 10-month average: +13% then vs -5% now; oil (Brent) 12-month change: +28% then vs +68% now |
+| 2011-03 | 2.71 | 2011 peak (6 months away) | +17.8% | +17.1% | USD/CHF 12-month change: -14% then vs +3% now; distance from 10-month average: +8% then vs -5% now |
+| 2008-08 | 2.78 | Financial crisis liquidation (2 months away) | +13.1% | +11.5% | geopolitical risk percentile (10y): 41 then vs 85 now; USD/CHF 12-month change: -10% then vs +3% now |
 
 ## Not yet available
 
@@ -73,14 +73,14 @@ _Descriptive, not predictive. This tool does not forecast prices or give instruc
 |---|---|---|
 | breakeven_10y | - | never succeeded |
 | brent_monthly | 2026-09 | ok |
-| cftc_cot | - | never succeeded |
+| cftc_cot | 2026-09 | ok |
 | dollar_broad | - | never succeeded |
 | fed_funds_eff | - | never succeeded |
 | fed_target_upper | - | never succeeded |
 | gold_usd_monthly | 2026-09 | ok |
 | gold_vol | - | never succeeded |
-| gpr_daily | - | never succeeded |
-| gpr_monthly | - | never succeeded |
+| gpr_daily | 2026-10 | ok |
+| gpr_monthly | 2026-09 | ok |
 | manual_reports | - | ok |
 | real_yield_10y | - | never succeeded |
 | us_10y_yield_monthly | 2026-08 | stale (68 days) |
