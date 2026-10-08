@@ -101,6 +101,21 @@ details[open] > summary .chev { transform: rotate(-135deg); }
 .pm { gap: 14px; }
 .pm .glance-sec { margin-bottom: 10px; }
 
+/* weighed-up odds */
+.odds { display: grid; gap: 12px; border-color: var(--gold); }
+.odds-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+.ocol { display: grid; gap: 4px; padding: 12px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--bg); }
+.ocol .h { font-size: 13px; font-weight: 600; }
+.ocol .pc { font-family: var(--font-display); font-size: 34px; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.ocol.rising .pc { color: var(--up); } .ocol.falling .pc { color: var(--down); } .ocol.sideways .pc { color: var(--side); }
+.ocol .sub { font-size: 12.5px; color: var(--muted); }
+.otrack { position: relative; height: 8px; background: var(--grid); border-radius: 99px; overflow: hidden; margin-top: 4px; }
+.otrack .f { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 99px; }
+.ocol.rising .f { background: var(--up); } .ocol.falling .f { background: var(--down); } .ocol.sideways .f { background: var(--side); }
+.otrack .n { position: absolute; top: -2px; bottom: -2px; width: 2px; background: var(--fg); opacity: 0.6; }
+.odds-why { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; font-size: 13px; }
+.odds-why ul { margin: 4px 0 0; padding-left: 18px; display: grid; gap: 3px; }
+
 /* educated guess */
 .guess { display: grid; gap: 12px; border-color: var(--gold); }
 .guess-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
@@ -297,9 +312,15 @@ table.t tr:last-child td { border-bottom: 0; }
 
   <section class="glance-sec" id="glance-sec" aria-label="At a glance">
     <h2 id="brief-head" class="glance-head">—</h2>
+    <div class="odds panel" id="odds">
+      <div class="eyebrow jg" data-tech="Multinomial logistic regression (L2 = 300, chosen from 8/60/300/1500 on the walk-forward test) on the month-end state vector; classes: 12-month return >= +10%, <= -10%, else sideways. Walk-forward from 2000 (refit every 6 months, trained only on months with known outcomes, standardised on the training window). Shown odds = w x model + (1 - w) x class frequencies, with w chosen by walk-forward Brier score.">Weighed-up odds for the next 12 months</div>
+      <div class="odds-grid" id="odds-bars"></div>
+      <div class="odds-why" id="odds-why"></div>
+      <p class="note" id="odds-track">—</p>
+    </div>
     <div class="guess panel" id="guess">
       <div class="guess-head">
-        <div><div class="eyebrow jg" data-tech="Empirical outcome distributions (interquartile range and median of forward returns) after past months matching today's setup, applied to today's price. Not a forecast model.">Educated guess: where gold might be, judging by the past</div>
+        <div><div class="eyebrow jg" data-tech="Empirical outcome distributions (interquartile range and median of forward returns) after past months matching today's setup, applied to today's price. Not a forecast model.">Price ranges from history: where gold might be in 1, 3 and 5 years</div>
         <p class="note" id="guess-sub">—</p></div>
       </div>
       <div class="guess-grid" id="guess-grid"></div>
@@ -630,6 +651,48 @@ table.t tr:last-child td { border-bottom: 0; }
   }
 
   // ---------- educated guess ----------
+  // ---------- weighed-up odds ----------
+  function renderOdds() {
+    var O = D.odds && D.odds.currencies[S.cur]; if (!O) return;
+    var bars = clear($("odds-bars"));
+    var names = { rising: ["Keeps rising", "up 10% or more"], sideways: ["Goes sideways", "between down 10% and up 10%"], falling: ["Falls", "down 10% or more"] };
+    ["rising", "sideways", "falling"].forEach(function (k) {
+      var c = el("div", { class: "ocol " + k });
+      c.appendChild(el("div", { class: "h" }, names[k][0]));
+      c.appendChild(jg("div", { class: "pc" }, Math.round(O.odds[k] * 100) + "%",
+        "Blended " + O.odds[k].toFixed(3) + " = " + O.blend_weight.toFixed(1) + " x model " + O.model_odds[k].toFixed(3) + " + " + (1 - O.blend_weight).toFixed(1) + " x normal " + O.normal_odds[k].toFixed(3)));
+      var tr = el("div", { class: "otrack" }), f = el("i", { class: "f" }); f.style.width = (O.odds[k] * 100) + "%"; tr.appendChild(f);
+      var nn = el("i", { class: "n" }); nn.style.left = (O.normal_odds[k] * 100) + "%"; tr.appendChild(nn); c.appendChild(tr);
+      c.appendChild(el("div", { class: "sub" }, "Over the next 12 months: " + names[k][1] + " in " + cname(S.cur) + ". Normally " + Math.round(O.normal_odds[k] * 100) + "% (the dark mark)."));
+      bars.appendChild(c);
+    });
+    var why = clear($("odds-why"));
+    var ups = O.drivers.filter(function (d) { return d.push > 0.02; }).slice(0, 3), downs = O.drivers.filter(function (d) { return d.push < -0.02; }).slice(0, 3);
+    function lvl(d) {
+      if (d.key === "fed_dir") return d.z > 0 ? "the Fed raising rates" : d.z < 0 ? "the Fed cutting rates" : "the Fed holding rates";
+      var a = Math.abs(d.z), w = a < 0.25 ? "about normal" : (a < 1 ? "a bit " : "") + (d.z > 0 ? "high" : "low");
+      return d.plain + " (" + w + (a < 0.25 ? "" : " compared with history") + ")";
+    }
+    [["Tipping the odds towards rising", ups], ["Tipping the odds towards falling", downs]].forEach(function (pair) {
+      var box = el("div"); box.appendChild(el("b", null, pair[0]));
+      var ul = el("ul");
+      if (!pair[1].length) ul.appendChild(el("li", null, "Nothing notable."));
+      pair[1].forEach(function (d) { var tx = lvl(d); ul.appendChild(jg("li", null, tx[0].toUpperCase() + tx.slice(1),
+        d.tech + ": z = " + d.z.toFixed(2) + ", push on log-odds(rising vs falling) = " + d.push.toFixed(3))); });
+      box.appendChild(ul); why.appendChild(box);
+    });
+    why.appendChild(el("p", { class: "note", style: "grid-column: 1 / -1" }, "These are the links the model learned from past years, not proven causes, so some may look surprising. For example, in 2004 to 2006 the Fed raised rates while gold rose."));
+    var t = O.track, skill = t.skill;
+    var verdict = skill > 0.05 ? "clearly better than" : skill > 0 ? "only slightly better than" : skill > -0.01 ? "no better than" : "worse than";
+    setText("odds-track", "How much to rely on this: very little. These odds weigh " + O.features.length + " measures at once: the trend, how stretched gold is, interest rates, the Fed, the dollar, inflation, oil, war and political risk, stock market fear, speculators' bets, the franc and recent price moves. " +
+      "Tested on every month since 2000, using only what was known at the time, the model was " + verdict + " gold's normal odds. " +
+      (O.blend_weight === 0 ? "So the figures above are simply gold's normal odds. " : O.blend_weight >= 1 ? "So the figures above are the model's own. " :
+        "A mix of " + Math.round(O.blend_weight * 100) + "% model and " + Math.round((1 - O.blend_weight) * 100) + "% normal odds scored a little better than either alone in that test, so that mix is what you see. ") +
+      "News only enters through the war and political risk index; headlines aren't read yet. Nobody can know the next year; these are odds from the past.",
+      "Walk-forward " + t.n + " months: Brier model " + t.brier_model.toFixed(3) + " vs normal " + t.brier_base.toFixed(3) + " (skill " + (skill * 100).toFixed(1) + "%), blended " + t.brier_blend.toFixed(3) +
+      "; top-class hit rate " + Math.round(t.hit_model * 100) + "% vs " + Math.round(t.hit_base * 100) + "%. Blend weight " + O.blend_weight.toFixed(1) + ". Penalty chosen from four tried values, which flatters the test slightly. Trained on " + O.n_train + " months.");
+  }
+
   function inTen(x) { var n = Math.round(x * 10); return n <= 0 ? "almost never" : n >= 10 ? "almost always" : "about " + n + " in 10 times"; }
   function renderGuess() {
     var G = D.guess; if (!G) return;
@@ -1457,7 +1520,7 @@ table.t tr:last-child td { border-bottom: 0; }
   Array.prototype.forEach.call(document.querySelectorAll("[data-tech]"), jgWire);
 
   function renderAll() {
-    renderMast(); renderGuess(); renderGlance(); renderRules(); renderPush(); renderRegime(); renderPrice(); renderLines(); renderStretch(); renderDates(); renderAnalogues(); renderAfter(); renderTech(); renderHistory(); renderFoot();
+    renderMast(); renderOdds(); renderGuess(); renderGlance(); renderRules(); renderPush(); renderRegime(); renderPrice(); renderLines(); renderStretch(); renderDates(); renderAnalogues(); renderAfter(); renderTech(); renderHistory(); renderFoot();
   }
 
   Array.prototype.forEach.call(document.querySelectorAll("[data-cur]"), function (b) {

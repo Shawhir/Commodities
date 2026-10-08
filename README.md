@@ -106,7 +106,14 @@ lines, what is pulling on gold (each factor with its usual effect), conflicts be
 the next releases, and what it can't cover yet. It states conditions, never instructions, and a
 check rejects the brief if instruction language appears.
 
-## Educated guess, history counts and technical picture
+## Weighed-up odds, educated guess, history counts and technical picture
+
+- **Weighed-up odds** (top of the page, `src/pmdash/history/odds.py`): one probability each for
+  rising (+10% or more), sideways and falling (-10% or worse) over 12 months, weighing 17 measures
+  at once. Tested walk-forward since 2000; the shown odds blend the model with gold's normal odds
+  by whatever mix scored best in that test, so an unproven model stays close to normal odds. It
+  lists what tips the odds each way. The owner relaxed the brief's "no combined score" and "no
+  forecasting" rules on 8 October 2026 for this view. News enters only via the GPR index.
 
 - **Educated guess** (top of the page): for 1, 3 and 5 years, the middle half of past outcomes
   after situations like today, applied to today's price, next to the same range for any month,

@@ -293,12 +293,14 @@ def build_payload(gold: pd.Series, fx: pd.Series, health: pd.DataFrame | None = 
                                        _measures(gold.loc[float_start:])["dist_10y_avg"])
     guess = base_rates.build_guess(gold, chf, reg_usd, _mom_sig(gold), _ma_sig(gold),
                                    _measures(gold.loc[float_start:])["dist_10y_avg"])
+    from ..history import odds as _odds
+    weighed = _odds.build(st, gold, chf)
     technical = {}
     for metal, (df_, src_) in (daily or {}).items():
         if df_ is not None:
             technical[metal] = base_rates.build_technical(df_, src_)
     return _clean({
-        "history": history, "technical": technical, "guess": guess,
+        "history": history, "technical": technical, "guess": guess, "odds": weighed,
         "brief": brief,
         "as_of": str(as_of), "built": str(date.today()), "disclaimer": s["disclaimer"],
         "regime": regime, "series": series, "manual_lines": manual, "lines": lines,
