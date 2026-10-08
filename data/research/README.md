@@ -49,21 +49,32 @@ history only. The months overlap, so these are not 309 independent tests.
 | Measures | Actual inside matched range | Matched median closer than unconditional | Direction right (matched / unconditional) | Label |
 |---|---|---|---|---|
 | Price shape only | 84% | 36% | 50% / 69% | context only |
-| Price + rates, inflation, risk, CHF | 69% | 39% | 54% / 69% | context only |
-| Rates, inflation, risk only | 69% | 44% | 61% / 69% | context only |
+| All groups with data | 72% | 40% | 52% / 69% | context only |
+| Macro, flow and risk only (no price) | 72% | 51% | 58% / 69% | context only |
 
-Macro measures used (backfilled 8 October 2026 from public mirrors of official series): US CPI
-y/y (lagged a month for publication), a real-yield proxy (10-year Treasury minus CPI y/y) and its
-6-month change, Brent's 12-month change, and VIX percentile (from 1990). Fed direction, the
-dollar, breakevens, GPR, CFTC and central bank buying are not in yet; they arrive with the first
-GitHub Actions run or by hand.
+Measures since the full backfill on 8 October 2026 (GitHub Actions, with a FRED API key):
 
-What the extra data changed:
+| Group | Measures |
+|---|---|
+| Price | Fall from 24-month high; distance from the 10-month and 10-year averages; 3-year return |
+| Rates | Real-yield proxy and its 6-month change; Fed direction; dollar 6-month change |
+| Inflation | CPI y/y, lagged one month for publication; Brent 12-month change; 10-year breakeven |
+| Flow | CFTC managed-money percentile within 3 years |
+| Risk | VIX and GPR percentiles within 10 years |
+| CHF | Gold in CHF against its 10-year average; USD/CHF 12-month change |
 
-- **Today's matches agree.** With price only, the six closest months to September 2026 ranged
-  from −33% to +119% over the next 12 months. With macro added, they range from +1% to +39%
-  (median +19%, n=6), and none points down. The closest are January 2012, May 2008 and June
-  2006. The main differences from today are oil (+68% over 12 months now) and price stretch.
-- **But it still does not beat the baseline out of sample.** Macro measures improve on price
-  shape (direction right 61% against 50%), yet both lose to "gold usually rises" (69%). The
-  finder stays **context only**. Agreement among today's matches is not evidence by itself.
+Fed direction is the 6-month change in the policy rate at month end: the target upper bound
+from December 2008, and the effective rate from 1954 before that. Central bank purchases and
+ETF flows are still missing; they come from the manual WGC figures.
+
+What the extra data shows:
+
+- **Price shape alone misleads most.** Its matches ranged from −33% to +119% over the next 12
+  months.
+- **No close match had the Fed hiking.** With every group in, the six closest months to
+  September 2026 are July 2006, August 2008, February 2012, February 1977, February 2024 and
+  April 2010. In none of them was the Fed raising rates; today it is. They were followed by −7%
+  to +43% over 12 months (median +21%, n=6), and they still disagree on direction.
+- **Macro without price does best, but still loses to the baseline.** Out of sample, its median
+  is closer than the unconditional median in about half of months (51%), and it calls direction
+  58% of the time against 69% for "gold usually rises". The finder stays **context only**.

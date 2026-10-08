@@ -36,9 +36,11 @@ LABELS = {
     "gpr_pct": "geopolitical risk percentile (10y)",
     "dollar_chg_6m": "dollar 6-month change",
     "fed_direction": "Fed direction",
+    "breakeven_10y": "10-year breakeven inflation",
+    "cftc_mm_pct": "managed-money positioning percentile (3y)",
 }
 CATEGORICAL = {"regime", "fed_direction"}
-POINTS = {"real_yield_proxy", "real_yield_proxy_chg_6m", "yield_10y_chg_6m", "real_yield_10y"}  # shown in pp
+POINTS = {"real_yield_proxy", "real_yield_proxy_chg_6m", "yield_10y_chg_6m", "real_yield_10y", "breakeven_10y"}  # shown in pp
 
 
 def trailing_pct(s: pd.Series, window: int = 120, min_periods: int = 36) -> pd.Series:
@@ -90,8 +92,15 @@ def build(gold_usd: pd.Series, usdchf: pd.Series | None = None, macro: dict | No
     if "dollar" in macro:
         d = macro["dollar"]
         df["dollar_chg_6m"] = (d / d.shift(6) - 1).reindex(idx)
-    if "fed_target" in macro:
-        f = macro["fed_target"]
-        chg = f - f.shift(6)
-        df["fed_direction"] = chg.map(lambda c: None if pd.isna(c) else "hiking" if c > 0 else "cutting" if c < 0 else "on hold").reindex(idx)
+    if "fed_rate" in macro:
+        # Effective fed funds rate at month end (from 1954): a 6-month move of 25 bp or more counts
+        # as a direction. Month-end, not the monthly average, so a late-month hike is not diluted.
+        chg = macro["fed_rate"] - macro["fed_rate"].shift(6)
+        df["fed_direction"] = chg.map(lambda c: None if pd.isna(c) else "hiking" if c >= 0.25
+                                      else "cutting" if c <= -0.25 else "on hold").reindex(idx)
+    if "breakeven" in macro:
+        df["breakeven_10y"] = macro["breakeven"].reindex(idx)
+    if "cftc_gold_mm" in macro:
+        # percentile within the trailing 3 years of monthly means
+        df["cftc_mm_pct"] = trailing_pct(macro["cftc_gold_mm"], window=36, min_periods=24).reindex(idx)
     return df

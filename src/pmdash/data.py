@@ -39,7 +39,9 @@ MACRO = {
     "brent": ["brent_monthly"],
     "gpr": ["gpr_monthly"],
     "dollar": ["dollar_broad"],
-    "fed_target": ["fed_target_upper"],
+    "fed_rate": ["fed_funds_eff"],          # spliced with the target upper bound below
+    "breakeven": ["breakeven_10y"],
+    "cftc_gold_mm": ["cftc_gold_mm_net"],
 }
 
 
@@ -51,9 +53,14 @@ def load_macro(con, as_of=None) -> dict[str, pd.Series]:
             s = db.get_series(con, sid, as_of=as_of)
             if s.empty:
                 continue
-            m = s.groupby(s.index.to_period("M")).mean()
-            if name == "fed_target":
-                m = s.groupby(s.index.to_period("M")).last()
+            g = s.groupby(s.index.to_period("M"))
+            m = g.last() if name == "fed_rate" else g.mean()
             out[name] = m
             break
+    # Fed policy rate: the target upper bound (exact 25 bp steps, from Dec 2008) where it exists,
+    # the effective rate (floats inside the range, from 1954) before that. Month-end values.
+    tgt = db.get_series(con, "fed_target_upper", as_of=as_of)
+    if not tgt.empty:
+        t = tgt.groupby(tgt.index.to_period("M")).last()
+        out["fed_rate"] = t.combine_first(out["fed_rate"]) if "fed_rate" in out else t
     return out

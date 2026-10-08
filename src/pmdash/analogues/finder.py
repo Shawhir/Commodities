@@ -128,7 +128,8 @@ def find(state: pd.DataFrame, target: str | pd.Period, groups: dict[str, list[st
         wsum[ok] += w
     d2 = (n_num / wsum.replace(0, np.nan)) * total
     for c in cats:
-        d2 += categorical_penalty ** 2 * (pool[c] != now[c]).astype(float)
+        # a month with no reading is missing, not different
+        d2 += categorical_penalty ** 2 * ((pool[c] != now[c]) & pool[c].notna()).astype(float)
     dist = np.sqrt(d2).dropna().sort_values()
 
     picked: list[tuple[pd.Period, float]] = []
@@ -148,7 +149,8 @@ def find(state: pd.DataFrame, target: str | pd.Period, groups: dict[str, list[st
     for m, v in picked:
         diffs = sorted(numeric, key=lambda c: -abs((z.loc[m, c] - zt[c])) if not pd.isna(z.loc[m, c]) else 0)
         words = [_describe_diff(c, state.loc[m, c], now[c]) for c in diffs[:2]]
-        words += [_describe_diff(c, state.loc[m, c], now[c]) for c in cats if state.loc[m, c] != now[c]]
+        words += [_describe_diff(c, state.loc[m, c], now[c]) for c in cats
+                  if not pd.isna(state.loc[m, c]) and state.loc[m, c] != now[c]]
         outcomes = {}
         for cur, f in fwd.items():
             if m in f.index:

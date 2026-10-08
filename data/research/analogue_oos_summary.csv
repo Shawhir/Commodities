@@ -1,4 +1,4 @@
 groups,start,run_on,months,in_range,median_beats_baseline,direction_right,baseline_direction_right,label
 price_shape,2000-01,2026-10-08,309,0.8350,0.3592,0.4984,0.6893,context only
-price_shape+rates_money+inflation+risk+chf,2000-01,2026-10-08,309,0.6861,0.3948,0.5372,0.6893,context only
-rates_money+inflation+risk,2000-01,2026-10-08,309,0.6861,0.4434,0.6084,0.6893,context only
+price_shape+rates_money+inflation+demand_flow+risk+chf,2000-01,2026-10-08,309,0.7184,0.3981,0.5178,0.6893,context only
+rates_money+inflation+demand_flow+risk,2000-01,2026-10-08,309,0.7249,0.5113,0.5793,0.6893,context only
