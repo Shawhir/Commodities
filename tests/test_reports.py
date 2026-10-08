@@ -170,3 +170,30 @@ def test_http_404_is_not_retried(monkeypatch):
     except DownloadError as exc:
         assert not exc.host_down
     assert len(n) == 1
+
+
+def test_fred_api_path_parses_json_and_keeps_key_out(monkeypatch):
+    from pmdash.ingest.generic import FredSeries
+    monkeypatch.setenv("FRED_API_KEY", "abcdef0123456789abcdef0123456789")
+    f = FredSeries(source_id="real_yield_10y", spec={"fred_id": "DFII10", "period": "day", "release_lag_days": 1})
+    seen = []
+
+    def fake_download(self):
+        seen.append(self.spec["url"])
+        return b'{"observations":[{"date":"2026-10-01","value":"2.10"},{"date":"2026-10-02","value":"."}]}'
+
+    monkeypatch.setattr(CsvSeries, "download", fake_download)
+    con = db.connect()
+    f.run(con)
+    assert "api.stlouisfed.org" in seen[0] and "api_key=" in seen[0]
+    assert "api_key" not in f.spec["url"]
+    src = con.execute("SELECT DISTINCT source FROM observations").fetchone()[0]
+    assert "api_key" not in src
+    assert list(db.get_series(con, "real_yield_10y")) == [2.10]
+
+
+def test_fred_without_key_gets_one_short_try(monkeypatch):
+    from pmdash.ingest.generic import FredSeries
+    monkeypatch.delenv("FRED_API_KEY", raising=False)
+    f = FredSeries(source_id="x", spec={"fred_id": "DFF"})
+    assert f.retry["attempts"] == 1 and f.retry["timeout_seconds"] <= 15

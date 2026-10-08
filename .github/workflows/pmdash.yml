@@ -45,6 +45,7 @@ jobs:
     timeout-minutes: 30
     env:
       PMDASH_DB: ${{ github.workspace }}/data/pmdash.duckdb
+      FRED_API_KEY: ${{ secrets.FRED_API_KEY }}   # free key; without it FRED's keyless CSV often stalls on CI
     steps:
       - uses: actions/checkout@v4
 
@@ -73,21 +74,25 @@ jobs:
         run: pmdash store load
 
       - name: Backfill (manual only)
+        timeout-minutes: 15
         if: steps.job.outputs.job == 'backfill'
         continue-on-error: true
         run: pmdash backfill --cftc-years 20
 
       - name: Daily fetch
+        timeout-minutes: 10
         if: steps.job.outputs.job == 'daily'
         continue-on-error: true   # one failing source must not stop the rest; data health records it
         run: pmdash fetch --schedule daily
 
       - name: Weekly fetch
+        timeout-minutes: 10
         if: steps.job.outputs.job == 'weekly'
         continue-on-error: true
         run: pmdash fetch --schedule weekly,daily
 
       - name: Report check
+        timeout-minutes: 10
         run: pmdash reports check --out reports.md
 
       - name: Key lines and alerts

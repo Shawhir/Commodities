@@ -7,6 +7,8 @@ Availability: ``available_date`` is when a value could first have been known.
 from __future__ import annotations
 
 import io
+import json
+import os
 import zipfile
 from datetime import date
 
@@ -59,13 +61,41 @@ class CsvSeries(Fetcher):
 
 
 class FredSeries(CsvSeries):
-    """FRED graph CSV (no API key): first column is the date, second the series."""
+    """FRED series.
+
+    With FRED_API_KEY set (free, https://fred.stlouisfed.org/docs/api/api_key.html) this uses the
+    official API (api.stlouisfed.org). Without it, it falls back to the keyless chart CSV
+    (fredgraph.csv), which is known to stall from cloud and CI machines, so it gets one short try.
+    The key is never stored: ``source`` records the keyless URL.
+    """
+
+    API = "https://api.stlouisfed.org/fred/series/observations?series_id={sid}&api_key={key}&file_type=json"
+    CSV = "https://fred.stlouisfed.org/graph/fredgraph.csv?id={sid}"
 
     def __post_init__(self):
         sid = self.spec["fred_id"]
-        self.spec = {"url": f"https://fred.stlouisfed.org/graph/fredgraph.csv?id={sid}", **self.spec}
+        self.key = os.environ.get("FRED_API_KEY", "").strip()
+        self.spec = {**self.spec, "url": self.CSV.format(sid=sid)}
+        if not self.key:
+            self.retry = {**self.retry, "attempts": 1, "timeout_seconds": 15}
+
+    def download(self) -> bytes:
+        if not self.key:
+            return super().download()
+        public = self.spec["url"]
+        self.spec = {**self.spec, "url": self.API.format(sid=self.spec["fred_id"], key=self.key)}
+        try:
+            return super().download()
+        finally:
+            self.spec = {**self.spec, "url": public}      # keep the key out of anything stored
 
     def parse(self, raw: bytes) -> pd.DataFrame:
+        if raw.lstrip()[:1] == b"{":
+            obs = json.loads(raw).get("observations")
+            if obs is None:
+                raise SchemaError("FRED API answer has no observations")
+            df = pd.DataFrame(obs)
+            return frame(df["date"], df["value"].replace(".", None), self.spec)
         df = pd.read_csv(io.BytesIO(raw), na_values=[".", ""])
         if df.shape[1] < 2:
             raise SchemaError(f"unexpected FRED columns {list(df.columns)}")
