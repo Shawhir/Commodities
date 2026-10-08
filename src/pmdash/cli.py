@@ -42,9 +42,7 @@ def cmd_fetch(args):
     con = _con()
     schedules = set(args.schedule.split(",")) if args.schedule else None
     ids = set(args.source.split(",")) if args.source else None
-    results = fetch_all(con, schedules=schedules, ids=ids)
-    for k, v in results.items():
-        print(f"{k}: {v}")
+    results = fetch_all(con, schedules=schedules, ids=ids, progress=True)
     return 0 if all(not v.startswith("FAILED") for v in results.values()) else 1
 
 
@@ -55,9 +53,7 @@ def cmd_backfill(args):
     cfg = config.load("sources")
     if args.cftc_years is not None:
         cfg["sources"]["cftc_cot"]["years_back"] = args.cftc_years
-    results = runner.fetch_all(con)
-    for k, v in results.items():
-        print(f"{k}: {v}")
+    results = runner.fetch_all(con, progress=True)
     ok = sum(not v.startswith("FAILED") for v in results.values())
     print(f"\n{ok} of {len(results)} sources fetched. Failures are recorded in data health and do not stop the rest.")
     return 0

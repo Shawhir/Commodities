@@ -132,3 +132,41 @@ def test_fred_fetcher_builds_url_and_parses():
     assert f.spec["url"] == "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DFII10"
     df = f.parse(b"observation_date,DFII10\n2026-10-01,2.10\n2026-10-02,.\n2026-10-05,2.15\n")
     assert list(df.value) == [2.10, 2.15]
+
+
+def test_unreachable_host_is_skipped_after_first_failure(monkeypatch):
+    import socket
+    from pmdash.ingest import runner
+    from pmdash.ingest.base import DownloadError
+    from pmdash.ingest.generic import FredSeries
+    calls = []
+
+    class Slow(FredSeries):
+        def download(self):
+            calls.append(self.source_id)
+            raise DownloadError(f"{self.source_id}: timed out", socket.timeout("timed out"))
+
+    fs = [Slow(source_id=f"s{i}", spec={"fred_id": f"X{i}"}) for i in range(3)]
+    monkeypatch.setattr(runner, "build_fetchers", lambda *a, **k: fs)
+    res = runner.fetch_all(db.connect())
+    assert calls == ["s0"]
+    assert "skipped" in res["s1"] and "skipped" in res["s2"]
+
+
+def test_http_404_is_not_retried(monkeypatch):
+    import urllib.error
+    import urllib.request
+    from pmdash.ingest.base import DownloadError
+    n = []
+
+    def fake(req, timeout=0):
+        n.append(1)
+        raise urllib.error.HTTPError(req.full_url, 404, "Not Found", {}, None)
+
+    monkeypatch.setattr(urllib.request, "urlopen", fake)
+    f = CsvSeries(source_id="x", spec={"url": "https://example.org/x.csv"})
+    try:
+        f.download()
+    except DownloadError as exc:
+        assert not exc.host_down
+    assert len(n) == 1

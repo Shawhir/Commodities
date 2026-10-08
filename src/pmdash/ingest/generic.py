@@ -12,7 +12,7 @@ from datetime import date
 
 import pandas as pd
 
-from .base import Fetcher, SchemaError
+from .base import DownloadError, Fetcher, SchemaError
 
 
 def _available(ref: pd.Series, period: str, lag_days: int) -> pd.Series:
@@ -101,11 +101,26 @@ class CftcDisaggregated(Fetcher):
         this = date.today().year
         return list(range(this - int(self.spec.get("years_back", 0)), this + 1))
 
+    HIST_URL = "https://www.cftc.gov/files/dea/history/fut_disagg_txt_hist_2006_2016.zip"
+
     def download(self) -> bytes:
-        parts = []
-        for y in self.years():
-            self.spec = {**self.spec, "url": self.URL.format(year=y)}
-            parts.append(super().download())
+        """One zip per year; years before 2017 come from the combined 2006-2016 history file.
+        A missing year (404) is skipped; a timeout stops the download."""
+        urls = [self.URL.format(year=y) for y in self.years() if y >= 2017]
+        if any(y < 2017 for y in self.years()):
+            urls.insert(0, self.HIST_URL)
+        parts, missing = [], []
+        for url in urls:
+            self.spec = {**self.spec, "url": url}
+            try:
+                parts.append(super().download())
+            except DownloadError as exc:
+                if exc.host_down:
+                    raise
+                missing.append(url.rsplit("/", 1)[-1])
+        if not parts:
+            raise DownloadError(f"{self.source_id}: no CFTC files found ({', '.join(missing)})")
+        self.missing = missing
         return b"\x00ZIPSEP\x00".join(parts)
 
     @staticmethod

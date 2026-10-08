@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import io
 import time
+import urllib.error
 import urllib.request
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
@@ -20,6 +21,19 @@ from ..storage import db
 
 class SchemaError(ValueError):
     pass
+
+
+class DownloadError(RuntimeError):
+    """Download failed. ``cause`` is the last underlying error (HTTPError, timeout, ...)."""
+
+    def __init__(self, msg: str, cause: Exception | None = None):
+        super().__init__(msg)
+        self.cause = cause
+
+    @property
+    def host_down(self) -> bool:
+        """True for timeouts and connection failures, where other files on the same host will fail too."""
+        return not isinstance(self.cause, urllib.error.HTTPError)
 
 
 @dataclass
@@ -48,11 +62,17 @@ class Fetcher:
                 req = urllib.request.Request(self.spec["url"], headers={"User-Agent": "pmdash/0.1"})
                 with urllib.request.urlopen(req, timeout=timeout) as resp:
                     return resp.read()
+            except urllib.error.HTTPError as exc:
+                last = exc
+                if 400 <= exc.code < 500 and exc.code != 429:
+                    break                           # not found / forbidden: retrying will not help
+                if i < attempts - 1:
+                    time.sleep(backoff[min(i, len(backoff) - 1)])
             except Exception as exc:  # noqa: BLE001 - recorded and re-raised below
                 last = exc
                 if i < attempts - 1:
                     time.sleep(backoff[min(i, len(backoff) - 1)])
-        raise RuntimeError(f"{self.source_id}: download failed after {attempts} attempts: {last}")
+        raise DownloadError(f"{self.source_id}: download failed: {last}", last)
 
     def cache_raw(self, raw: bytes) -> Path:
         self.raw_dir.mkdir(parents=True, exist_ok=True)
