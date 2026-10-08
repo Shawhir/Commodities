@@ -75,6 +75,32 @@ body { background: var(--bg); color: var(--fg); font-family: var(--font-body); f
 .note { color: var(--muted); font-size: 13px; max-width: 75ch; }
 .panel { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; min-width: 0; }
 
+/* decision brief */
+.brief { display: grid; gap: 14px; }
+.brief-head { font-family: var(--font-display); font-size: 19px; line-height: 1.35; max-width: 70ch; }
+.brief-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 14px; }
+.brief-card { display: grid; gap: 10px; align-content: start; min-width: 0; }
+.rule { display: grid; gap: 6px; padding-bottom: 10px; border-bottom: 1px solid var(--grid); }
+.rule:last-child { border-bottom: 0; padding-bottom: 0; }
+.rule-top { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+.rule-top b { font-weight: 600; }
+.steps { margin: 0; padding-left: 18px; color: var(--muted); font-size: 13px; display: grid; gap: 3px; }
+.steps .known { color: var(--fg); }
+.zone { position: relative; height: 26px; border-radius: 4px; overflow: hidden; display: flex; border: 1px solid var(--line); }
+.zone span { display: block; height: 100%; }
+.zone .z-Down { background: var(--down-band); } .zone .z-Sideways { background: var(--side-band); } .zone .z-Up { background: var(--up-band); }
+.zone .mark { position: absolute; top: -2px; bottom: -2px; width: 2px; background: var(--gold); }
+.zone-wrap { position: relative; padding-top: 18px; padding-bottom: 18px; }
+.zone-lbl { position: absolute; font-size: 11px; color: var(--muted); font-family: var(--font-data); transform: translateX(-50%); white-space: nowrap; }
+.zone-lbl.top { top: 0; color: var(--gold); font-weight: 600; } .zone-lbl.bot { bottom: 0; }
+.fx { display: inline-block; font-size: 11px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; padding: 1px 8px; border-radius: 99px; border: 1px solid currentColor; white-space: nowrap; }
+.fx-headwind { color: var(--down); } .fx-support { color: var(--up); } .fx-mixed, .fx-crowded { color: var(--warn); }
+.fx-neutral { color: var(--side); } .fx-washed { color: var(--info); }
+.fx-lowers { color: var(--down); } .fx-raises { color: var(--up); }
+.blist { margin: 0; padding-left: 18px; display: grid; gap: 6px; font-size: 13px; }
+.blist.muted { color: var(--muted); }
+#press-table { min-width: 520px; }
+
 /* regime cards */
 .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; }
 .card { display: grid; gap: 12px; }
@@ -198,6 +224,43 @@ table.t tr:last-child td { border-bottom: 0; }
       </div>
     </div>
   </header>
+
+  <section class="sec" id="brief">
+    <div class="sec-head">
+      <div><div class="eyebrow">Decision brief · conditions, not instructions</div><h2 id="brief-head">—</h2></div>
+    </div>
+    <div class="brief">
+      <div class="brief-grid">
+        <div class="panel brief-card">
+          <div class="eyebrow">Your trend rules and what would flip them</div>
+          <div id="brief-rules"></div>
+        </div>
+        <div class="panel brief-card">
+          <div class="eyebrow">Regime next month, by next month's average price</div>
+          <div id="brief-regime"></div>
+          <div class="eyebrow" style="margin-top:6px">Nearest key lines</div>
+          <div class="tbl-wrap"><table class="t" id="brief-lines"></table></div>
+        </div>
+      </div>
+      <div class="panel brief-card">
+        <div class="eyebrow">What is pulling on gold</div>
+        <div class="tbl-wrap"><table class="t" id="press-table"></table></div>
+      </div>
+      <div class="brief-grid">
+        <div class="panel brief-card">
+          <div class="eyebrow">Conflicts between readings</div>
+          <ul class="blist" id="brief-conflicts"></ul>
+        </div>
+        <div class="panel brief-card">
+          <div class="eyebrow">Coming up</div>
+          <ul class="blist" id="brief-upcoming"></ul>
+          <div class="eyebrow" style="margin-top:6px">Not covered yet</div>
+          <ul class="blist muted" id="brief-gaps"></ul>
+        </div>
+      </div>
+      <p class="note">Monthly averages stand in for closes until daily prices are ingested. "Usually" describes how a factor has tended to act on gold, not what it will do. Rules and lines come from your config; the brief shows where they stand and never says what to do.</p>
+    </div>
+  </section>
 
   <section class="sec" id="regime">
     <div class="sec-head">
@@ -853,6 +916,97 @@ table.t tr:last-child td { border-bottom: 0; }
       (waiting ? " · " + waiting + " waiting" : "");
   }
 
+  // ---------- decision brief ----------
+  function money0(x, cur) { return money(x, cur); }
+  function renderBrief() {
+    var B = D.brief; if (!B) return;
+    $("brief-head").textContent = B.headline;
+    var cur = S.cur, R = B.rules[cur];
+    var host = clear($("brief-rules"));
+    [["12-1 momentum", R.momentum], ["10-month average", R.ma]].forEach(function (pair) {
+      var r = pair[1], box = el("div", { class: "rule" });
+      var top = el("div", { class: "rule-top" });
+      var name = el("span"); name.appendChild(el("b", null, pair[0])); name.appendChild(document.createTextNode(" · " + cur));
+      top.appendChild(name);
+      top.appendChild(el("span", { class: "pill " + (r.state === "In" ? "in" : "out") }, r.state));
+      box.appendChild(top);
+      var ul = el("ul", { class: "steps" });
+      if (r.steps) {
+        r.steps.forEach(function (st) { ul.appendChild(el("li", { class: st.known ? "known" : "" }, st.text)); });
+        ul.appendChild(el("li", null, r.if_flat));
+      } else {
+        ul.appendChild(el("li", { class: "known" }, r.text));
+      }
+      box.appendChild(ul);
+      host.appendChild(box);
+    });
+
+    var rg = clear($("brief-regime")), X = B.regimes[cur];
+    rg.appendChild(el("div", { class: "rule-top" }, null));
+    var t = rg.lastChild; var nm = el("span"); nm.appendChild(el("b", null, "Now: " + X.now));
+    nm.appendChild(document.createTextNode(" · 12m " + pct(X.ret) + ", ER " + X.er.toFixed(2))); t.appendChild(nm);
+    t.appendChild(el("span", { class: "pill r-" + X.now }, X.now));
+    var last = D.regime.filter(function (r) { return r.currency === cur; })[0].close;
+    var cuts = [];
+    X.ranges.forEach(function (z) { if (z.high_cut) cuts.push(z.high_cut); });
+    var lo = Math.min(last, cuts.length ? cuts[0] : last) * 0.8, hi = Math.max(last, cuts.length ? cuts[cuts.length - 1] : last) * 1.12;
+    var wrap = el("div", { class: "zone-wrap" }), bar = el("div", { class: "zone", role: "img",
+      "aria-label": X.text });
+    X.ranges.forEach(function (z) {
+      var a = Math.max(lo, z.low_cut || lo), b = Math.min(hi, z.high_cut || hi);
+      if (b <= a) return;
+      var sp = el("span", { class: "z-" + z.regime, title: z.regime }); sp.style.width = ((b - a) / (hi - lo) * 100) + "%"; bar.appendChild(sp);
+    });
+    var mk = el("i", { class: "mark" }); mk.style.left = ((last - lo) / (hi - lo) * 100) + "%"; bar.appendChild(mk);
+    wrap.appendChild(bar);
+    var tl = el("span", { class: "zone-lbl top" }, "Sep " + Math.round(last).toLocaleString("en-US")); tl.style.left = ((last - lo) / (hi - lo) * 100) + "%"; wrap.appendChild(tl);
+    cuts.forEach(function (c) { var l = el("span", { class: "zone-lbl bot" }, Math.round(c).toLocaleString("en-US")); l.style.left = ((c - lo) / (hi - lo) * 100) + "%"; wrap.appendChild(l); });
+    rg.appendChild(wrap);
+    rg.appendChild(el("p", { class: "note" }, X.text + ". Green Up, grey Sideways, red Down; the gold mark is the latest monthly average."));
+
+    var lt = clear($("brief-lines"));
+    var rows = B.near_lines.filter(function (L) { return L.currency === cur; });
+    var hr = el("tr"); [["Line", ""], ["State", ""], ["Gap", "n"]].forEach(function (h) { hr.appendChild(el("th", { class: h[1] }, h[0])); });
+    var th = el("thead"); th.appendChild(hr); lt.appendChild(th);
+    var tb = el("tbody");
+    rows.forEach(function (L) {
+      var tr = el("tr"), c0 = el("td");
+      c0.appendChild(el("div", { class: "line-name" }, L.label));
+      if (L.note) c0.appendChild(el("div", { class: "line-note" }, L.note));
+      tr.appendChild(c0);
+      var c1 = el("td"); c1.appendChild(el("span", { class: "pill s-" + L.state }, L.state)); tr.appendChild(c1);
+      tr.appendChild(el("td", { class: "n " + cls(L.distance) }, pct(L.distance)));
+      tb.appendChild(tr);
+    });
+    lt.appendChild(tb);
+
+    var pt = clear($("press-table"));
+    var h2 = el("tr"); [["Factor", ""], ["Reading", ""], ["Usually", ""], ["Why", ""]].forEach(function (h) { h2.appendChild(el("th", { class: h[1] }, h[0])); });
+    var th2 = el("thead"); th2.appendChild(h2); pt.appendChild(th2);
+    var tb2 = el("tbody");
+    B.pressures.forEach(function (p) {
+      var tr = el("tr");
+      tr.appendChild(el("td", { class: "line-name" }, p.factor));
+      tr.appendChild(el("td", { class: "num" }, p.reading));
+      var c = el("td"); c.appendChild(el("span", { class: "fx fx-" + p.usual_effect.split(" ")[0] }, p.usual_effect)); tr.appendChild(c);
+      tr.appendChild(el("td", { class: "line-note" }, p.why));
+      tb2.appendChild(tr);
+    });
+    pt.appendChild(tb2);
+
+    var cf = clear($("brief-conflicts"));
+    (B.conflicts.length ? B.conflicts : ["No conflicting readings."]).forEach(function (c) { cf.appendChild(el("li", null, c)); });
+    var up = clear($("brief-upcoming"));
+    B.upcoming.forEach(function (r) {
+      var when = r.window_start === r.window_end ? r.window_start : r.window_start + " to " + r.window_end;
+      var li = el("li"); li.appendChild(el("b", null, r.name)); li.appendChild(document.createTextNode(" (" + r.period + "), " + when + (r.why ? ". " + r.why : "")));
+      up.appendChild(li);
+    });
+    if (!B.upcoming.length) up.appendChild(el("li", null, "Nothing scheduled in the calendar window."));
+    var gp = clear($("brief-gaps"));
+    B.gaps.forEach(function (g) { gp.appendChild(el("li", null, g)); });
+  }
+
   // ---------- footer ----------
   function renderFoot() {
     var ul = clear($("pending"));
@@ -867,7 +1021,7 @@ table.t tr:last-child td { border-bottom: 0; }
   }
 
   function renderAll() {
-    renderMast(); renderRegime(); renderPrice(); renderBackdrop(); renderLines(); renderTriggers(); renderReports(); renderStretch(); renderAnalogues(); renderHistory(); renderFoot();
+    renderMast(); renderBrief(); renderRegime(); renderPrice(); renderBackdrop(); renderLines(); renderTriggers(); renderReports(); renderStretch(); renderAnalogues(); renderHistory(); renderFoot();
   }
 
   Array.prototype.forEach.call(document.querySelectorAll("[data-cur]"), function (b) {

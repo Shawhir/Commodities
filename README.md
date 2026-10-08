@@ -97,6 +97,15 @@ data/key_moments.csv, data/events.csv (header only, filled in phase 6), data/res
 tests/             pytest; fixtures are frozen copies of the verified datasets
 ```
 
+## Decision brief
+
+The dashboard and the weekly summary open with a decision brief (`src/pmdash/digest/brief.py`).
+It lists your trend rules with the exact next-month average that would flip each one, and the
+price ranges that would make next month Up, Sideways or Down. It also shows the nearest key
+lines, what is pulling on gold (each factor with its usual effect), conflicts between readings,
+the next releases, and what it can't cover yet. It states conditions, never instructions, and a
+check rejects the brief if instruction language appears.
+
 ## Design notes
 
 - **Closes, not touches.** Lines are judged on closes with a buffer. With only monthly

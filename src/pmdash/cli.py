@@ -252,7 +252,9 @@ def cmd_summary(args):
     from .digest.summary import build, to_markdown
     con = _con()
     gold, fx = data.load_monthly(con, args.as_of)
-    md = to_markdown(build(gold, fx, _health(con), data.load_macro(con, args.as_of)))
+    from .digest.brief import to_markdown as brief_md
+    md = brief_md(_payload(con, args, include_oos=False)["brief"]) + "\n" + \
+        to_markdown(build(gold, fx, _health(con), data.load_macro(con, args.as_of)))
     if args.out:
         Path(args.out).write_text(md)
         print("wrote", args.out)
@@ -261,19 +263,26 @@ def cmd_summary(args):
     return 0
 
 
-def cmd_export_html(args):
-    from .export.html import build_payload, render
-    con = _con()
+def _payload(con, args, include_oos: bool):
+    from .export.html import build_payload
     gold, fx = data.load_monthly(con, args.as_of)
     from datetime import date as _date
     from .reports import calendar as cal
     today = _date.fromisoformat(args.as_of) if args.as_of else _date.today()
     rels = cal.calendar(con, config.load("reports"), today, back_days=45, ahead_days=45)
     stored = {(r[0], r[1]): r[2] for r in con.execute("SELECT report_id, period, detail FROM releases").fetchall()}
-    reports = [{**r.as_dict(), "detail": stored.get((r.report_id, r.period)) or r.detail} for r in rels]
+    rspec = config.load("reports")["reports"]
+    reports = [{**r.as_dict(), "detail": stored.get((r.report_id, r.period)) or r.detail,
+                "why": rspec.get(r.report_id, {}).get("why", "")} for r in rels]
     fx_daily = db.get_series(con, "usdchf_daily", as_of=args.as_of)
-    payload = build_payload(gold, fx, _health(con), data.load_macro(con, args.as_of), include_oos=not args.no_oos,
-                            reports=reports, fx_daily=fx_daily if len(fx_daily) else None)
+    return build_payload(gold, fx, _health(con), data.load_macro(con, args.as_of), include_oos=include_oos,
+                         reports=reports, fx_daily=fx_daily if len(fx_daily) else None)
+
+
+def cmd_export_html(args):
+    from .export.html import render
+    con = _con()
+    payload = _payload(con, args, include_oos=not args.no_oos)
     out = Path(args.out)
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(render(payload, fragment=args.fragment))

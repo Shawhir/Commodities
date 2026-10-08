@@ -16,6 +16,7 @@ import pandas as pd
 from .. import config
 from ..analogues import finder, state
 from ..analogues.state import LABELS
+from ..digest import brief as decision_brief
 from ..digest.summary import build as build_summary
 from ..regime.labeller import label_from_config
 from ..testing.seed_study import run_study
@@ -154,6 +155,25 @@ def build_payload(gold: pd.Series, fx: pd.Series, health: pd.DataFrame | None = 
             "distance": dist, "severity": r.severity, "note": m.get("note", ""),
             "label": m.get("label", lid) + (f" ({lid.rsplit('_p', 1)[1]}th percentile)" if base != lid else ""),
         })
+    # Lines that never changed state have no transition yet: add them as intact with today's gap.
+    have = {(d["id"], d["currency"]) for d in lines}
+    for item in levels_cfg.get("gold", []):
+        if item["type"] not in ("manual_price", "derived_ma"):
+            continue
+        if item.get("active_from") and pd.Period(str(item["active_from"])[:7], "M") > as_of:
+            continue
+        for cur, p in (("USD", gold), ("CHF", chf)):
+            if (item["id"], cur) in have:
+                continue
+            if item["type"] == "manual_price":
+                lv = float(item["value_usd"]) * (1.0 if cur == "USD" else float(fx.loc[as_of]))
+            else:
+                lv = float(p.rolling(item["window_months"]).mean().iloc[-1])
+            close = float(p.iloc[-1])
+            lines.append({"id": item["id"], "currency": cur, "type": item["type"], "state": "intact",
+                          "prev_state": None, "watching": item.get("direction"), "since": None, "close": close,
+                          "line_value": lv, "distance": close / lv - 1, "severity": item.get("severity"),
+                          "note": item.get("note", ""), "label": item.get("label", item["id"])})
     sev_rank = {"important": 0, "watch": 1, "info": 2}
     lines.sort(key=lambda d: (sev_rank.get(d["severity"], 3), d["id"], d["currency"] or ""))
     cutoff = as_of.to_timestamp() - pd.DateOffset(months=12)
@@ -205,7 +225,15 @@ def build_payload(gold: pd.Series, fx: pd.Series, health: pd.DataFrame | None = 
     eps = study["sideways_episodes"].to_dict("records")
 
     regime = s["regime"].to_dict("records")
+    stretch_pct = {cur: next((r["pct_since"] for r in rows if r["measure"] == "dist_10y_avg"), None)
+                   for cur, rows in stretch.items()}
+    brief = decision_brief.build(gold, fx, st, macro or {}, lines, reports or [], stretch_pct, th,
+                                 allocation=config.load("allocation"), journal_open=None)
+    bad = decision_brief.check_language(brief)
+    if bad:
+        raise ValueError(f"decision brief contains instruction language: {bad}")
     return _clean({
+        "brief": brief,
         "as_of": str(as_of), "built": str(date.today()), "disclaimer": s["disclaimer"],
         "regime": regime, "series": series, "manual_lines": manual, "lines": lines,
         "line_notes": s["level_notes"], "triggers": trig, "stretch": stretch, "analogues": an,
