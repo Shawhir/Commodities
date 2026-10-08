@@ -23,6 +23,28 @@ from ..testing.seed_study import run_study
 
 TEMPLATE = Path(__file__).with_name("template.html")
 
+SOURCE_PLAIN = {
+    "gold_usd_monthly": "Gold price, monthly", "usdchf_monthly": "Francs per dollar, monthly",
+    "us_cpi_mirror": "US inflation (copy)", "us_10y_yield_monthly": "US 10-year interest rate",
+    "vix_daily_mirror": "Stock market fear gauge (copy)", "brent_monthly": "Oil price (Brent)",
+    "wti_monthly": "Oil price (US)", "usdchf_daily": "Francs per dollar, daily (copy)",
+    "real_yield_10y": "Interest rates after inflation", "breakeven_10y": "Expected inflation",
+    "dollar_broad": "US dollar index", "vix_fred": "Stock market fear gauge", "gold_vol": "Gold price swings gauge",
+    "fed_funds_eff": "US overnight interest rate", "fed_target_upper": "Fed's target interest rate",
+    "us_cpi_fred": "US inflation", "us_core_cpi": "US inflation without food and energy", "us_payrolls": "US jobs",
+    "us_unemployment": "US unemployment", "usdchf_fred": "Francs per dollar, daily",
+    "cftc_cot": "Speculators' positions", "gpr_monthly": "War and political risk, monthly",
+    "gpr_daily": "War and political risk, daily", "manual_reports": "Figures typed in by hand",
+}
+PENDING = [
+    {"text": "A faster weekly mood reading needs daily prices, which aren't connected yet.",
+     "tech": "Weekly-close regime reading: needs daily prices (phase 2)."},
+    {"text": "Silver, gold fund holdings, exchange warehouse stocks and other market-plumbing data aren't in yet.",
+     "tech": "Silver, ETF holdings, COMEX registered stocks, stress indicators, curve/carry: phase 2."},
+    {"text": "Tracking of world events by theme, and a written weekly analysis, aren't built yet.",
+     "tech": "Theme register and agent weekly read: phases 6 and 7."},
+]
+
 STRETCH_LABELS = {
     "dist_10m_avg": "Distance from 10-month average",
     "dist_3y_avg": "Distance from 3-year average",
@@ -30,6 +52,10 @@ STRETCH_LABELS = {
     "return_3y": "3-year return",
     "fall_from_24m_high": "Fall from 24-month high",
 }
+
+
+def _pct_mark(p: str) -> str:
+    return {"50": ": halfway mark of history", "90": ": top-10% mark of history"}.get(p, f": {p}% mark of history")
 
 
 def _clean(x):
@@ -64,6 +90,7 @@ def _oos(st, gold, groups, kw) -> list[dict]:
     variants = [("Price shape only", price), ("Price + " + ", ".join(o.replace("_", " ") for o in others), groups)]
     if macro_only:
         variants.append(("Macro only (" + ", ".join(g.replace("_", " ") for g in macro_only) + ")", macro_only))
+    plain = {"Price shape only": "Price pattern only"}
     for name, g in variants:
         df = finder.out_of_sample(st, gold, g, start="2000-01", **kw)
         rows.append({"groups": name, **finder.oos_summary(df)})
@@ -153,7 +180,7 @@ def build_payload(gold: pd.Series, fx: pd.Series, health: pd.DataFrame | None = 
             "state": r.state, "prev_state": r.prev_state, "watching": r.watching if isinstance(r.watching, str) else None,
             "since": str(pd.Timestamp(r.date).date()), "close": r.close, "line_value": r.line_value,
             "distance": dist, "severity": r.severity, "note": m.get("note", ""),
-            "label": m.get("label", lid) + (f" ({lid.rsplit('_p', 1)[1]}th percentile)" if base != lid else ""),
+            "label": m.get("label", lid) + (_pct_mark(lid.rsplit('_p', 1)[1]) if base != lid else ""),
         })
     # Lines that never changed state have no transition yet: add them as intact with today's gap.
     have = {(d["id"], d["currency"]) for d in lines}
@@ -174,6 +201,30 @@ def build_payload(gold: pd.Series, fx: pd.Series, health: pd.DataFrame | None = 
                           "prev_state": None, "watching": item.get("direction"), "since": None, "close": close,
                           "line_value": lv, "distance": close / lv - 1, "severity": item.get("severity"),
                           "note": item.get("note", ""), "label": item.get("label", item["id"])})
+    # The last transition's close can be old; show today's reading for every line.
+    from ..indicators.trend import momentum_12_1 as _mom
+    stretch_now = {}
+    for cur_, t_ in s["stretch"].items():
+        stretch_now[cur_] = float(t_.loc["dist_10y_avg", "pct_since_float"]) if "dist_10y_avg" in t_.index else None
+    for d in lines:
+        cur_ = d.get("currency")
+        if cur_ not in ("USD", "CHF"):
+            continue
+        p_ = gold if cur_ == "USD" else chf
+        item = meta.get(d["id"].rsplit("_p", 1)[0] if d["id"].startswith("gold_stretch") else d["id"], {})
+        typ = item.get("type")
+        if typ == "manual_price":
+            d["line_value"] = float(item["value_usd"]) * (1.0 if cur_ == "USD" else float(fx.loc[as_of]))
+            d["close"] = float(p_.iloc[-1])
+        elif typ == "derived_ma":
+            d["line_value"] = float(p_.rolling(item["window_months"]).mean().iloc[-1])
+            d["close"] = float(p_.iloc[-1])
+        elif typ == "signal_zero_cross":
+            d["close"] = float(_mom(p_).iloc[-1])
+        elif typ == "stretch_percentile" and stretch_now.get(cur_) is not None:
+            d["close"] = stretch_now[cur_]
+        if typ in ("manual_price", "derived_ma") and d.get("line_value"):
+            d["distance"] = d["close"] / d["line_value"] - 1
     sev_rank = {"important": 0, "watch": 1, "info": 2}
     lines.sort(key=lambda d: (sev_rank.get(d["severity"], 3), d["id"], d["currency"] or ""))
     cutoff = as_of.to_timestamp() - pd.DateOffset(months=12)
@@ -184,7 +235,7 @@ def build_payload(gold: pd.Series, fx: pd.Series, health: pd.DataFrame | None = 
         base = d["line_id"].rsplit("_p", 1)[0] if d["line_id"].startswith("gold_stretch") else d["line_id"]
         d["label"] = meta.get(base, {}).get("label", d["line_id"])
         if base != d["line_id"]:
-            d["label"] += f" ({d['line_id'].rsplit('_p', 1)[1]}th percentile)"
+            d["label"] += _pct_mark(d["line_id"].rsplit("_p", 1)[1])
 
     # --- stretch ----------------------------------------------------------------------------
     stretch = {}
@@ -201,10 +252,12 @@ def build_payload(gold: pd.Series, fx: pd.Series, health: pd.DataFrame | None = 
     an = {
         "target": str(res.target), "summary": res.summary(), "spread": res.spread, "baseline": res.baseline,
         "disagreement": res.disagreement, "used": [LABELS.get(m, m) for m in res.used_measures],
+        "used_tech": res.used_measures, "dropped_plain": [LABELS.get(m, m.replace("_", " ")) for m in res.dropped_measures],
         "dropped": res.dropped_measures, "key_moments": res.key_moments[:5],
         "now": {LABELS.get(m, m): now[m] for m in res.used_measures},
         "matches": [{"month": str(m.month), "distance": m.distance, "group_distance": m.group_distance,
-                     "key_moment": m.key_moment, "differences": m.differences, "outcomes": m.outcomes,
+                     "key_moment": m.key_moment, "differences": m.differences, "differences_tech": m.differences_tech,
+                     "outcomes": m.outcomes,
                      "then": {LABELS.get(c, c): st.loc[m.month, c] for c in res.used_measures}}
                     for m in res.matches],
     }
@@ -242,9 +295,12 @@ def build_payload(gold: pd.Series, fx: pd.Series, health: pd.DataFrame | None = 
         "backdrop": backdrop(macro or {}, fx_daily, as_of, float_start),
         "reports": reports or [],
         "health": [] if health is None or health.empty else [
-            {"source": r.source_id, "latest": str(pd.Timestamp(r.latest_ref_date).date())
-             if not pd.isna(r.latest_ref_date) else None, "status": r.status} for r in health.itertuples()],
-        "pending": s["pending"],
+            {"source": r.source_id, "plain": SOURCE_PLAIN.get(r.source_id, r.source_id),
+             "latest": str(pd.Timestamp(r.latest_ref_date).date()) if not pd.isna(r.latest_ref_date) else None,
+             "status": r.status, "error": None if pd.isna(r.last_error) else r.last_error} for r in health.itertuples()],
+        "pending": PENDING + ([{"text": "Alerts based on the wider economy (a jump in interest rates after inflation; "
+                                        "how many Fed rate rises markets expect) aren't switched on yet.",
+                                "tech": " ".join(s["level_notes"])}] if s["level_notes"] else []),
     })
 
 

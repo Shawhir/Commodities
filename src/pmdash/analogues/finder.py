@@ -15,7 +15,7 @@ from dataclasses import dataclass, field
 import numpy as np
 import pandas as pd
 
-from .state import CATEGORICAL, LABELS, POINTS
+from .state import CATEGORICAL, FED_PLAIN, LABELS, MOOD_PLAIN, POINTS, TECH_LABELS
 
 
 @dataclass
@@ -25,6 +25,7 @@ class Match:
     group_distance: dict
     differences: list[str]
     outcomes: dict
+    differences_tech: list[str] = field(default_factory=list)
     key_moment: str | None = None
     dropped: list[str] = field(default_factory=list)
 
@@ -67,15 +68,27 @@ def forward_outcomes(p: pd.Series, horizons=(3, 6, 12, 24)) -> pd.DataFrame:
 
 def _describe_diff(measure: str, then, now) -> str:
     name = LABELS.get(measure, measure)
+    if measure == "fed_direction":
+        return f"{name}: {FED_PLAIN.get(then, then)} then, {FED_PLAIN.get(now, now)} now"
+    if measure == "regime":
+        return f"{name}: {MOOD_PLAIN.get(then, then)} then, {MOOD_PLAIN.get(now, now)} now"
     if measure in CATEGORICAL:
         return f"{name}: {then} then, {now} now"
     if measure == "efficiency_ratio":
         return f"{name}: {then:.2f} then vs {now:.2f} now"
     if measure in POINTS:
-        return f"{name}: {then:+.1f} pp then vs {now:+.1f} pp now"
+        return f"{name}: {then:+.1f} points then vs {now:+.1f} now"
     if measure.endswith("_pct"):
         return f"{name}: {then:.0f} then vs {now:.0f} now"
     return f"{name}: {then:+.0%} then vs {now:+.0%} now"
+
+
+def _describe_diff_tech(measure: str, then, now, dz: float | None) -> str:
+    name = TECH_LABELS.get(measure, measure)
+    if measure in CATEGORICAL:
+        return f"{name}: {then} vs {now} (categorical penalty)"
+    z = f", |dz| = {dz:.2f}" if dz is not None and dz == dz else ""
+    return f"{name}: {float(then):.4g} vs {float(now):.4g}{z}"
 
 
 def find(state: pd.DataFrame, target: str | pd.Period, groups: dict[str, list[str]],
@@ -149,8 +162,11 @@ def find(state: pd.DataFrame, target: str | pd.Period, groups: dict[str, list[st
     for m, v in picked:
         diffs = sorted(numeric, key=lambda c: -abs((z.loc[m, c] - zt[c])) if not pd.isna(z.loc[m, c]) else 0)
         words = [_describe_diff(c, state.loc[m, c], now[c]) for c in diffs[:2]]
-        words += [_describe_diff(c, state.loc[m, c], now[c]) for c in cats
-                  if not pd.isna(state.loc[m, c]) and state.loc[m, c] != now[c]]
+        tech = [_describe_diff_tech(c, state.loc[m, c], now[c], abs(z.loc[m, c] - zt[c])) for c in diffs[:2]]
+        for c in cats:
+            if not pd.isna(state.loc[m, c]) and state.loc[m, c] != now[c]:
+                words.append(_describe_diff(c, state.loc[m, c], now[c]))
+                tech.append(_describe_diff_tech(c, state.loc[m, c], now[c], None))
         outcomes = {}
         for cur, f in fwd.items():
             if m in f.index:
@@ -166,7 +182,7 @@ def find(state: pd.DataFrame, target: str | pd.Period, groups: dict[str, list[st
                 label = km.loc[j, "label"] if gap[j] == 0 else f"{km.loc[j, 'label']} ({gap[j]} months away)"
         matches.append(Match(m, v, {g: float(np.sqrt(d.loc[m])) for g, d in group_d2.items()},
                              words, outcomes, label,
-                             [c for c in numeric if pd.isna(state.loc[m, c])]))
+                             [c for c in numeric if pd.isna(state.loc[m, c])], tech))
 
     key = "fwd_12m_usd"
     vals = [mm.outcomes.get(key) for mm in matches if mm.outcomes.get(key) is not None]

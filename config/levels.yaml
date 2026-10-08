@@ -37,13 +37,13 @@ gold:
     direction: above
     severity: info
   - id: gold_10m_avg
-    label: "10-month average"
+    label: "10-month average (rule 2 switch point)"
     type: derived_ma
     window_months: 10
     direction: both
     severity: important
   - id: gold_mom_12_1
-    label: "12-1 momentum zero line"
+    label: "Rule 1 switch point (gold vs a year ago at zero)"
     type: signal_zero_cross
     signal: momentum_12_1
     direction: both
@@ -53,7 +53,7 @@ gold:
     type: regime_change
     severity: watch
   - id: gold_stretch_10y
-    label: "Stretch vs 10-year average"
+    label: "Gold vs its 10-year average"
     type: stretch_percentile
     measure: dist_10y_avg
     thresholds: [50, 90]

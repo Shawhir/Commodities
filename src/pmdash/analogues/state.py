@@ -17,28 +17,39 @@ from ..indicators.stretch import measures as price_measures
 from ..regime.labeller import label
 
 LABELS = {
-    "fall_from_24m_high": "fall from 24-month high",
-    "dist_10y_avg": "distance from 10-year average",
-    "return_3y": "3-year return",
-    "dist_10m_avg": "distance from 10-month average",
-    "dist_3y_avg": "distance from 3-year average",
-    "efficiency_ratio": "efficiency ratio",
-    "regime": "regime label",
-    "chf_dist_10y_avg": "gold in CHF vs its 10-year average",
-    "usdchf_chg_12m": "USD/CHF 12-month change",
-    "cpi_yoy": "US inflation (CPI, y/y)",
-    "real_yield_proxy": "real yield (10y minus inflation)",
-    "real_yield_proxy_chg_6m": "6-month change in real yield",
-    "yield_10y_chg_6m": "6-month change in 10y yield",
-    "real_yield_10y": "10-year TIPS real yield",
-    "oil_chg_12m": "oil (Brent) 12-month change",
-    "vix_pct": "VIX percentile (10y)",
-    "gpr_pct": "geopolitical risk percentile (10y)",
-    "dollar_chg_6m": "dollar 6-month change",
-    "fed_direction": "Fed direction",
-    "breakeven_10y": "10-year breakeven inflation",
-    "cftc_mm_pct": "managed-money positioning percentile (3y)",
+    "fall_from_24m_high": "distance below its 2-year high",
+    "dist_10y_avg": "gold vs its 10-year average",
+    "return_3y": "change over 3 years",
+    "dist_10m_avg": "gold vs its 10-month average",
+    "dist_3y_avg": "gold vs its 3-year average",
+    "efficiency_ratio": "how steady the move was",
+    "regime": "market mood",
+    "chf_dist_10y_avg": "gold in francs vs its 10-year average",
+    "usdchf_chg_12m": "francs per dollar, change over 12 months",
+    "cpi_yoy": "US inflation",
+    "real_yield_proxy": "interest rates after inflation",
+    "real_yield_proxy_chg_6m": "change in interest rates after inflation over 6 months",
+    "yield_10y_chg_6m": "change in the US 10-year interest rate over 6 months",
+    "real_yield_10y": "interest rates after inflation (official)",
+    "oil_chg_12m": "oil price change over 12 months",
+    "vix_pct": "stock market fear (0 to 100 scale)",
+    "gpr_pct": "war and political risk (0 to 100 scale)",
+    "dollar_chg_6m": "dollar change over 6 months",
+    "fed_direction": "US interest rates",
+    "breakeven_10y": "expected inflation over 10 years",
+    "cftc_mm_pct": "speculators' bets on gold (0 to 100 scale)",
 }
+TECH_LABELS = {
+    "fall_from_24m_high": "P / max(P, 24m) - 1", "dist_10y_avg": "P / SMA120 - 1", "return_3y": "P / P(t-36) - 1",
+    "dist_10m_avg": "P / SMA10 - 1", "dist_3y_avg": "P / SMA36 - 1", "efficiency_ratio": "efficiency ratio (12m)",
+    "regime": "regime label", "chf_dist_10y_avg": "P_CHF / SMA120_CHF - 1", "usdchf_chg_12m": "USD/CHF 12m change",
+    "cpi_yoy": "CPI-U y/y (lag 1m)", "real_yield_proxy": "GS10 - CPI y/y (pp)", "real_yield_proxy_chg_6m": "6m change in real-yield proxy (pp)",
+    "yield_10y_chg_6m": "6m change in GS10 (pp)", "real_yield_10y": "DFII10", "oil_chg_12m": "Brent 12m change",
+    "vix_pct": "VIX 120m percentile", "gpr_pct": "GPR 120m percentile", "dollar_chg_6m": "DTWEXBGS 6m change",
+    "fed_direction": "Fed direction (6m policy-rate change)", "breakeven_10y": "T10YIE", "cftc_mm_pct": "CFTC MM net 36m percentile",
+}
+FED_PLAIN = {"hiking": "rising", "cutting": "falling", "on hold": "steady"}
+MOOD_PLAIN = {"Up": "rising steadily", "Sideways": "going sideways", "Down": "falling steadily"}
 CATEGORICAL = {"regime", "fed_direction"}
 POINTS = {"real_yield_proxy", "real_yield_proxy_chg_6m", "yield_10y_chg_6m", "real_yield_10y", "breakeven_10y"}  # shown in pp
 

@@ -75,6 +75,32 @@ body { background: var(--bg); color: var(--fg); font-family: var(--font-body); f
 .note { color: var(--muted); font-size: 13px; max-width: 75ch; }
 .panel { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; min-width: 0; }
 
+/* layout: glance first, details folded */
+.glance-sec { display: grid; gap: 12px; }
+.glance-head { font-family: var(--font-display); font-weight: 500; font-size: 22px; line-height: 1.3; max-width: 62ch; }
+.glance { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px; }
+.gtile { text-align: left; font: inherit; color: inherit; background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 12px 14px; display: grid; gap: 4px; align-content: start; cursor: pointer; min-width: 0; }
+.gtile:hover { border-color: var(--gold); }
+.gtile .k { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.gtile .v { font-family: var(--font-display); font-size: 21px; line-height: 1.2; font-weight: 500; }
+.gtile .d { font-size: 12.5px; color: var(--muted); }
+.gtile .more { font-size: 12px; color: var(--gold); }
+.glance-foot { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px 16px; }
+.linkbtn { font: 500 13px var(--font-body); color: var(--fg); background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 5px 12px; cursor: pointer; }
+.linkbtn:hover { border-color: var(--gold); }
+details.fold { border-top: 1px solid var(--line); padding-top: 4px; }
+details.fold > summary { list-style: none; display: flex; align-items: center; justify-content: space-between; gap: 12px; cursor: pointer; padding: 10px 0; }
+details.fold > summary::-webkit-details-marker { display: none; }
+details.fold > summary h2 { font-family: var(--font-display); font-weight: 500; font-size: 18px; line-height: 1.3; margin-top: 2px; }
+details.fold > summary:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; border-radius: 4px; }
+.chev { flex: none; width: 10px; height: 10px; border-right: 2px solid var(--muted); border-bottom: 2px solid var(--muted); transform: rotate(45deg); margin-right: 6px; transition: transform 150ms ease; }
+details[open] > summary .chev { transform: rotate(-135deg); }
+.fold-body { display: grid; gap: 14px; padding-bottom: 18px; min-width: 0; }
+.sub-head { font-family: var(--font-display); font-weight: 500; font-size: 17px; margin: 6px 0 0; }
+.pm { gap: 14px; }
+.pm .glance-sec { margin-bottom: 10px; }
+
 /* plain-language text with a technical version on hover / tap */
 .jg, .jg-demo { text-decoration: underline dotted var(--faint); text-underline-offset: 3px; text-decoration-thickness: 1px; cursor: help; }
 .jg:hover, .jg:focus-visible, .jg.on { text-decoration-color: var(--gold); outline: none; }
@@ -179,7 +205,7 @@ table.t tr:last-child td { border-bottom: 0; }
 
 /* analogues */
 .verdict { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
-.tag { font-size: 12px; font-weight: 600; padding: 2px 10px; border-radius: 99px; background: var(--gold-soft); color: var(--fg); }
+.tag { white-space: nowrap; flex: none; font-size: 12px; font-weight: 600; padding: 2px 10px; border-radius: 99px; background: var(--gold-soft); color: var(--fg); }
 .tag.warn { background: transparent; border: 1px solid var(--warn); color: var(--warn); }
 .diff { color: var(--muted); font-size: 12px; }
 .diff li { margin: 0; }
@@ -220,12 +246,12 @@ table.t tr:last-child td { border-bottom: 0; }
 <div class="pm" id="pm">
   <header class="mast">
     <div>
-      <div class="eyebrow">Gold · monthly closes</div>
+      <div class="eyebrow jg" data-tech="Research series: monthly average prices (datasets/gold-prices), used as monthly closes">Gold · monthly prices</div>
       <h1>Precious Metals Dashboard</h1>
       <p class="sub" id="mast-sub">—</p>
     </div>
     <div class="right">
-      <span class="label-chip">Descriptive, not predictive</span>
+      <span class="label-chip jg" data-tech="Descriptive, not predictive (section 11 guardrail). No forecasts, no instructions.">Describes, doesn't predict</span>
       <div class="seg" role="group" aria-label="Currency">
         <button type="button" id="cur-chf" data-cur="CHF" aria-pressed="true">CHF</button>
         <button type="button" id="cur-usd" data-cur="USD" aria-pressed="false">USD</button>
@@ -233,55 +259,46 @@ table.t tr:last-child td { border-bottom: 0; }
     </div>
   </header>
 
-  <section class="sec" id="brief">
-    <div class="sec-head">
-      <div><div class="eyebrow">This month at a glance · what your rules say, not advice</div><h2 id="brief-head">—</h2></div>
+  <section class="glance-sec" id="glance-sec" aria-label="At a glance">
+    <h2 id="brief-head" class="glance-head">—</h2>
+    <div class="glance" id="glance"></div>
+    <div class="glance-foot">
+      <p class="note">Tap a box to see the detail. Hover over (or tap) <span class="jg-demo">underlined text</span> for the technical version. This page describes; it never tells you what to do.</p>
+      <button type="button" class="linkbtn" id="toggle-all">Open all</button>
     </div>
-    <p class="note">Hover over (or tap) any <span class="jg-demo">underlined text</span> to see the technical version.</p>
-    <div class="brief">
+  </section>
+
+  <details class="sec fold" id="d-rules">
+    <summary><div><div class="eyebrow">Your two rules and what would switch them</div><h2 id="sum-rules">—</h2></div><span class="chev" aria-hidden="true"></span></summary>
+    <div class="fold-body">
       <div class="brief-grid">
-        <div class="panel brief-card">
-          <div class="eyebrow">Your two trend rules: where they stand and what would switch them</div>
-          <div id="brief-rules"></div>
-        </div>
+        <div class="panel brief-card"><div id="brief-rules"></div></div>
         <div class="panel brief-card">
           <div class="eyebrow">Market mood next month, depending on gold's average price</div>
           <div id="brief-regime"></div>
-          <div class="eyebrow" style="margin-top:6px">Price levels to watch</div>
-          <div class="tbl-wrap"><table class="t" id="brief-lines"></table></div>
         </div>
       </div>
+    </div>
+  </details>
+
+  <details class="sec fold" id="d-push">
+    <summary><div><div class="eyebrow">What is pushing gold up or down</div><h2 id="sum-push">—</h2></div><span class="chev" aria-hidden="true"></span></summary>
+    <div class="fold-body">
+      <div class="panel brief-card"><div class="tbl-wrap"><table class="t" id="press-table"></table></div></div>
       <div class="panel brief-card">
-        <div class="eyebrow">What is pushing gold up or down</div>
-        <div class="tbl-wrap"><table class="t" id="press-table"></table></div>
+        <div class="eyebrow">Mixed signals</div>
+        <ul class="blist" id="brief-conflicts"></ul>
       </div>
-      <div class="brief-grid">
-        <div class="panel brief-card">
-          <div class="eyebrow">Mixed signals</div>
-          <ul class="blist" id="brief-conflicts"></ul>
-        </div>
-        <div class="panel brief-card">
-          <div class="eyebrow">Dates to know</div>
-          <ul class="blist" id="brief-upcoming"></ul>
-          <div class="eyebrow" style="margin-top:6px">What this page can't tell you yet</div>
-          <ul class="blist muted" id="brief-gaps"></ul>
-        </div>
-      </div>
-      <p class="note">Prices are monthly averages, so "end of the month" means that month's average price. "Usually" describes how something has tended to affect gold in the past, not what it will do next. The rules and price levels come from your own settings; this section shows where they stand and never tells you what to do.</p>
+      <div class="eyebrow">The wider economy, in numbers</div>
+      <h3 id="bd-head" class="sub-head">—</h3>
+      <div class="tiles" id="bd-tiles"></div>
+      <p class="note jg" data-tech="Percentiles are against each series' own monthly history since August 1971, or since it starts if later. Sample sizes are shown. The real yield is a proxy (10-year Treasury minus trailing CPI inflation) so that one definition covers the whole history.">"Higher than X% of months" compares today with that series' own history since 1971, or since it started. Interest rates after inflation are estimated as the US 10-year interest rate minus inflation, so one method covers the whole history.</p>
     </div>
-  </section>
+  </details>
 
-  <section class="sec" id="regime">
-    <div class="sec-head">
-      <div><div class="eyebrow">Regime</div><h2 id="regime-head">—</h2></div>
-    </div>
-    <div class="cards" id="regime-cards"></div>
-    <p class="note">Up when the efficiency ratio is at least 0.30 and the 12-month return at least +10%; Down at −10% or worse; otherwise Sideways. Rules fixed in section 8.1, judged on monthly average closes. The section 8 study labels regimes on the USD price.</p>
-  </section>
-
-  <section class="sec" id="price">
-    <div class="sec-head">
-      <div><div class="eyebrow">Price and key lines</div><h2 id="price-head">—</h2></div>
+  <details class="sec fold" id="d-price">
+    <summary><div><div class="eyebrow">Gold's price and mood</div><h2 id="price-head">—</h2></div><span class="chev" aria-hidden="true"></span></summary>
+    <div class="fold-body">
       <div class="chart-tools">
         <div class="seg" role="group" aria-label="Range">
           <button type="button" id="rng-3" data-range="3">3y</button>
@@ -289,119 +306,111 @@ table.t tr:last-child td { border-bottom: 0; }
           <button type="button" id="rng-20" data-range="20">20y</button>
           <button type="button" id="rng-all" data-range="all">Since 1971</button>
         </div>
-        <label class="check"><input type="checkbox" id="log-scale"> Log scale</label>
+        <label class="check" title="Logarithmic y-axis: equal vertical distances are equal percentage changes."><input type="checkbox" id="log-scale"> Show % changes evenly</label>
       </div>
-    </div>
-    <div class="panel">
-      <div class="chart-wrap" id="price-chart"></div>
-      <div class="legend" id="price-legend"></div>
-    </div>
-  </section>
-
-  <section class="sec" id="backdrop">
-    <div class="sec-head">
-      <div><div class="eyebrow">Backdrop</div><h2 id="bd-head">—</h2></div>
-    </div>
-    <div class="tiles" id="bd-tiles"></div>
-    <p class="note">Percentiles are against each series' own monthly history since August 1971, or since it starts if later. Sample sizes are shown. The real yield is a proxy (10-year Treasury minus trailing CPI inflation) so that one definition covers the whole history.</p>
-  </section>
-
-  <div class="two">
-    <section class="sec" id="lines">
-      <div class="sec-head">
-        <div><div class="eyebrow">Key lines</div><h2 id="lines-head">—</h2></div>
+      <div class="panel">
+        <div class="chart-wrap" id="price-chart"></div>
+        <div class="legend" id="price-legend"></div>
       </div>
+      <h3 id="regime-head" class="sub-head">—</h3>
+      <div class="cards" id="regime-cards"></div>
+      <p class="note jg" data-tech="Regime (section 8.1): Up when the efficiency ratio is at least 0.30 and the 12-month return at least +10%; Down at -10% or worse; otherwise Sideways. Judged on monthly average closes. The section 8 study labels regimes on the USD price.">"Rising steadily" means gold is at least 10% higher than a year ago and got there fairly smoothly. "Falling steadily" is the same in reverse. Anything else counts as going sideways.</p>
+    </div>
+  </details>
+
+  <details class="sec fold" id="d-lines">
+    <summary><div><div class="eyebrow">Price levels to watch</div><h2 id="lines-head">—</h2></div><span class="chev" aria-hidden="true"></span></summary>
+    <div class="fold-body">
       <div class="panel tbl-wrap"><table class="t" id="lines-table"></table></div>
-      <p class="note">Judged on closes with a buffer, never on touches. Only <em>confirmed</em> and <em>failed</em> are alerts. With monthly data only, a break beyond the buffer is confirmed on the same close; daily data will separate the two.</p>
-    </section>
+      <p class="note jg" data-tech="Judged on closes with a 1% buffer, never on touches. State machine: intact, approaching, broken, confirmed, failed. Only confirmed and failed are alerts. With monthly data only, a break beyond the buffer is confirmed on the same close; daily data will separate the two.">A level only counts as crossed when a month's price ends clearly beyond it (by more than 1%), not when it briefly touches it. You get an alert only when a crossing holds, or when the price comes straight back.</p>
+      <h3 id="trig-head" class="sub-head">—</h3>
+      <div class="panel tbl-wrap"><table class="t" id="trig-table"></table></div>
+    </div>
+  </details>
 
-    <section class="sec" id="stretch">
-      <div class="sec-head">
-        <div><div class="eyebrow">Stretch</div><h2 id="stretch-head">—</h2></div>
-      </div>
+  <details class="sec fold" id="d-stretch">
+    <summary><div><div class="eyebrow">How far gold is from its usual levels</div><h2 id="stretch-head">—</h2></div><span class="chev" aria-hidden="true"></span></summary>
+    <div class="fold-body">
       <div class="panel st-list" id="stretch-list"></div>
-      <p class="note">Filled dot: percentile since 1971 (floating-era windows, so the 10-year average starts in 1981). Hollow dot: percentile within the last 10 years. Sample sizes in brackets.</p>
-    </section>
-  </div>
+      <p class="note jg" data-tech="Filled dot: percentile since 1971 (floating-era windows, so the 10-year average starts in 1981). Hollow dot: percentile within the last 10 years. Sample sizes in brackets.">Filled dot: how today compares with every month since 1971. Hollow dot: how it compares with the last 10 years. Further right means a larger share of past months were lower.</p>
+    </div>
+  </details>
 
-  <section class="sec" id="triggers">
-    <div class="sec-head">
-      <div><div class="eyebrow">Triggers</div><h2 id="trig-head">—</h2></div>
+  <details class="sec fold" id="d-dates">
+    <summary><div><div class="eyebrow">Dates to know and reports</div><h2 id="rep-head">—</h2></div><span class="chev" aria-hidden="true"></span></summary>
+    <div class="fold-body">
+      <div class="panel brief-card"><ul class="blist" id="brief-upcoming"></ul></div>
+      <div class="panel tbl-wrap"><table class="t" id="rep-table"></table></div>
+      <p class="note jg" data-tech="Release calendar (section 9.6). 'Enter' means the figures come from a report whose terms rule out automated download. With no consensus-forecast feed, changes are compared with the prior release and the 12-month trend, not with expectations.">"Type in by hand" means the publisher doesn't allow automatic downloads. There's no feed of what forecasters expected, so new figures are compared with the previous release and the past year instead.</p>
     </div>
-    <div class="panel tbl-wrap"><table class="t" id="trig-table"></table></div>
-  </section>
+  </details>
 
-  <section class="sec" id="reports">
-    <div class="sec-head">
-      <div><div class="eyebrow">Reports and releases</div><h2 id="rep-head">—</h2></div>
-    </div>
-    <div class="panel tbl-wrap"><table class="t" id="rep-table"></table></div>
-    <p class="note">From the release calendar. "Enter" means the figures come from a report whose terms rule out automated download, so they are typed in by hand. With no consensus-forecast feed, changes are compared with the prior release and the 12-month trend, not with expectations.</p>
-  </section>
-
-  <section class="sec" id="analogues">
-    <div class="sec-head">
-      <div><div class="eyebrow">When did it last look like this?</div><h2 id="an-head">—</h2></div>
-      <div class="verdict" id="an-verdict"></div>
-    </div>
-    <div class="panel">
-      <div class="chart-wrap" id="an-chart"></div>
-      <p class="note" id="an-summary">—</p>
-    </div>
-    <div class="panel tbl-wrap"><table class="t" id="an-table"></table></div>
-    <div class="two">
+  <details class="sec fold" id="d-analogues">
+    <summary><div><div class="eyebrow">When did it last look like this?</div><h2 id="an-head">—</h2></div><span class="verdict" id="an-verdict"></span><span class="chev" aria-hidden="true"></span></summary>
+    <div class="fold-body">
       <div class="panel">
-        <div class="eyebrow">Out-of-sample check, every month since 2000</div>
-        <div class="tbl-wrap"><table class="t" id="oos-table"></table></div>
-        <p class="note" style="margin-top:8px">Each month uses only earlier history. Months overlap, so they are not independent tests. The finder is labelled useful only if its median beats the unconditional median in most months and calls direction more often.</p>
+        <div class="chart-wrap" id="an-chart"></div>
+        <p class="note" id="an-summary">—</p>
+      </div>
+      <div class="panel tbl-wrap"><table class="t" id="an-table"></table></div>
+      <div class="two">
+        <div class="panel">
+          <div class="eyebrow jg" data-tech="Out-of-sample check: for every month since 2000, the finder ran on earlier history only.">Has this comparison worked before? Tested on every month since 2000</div>
+          <div class="tbl-wrap"><table class="t" id="oos-table"></table></div>
+          <p class="note jg" style="margin-top:8px" data-tech="Each month uses only earlier history. Months overlap (12-month outcomes), so they are not independent tests. Labelled useful only if the matched median beats the unconditional median in most months and calls direction more often.">Each month was tested using only the history available at the time. The months overlap, so there are fewer independent tests than it looks. The comparison would count as useful only if it beat the simple rule "gold usually rises" in most months.</p>
+        </div>
+        <div class="panel">
+          <div class="eyebrow">What the comparison looks at</div>
+          <p class="note jg" id="an-measures" style="margin-top:6px">—</p>
+          <div class="eyebrow jg" style="margin-top:12px" data-tech="Key moments catalogue (data/key_moments.csv): distance in the same standardised space.">Closest famous moments</div>
+          <div class="tbl-wrap"><table class="t" id="km-table"></table></div>
+        </div>
+      </div>
+    </div>
+  </details>
+
+  <details class="sec fold" id="d-history">
+    <summary><div><div class="eyebrow">Since 1971: market mood and how the rules did</div><h2 id="hist-head">—</h2></div><span class="chev" aria-hidden="true"></span></summary>
+    <div class="fold-body">
+      <div class="panel">
+        <div class="chart-wrap" id="strip"></div>
+        <div class="legend" style="margin-top:8px">
+          <span><i class="sw box" style="background:var(--up)"></i>Rising steadily</span>
+          <span><i class="sw box" style="background:var(--side)"></i>Going sideways</span>
+          <span><i class="sw box" style="background:var(--down)"></i>Falling steadily</span>
+        </div>
+        <div class="eyebrow jg" style="margin-top:14px" data-tech="Sideways episodes (USD regime, at least 12 months, gaps up to 2 months merged).">Long sideways stretches (in dollars, a year or longer)</div>
+        <div class="episodes" id="episodes" style="margin-top:6px"></div>
+      </div>
+      <div class="two">
+        <div class="panel tbl-wrap">
+          <div class="eyebrow jg" data-tech="Backtest, section 8.3: switching between gold and cash on monthly signals.">How the rules would have done, <span id="study-window">—</span></div>
+          <table class="t" id="study-table"></table>
+        </div>
+        <div class="panel tbl-wrap">
+          <div class="eyebrow jg" data-tech="Per-regime results (section 8.3): month t+1 returns classified by the regime label at t, annualised geometrically.">By market mood (in dollars)</div>
+          <table class="t" id="per-table"></table>
+        </div>
+      </div>
+      <p class="note jg" data-tech="Signal on a month's close sets the next month's position. 0.2% cost per switch, cash at 0% (understates the rules until T-bill and SARON returns are added). CHF results apply the USD signal. The chop filter was tested and rejected.">Each rule's signal at the end of a month decides what it holds the next month. Each switch costs 0.2%. Time out of gold earns nothing here, which flatters "just hold gold" until interest on cash is added. Franc results use the dollar signals. Pausing rule 1 in sideways markets was tested and made results worse.</p>
+    </div>
+  </details>
+
+  <details class="sec fold" id="d-data">
+    <summary><div><div class="eyebrow">Data and what's missing</div><h2 id="sum-data">—</h2></div><span class="chev" aria-hidden="true"></span></summary>
+    <div class="fold-body foot">
+      <div class="panel">
+        <div class="eyebrow">What this page can't tell you yet</div>
+        <ul class="blist muted" id="brief-gaps" style="margin-top:6px"></ul>
+        <ul id="pending"></ul>
       </div>
       <div class="panel">
-        <div class="eyebrow">Measures</div>
-        <p class="note" id="an-measures" style="margin-top:6px">—</p>
-        <div class="eyebrow" style="margin-top:12px">Closest key moments</div>
-        <div class="tbl-wrap"><table class="t" id="km-table"></table></div>
+        <div class="eyebrow jg" data-tech="Data health: last success, latest period, staleness per source.">Data freshness</div>
+        <div class="tbl-wrap"><table class="t" id="health"></table></div>
+        <p class="note jg" style="margin-top:8px" data-tech="Prices: monthly averages from datasets/gold-prices and datasets/exchange-rates (research baseline). Macro: FRED API; positioning: CFTC; geopolitical risk: Caldara-Iacoviello.">Prices are monthly averages from public datasets. Economic data comes from the US Federal Reserve's database, positioning from the US futures regulator, and war-risk data from two Fed economists' index.</p>
       </div>
     </div>
-  </section>
-
-  <section class="sec" id="history">
-    <div class="sec-head">
-      <div><div class="eyebrow">Regime history</div><h2 id="hist-head">—</h2></div>
-    </div>
-    <div class="panel">
-      <div class="chart-wrap" id="strip"></div>
-      <div class="legend" style="margin-top:8px">
-        <span><i class="sw box" style="background:var(--up)"></i>Up</span>
-        <span><i class="sw box" style="background:var(--side)"></i>Sideways</span>
-        <span><i class="sw box" style="background:var(--down)"></i>Down</span>
-      </div>
-      <div class="eyebrow" style="margin-top:14px">Sideways episodes (USD, at least 12 months, gaps up to 2 merged)</div>
-      <div class="episodes" id="episodes" style="margin-top:6px"></div>
-    </div>
-    <div class="two">
-      <div class="panel tbl-wrap">
-        <div class="eyebrow">Rules tested, <span id="study-window">—</span></div>
-        <table class="t" id="study-table"></table>
-      </div>
-      <div class="panel tbl-wrap">
-        <div class="eyebrow">By regime (USD)</div>
-        <table class="t" id="per-table"></table>
-      </div>
-    </div>
-    <p class="note">Signal on a month's close sets the next month's position. 0.2% cost per switch, cash at 0% (understates the rules until T-bill and SARON returns are added). CHF results apply the USD signal. The chop filter was tested and rejected.</p>
-  </section>
-
-  <footer class="foot">
-    <div class="panel">
-      <div class="eyebrow">Not yet available</div>
-      <ul id="pending"></ul>
-    </div>
-    <div class="panel">
-      <div class="eyebrow">Data health</div>
-      <div class="tbl-wrap"><table class="t" id="health"></table></div>
-      <p class="note" style="margin-top:8px">Source: monthly averages from the datasets/gold-prices and datasets/exchange-rates collections. Research baseline only.</p>
-    </div>
-  </footer>
+  </details>
 </div>
 
 <script type="application/json" id="pmdash-data">__PMDASH_DATA__</script>
@@ -415,6 +424,7 @@ table.t tr:last-child td { border-bottom: 0; }
 
   var NS = "http://www.w3.org/2000/svg";
   var MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  var MONTHS_FULL = ["January","February","March","April","May","June","July","August","September","October","November","December"];
   function $(id) { return document.getElementById(id); }
   function el(tag, attrs, text) {
     var e = document.createElement(tag);
@@ -431,14 +441,196 @@ table.t tr:last-child td { border-bottom: 0; }
   function clear(node) { while (node.firstChild) node.removeChild(node.firstChild); return node; }
   function css(name) { return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
 
+  // ---------- shared plain-language helpers ----------
+  // Plain text on the page; the technical version shows in a pop-up on hover, keyboard focus or tap.
+  var jgTip = null, jgPinned = null;
+  function jgShow(node) {
+    if (!jgTip) { jgTip = el("div", { class: "jgtip", role: "tooltip", hidden: "" }); document.body.appendChild(jgTip); }
+    clear(jgTip); jgTip.appendChild(el("b", null, "Technical version")); jgTip.appendChild(document.createTextNode(node.dataset.tech));
+    jgTip.hidden = false;
+    var r = node.getBoundingClientRect(), tw = jgTip.offsetWidth, th = jgTip.offsetHeight;
+    var left = Math.min(Math.max(16, r.left), window.innerWidth - tw - 16);
+    var top = r.bottom + 6; if (top + th > window.innerHeight - 8) top = Math.max(8, r.top - th - 6);
+    jgTip.style.left = left + "px"; jgTip.style.top = top + "px";
+  }
+  function jgHide() { if (jgTip) jgTip.hidden = true; if (jgPinned) jgPinned.classList.remove("on"); jgPinned = null; }
+  function jgWire(e) {
+    if (e._jg) return e; e._jg = true;
+    e.classList.add("jg"); e.tabIndex = 0;
+    {
+      e.addEventListener("mouseenter", function () { if (!jgPinned) jgShow(e); });
+      e.addEventListener("mouseleave", function () { if (!jgPinned) jgHide(); });
+      e.addEventListener("focus", function () { jgShow(e); });
+      e.addEventListener("blur", function () { if (jgPinned !== e) jgHide(); });
+      e.addEventListener("click", function (ev) {
+        ev.stopPropagation();
+        if (jgPinned === e) { jgHide(); return; }
+        jgHide(); jgPinned = e; e.classList.add("on"); jgShow(e);
+      });
+    }
+    return e;
+  }
+  function jg(tag, attrs, text, tech) {
+    var e = el(tag, attrs, text);
+    if (tech) { e.dataset.tech = tech; jgWire(e); }
+    return e;
+  }
+  function setText(id, text, tech) {
+    var e = $(id); if (!e) return; e.textContent = text;
+    if (tech) { e.dataset.tech = tech; jgWire(e); }
+  }
+  document.addEventListener("click", function () { if (jgPinned) jgHide(); });
+  document.addEventListener("keydown", function (ev) { if (ev.key === "Escape") jgHide(); });
+  window.addEventListener("scroll", function () { if (!jgPinned) { if (jgTip) jgTip.hidden = true; } else jgShow(jgPinned); }, { passive: true });
+
+
+  var MOOD = { Up: "Rising steadily", Sideways: "Going sideways", Down: "Falling steadily" };
+  var STATE_PLAIN = { intact: "not crossed", approaching: "getting close", broken: "crossed", confirmed: "crossed and held", failed: "crossed, then recovered" };
+  var EFFECT_PLAIN = { headwind: "down", support: "up", mixed: "either way", neutral: "little effect now", crowded: "risk of a sharp drop",
+    "washed out": "room to recover", "lowers CHF returns": "down, in francs", "raises CHF returns": "up, in francs" };
+  var ONOFF = { In: "ON", Out: "OFF" };
+  var SEV_PLAIN = { important: "key level", watch: "watch", info: "for info" };
+  var REPORT_STATUS = { upcoming: "coming", due: "due now", late: "late", overdue: "overdue", received: "arrived",
+    happened: "happened", enter: "type in by hand", "fetch failed": "download failed" };
+  var HEALTH_PLAIN = function (s) { return s === "ok" ? "up to date" : s === "never succeeded" ? "never loaded" :
+    s.indexOf("stale") === 0 ? "out of date" : s === "last attempt failed" ? "last try failed" : s; };
+  function cname(cur) { return cur === "CHF" ? "francs" : "dollars"; }
+  function updown(x, d) { return (x >= 0 ? "up " : "down ") + pct(Math.abs(x), d === undefined ? 0 : d).replace("+", ""); }
+
   // ---------- masthead ----------
   function renderMast() {
-    $("mast-sub").textContent = "Data to " + monthName(D.as_of) + " · built " + D.built + " · all figures computed from stored monthly averages";
+    setText("mast-sub", "Prices to " + monthName(D.as_of) + " · updated " + D.built,
+      "Data to " + D.as_of + " (latest monthly average); built " + D.built + "; all figures computed from stored point-in-time data");
     ["cur-chf", "cur-usd"].forEach(function (id) { var b = $(id); b.setAttribute("aria-pressed", String(b.dataset.cur === S.cur)); });
     ["rng-3", "rng-10", "rng-20", "rng-all"].forEach(function (id) { var b = $(id); b.setAttribute("aria-pressed", String(b.dataset.range === S.range)); });
   }
 
-  // ---------- regime cards ----------
+  // ---------- at a glance ----------
+  function openSection(id) {
+    var d = $(id); if (!d) return;
+    d.open = true; saveOpen(); d.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
+  }
+  function tile(k, v, dtxt, target, tech) {
+    var b = el("button", { type: "button", class: "gtile" });
+    b.appendChild(el("span", { class: "k" }, k));
+    b.appendChild(el("span", { class: "v" }, v));
+    if (dtxt) b.appendChild(el("span", { class: "d" }, dtxt));
+    b.appendChild(el("span", { class: "more" }, "See detail ›"));
+    if (tech) b.title = tech;
+    b.addEventListener("click", function () { openSection(target); });
+    return b;
+  }
+  function renderGlance() {
+    var B = D.brief, cur = S.cur, host = clear($("glance"));
+    setText("brief-head", B.headline, B.headline_tech);
+    var r = D.regime.filter(function (x) { return x.currency === cur; })[0];
+    var other = D.regime.filter(function (x) { return x.currency !== cur; })[0];
+    host.appendChild(tile("Gold today", money(r.close, cur), updown(r.return_12m) + " on a year ago (" + monthName(r.month) + " average)", "d-price",
+      "Monthly average P = " + r.close.toFixed(2) + " " + cur + "; 12-month return " + pct(r.return_12m, 2)));
+    host.appendChild(tile("Market mood", MOOD[r.regime], "In " + cname(other.currency) + ": " + MOOD[other.regime].toLowerCase(), "d-price",
+      "Regime " + r.regime + " (" + cur + "), " + other.regime + " (" + other.currency + ")"));
+    var R = B.rules[cur], m = R.momentum, a = R.ma;
+    var cands = [];
+    m.steps.forEach(function (st) {
+      if (!st.known) cands.push({ gap: Math.abs(st.threshold / r.close - 1),
+        text: "rule 1 turns " + (m.state === "In" ? "OFF" : "ON") + " if " + MONTHS_FULL[+st.depends_on.slice(5) - 1] + " averages " + (m.state === "In" ? "below " : "above ") + money(st.threshold, cur) });
+    });
+    cands.push({ gap: Math.abs(a.threshold / r.close - 1),
+      text: "rule 2 turns " + (a.state === "Out" ? "ON" : "OFF") + " if " + MONTHS_FULL[+a.month.slice(5) - 1] + " averages " + (a.state === "Out" ? "above " : "below ") + money(a.threshold, cur) });
+    cands.sort(function (p, q) { return p.gap - q.gap; });
+    host.appendChild(tile("Your rules", "1 " + m.onoff + " · 2 " + a.onoff, "Nearest switch: " + cands[0].text, "d-rules",
+      "12-1 momentum " + m.state + ", SMA10 rule " + a.state));
+    var heads = B.pressures.filter(function (p) { return p.usual_effect === "headwind"; }).map(function (p) { return p.factor; });
+    var sups = B.pressures.filter(function (p) { return p.usual_effect === "support"; }).map(function (p) { return p.factor; });
+    host.appendChild(tile("Pushing gold", heads.length + " down · " + sups.length + " up",
+      (heads.length ? "Down: " + heads.join(", ") : "") + (sups.length ? (heads.length ? ". " : "") + "Up: " + sups.join(", ") : ""), "d-push",
+      "Backdrop: " + heads.length + " headwinds, " + sups.length + " supports"));
+    var near = D.lines.filter(function (L) { return L.currency === cur && L.distance !== null && L.distance !== undefined && (L.type === "manual_price" || L.type === "derived_ma"); })
+      .sort(function (p, q) { return Math.abs(p.distance) - Math.abs(q.distance); })[0];
+    if (near) host.appendChild(tile("Nearest price level", near.label, "Gold is " + pct(Math.abs(near.distance)).replace("+", "") + (near.distance >= 0 ? " above" : " below") + " it (" + money(near.line_value, cur) + ")", "d-lines",
+      near.id + ": distance " + pct(near.distance, 2)));
+    var nx = B.upcoming.filter(function (u) { return u.report_id !== "cftc_cot"; })[0] || B.upcoming[0];
+    if (nx) host.appendChild(tile("Next date", nx.plain_name || nx.name, nx.window_start === nx.window_end ? nx.window_start : nx.window_start + " to " + nx.window_end, "d-dates",
+      nx.name + " (" + nx.period + ")"));
+  }
+
+  // ---------- rules (brief) ----------
+  function renderRules() {
+    var B = D.brief, cur = S.cur, R = B.rules[cur];
+    $("sum-rules").textContent = "Rule 1 is " + R.momentum.onoff + " and rule 2 is " + R.ma.onoff + " (in " + cname(cur) + ")";
+    var host = clear($("brief-rules"));
+    [R.momentum, R.ma].forEach(function (r) {
+      var box = el("div", { class: "rule" });
+      var top = el("div", { class: "rule-top" });
+      var name = el("span"); name.appendChild(el("b", null, r.name)); name.appendChild(document.createTextNode(" · " + cur));
+      top.appendChild(name);
+      top.appendChild(jg("span", { class: "pill " + (r.state === "In" ? "in" : "out") }, r.onoff, "Rule state: " + r.state));
+      box.appendChild(top);
+      box.appendChild(jg("p", { class: "note" }, r.explain, r.tech));
+      var ul = el("ul", { class: "steps" });
+      if (r.steps) {
+        r.steps.forEach(function (st) { ul.appendChild(jg("li", { class: st.known ? "known" : "" }, st.text, st.tech)); });
+        ul.appendChild(jg("li", null, r.if_flat, r.if_flat_tech));
+      } else {
+        ul.appendChild(jg("li", { class: "known" }, r.text, "Breakeven next-month price = mean of the last 9 monthly averages = " +
+          r.threshold.toFixed(2) + "; SMA10 now " + r.average.toFixed(2)));
+      }
+      box.appendChild(ul);
+      host.appendChild(box);
+    });
+    var rg = clear($("brief-regime")), X = B.regimes[cur];
+    var t = el("div", { class: "rule-top" });
+    var nm = el("span"); nm.appendChild(el("b", null, "Now: " + MOOD[X.now].toLowerCase()));
+    nm.appendChild(document.createTextNode(" · " + updown(X.ret, 1) + " on a year ago"));
+    t.appendChild(nm);
+    t.appendChild(jg("span", { class: "pill r-" + X.now }, MOOD[X.now], "Regime label: " + X.now + " (r12 " + pct(X.ret) + ", efficiency ratio " + X.er.toFixed(2) + ")"));
+    rg.appendChild(t);
+    var last = D.regime.filter(function (r) { return r.currency === cur; })[0].close;
+    var cuts = [];
+    X.ranges.forEach(function (z) { if (z.high_cut) cuts.push(z.high_cut); });
+    var lo = Math.min(last, cuts.length ? cuts[0] : last) * 0.8, hi = Math.max(last, cuts.length ? cuts[cuts.length - 1] : last) * 1.12;
+    var wrap = el("div", { class: "zone-wrap" }), bar = el("div", { class: "zone", role: "img", "aria-label": X.text });
+    X.ranges.forEach(function (z) {
+      var a = Math.max(lo, z.low_cut || lo), b = Math.min(hi, z.high_cut || hi);
+      if (b <= a) return;
+      var sp = el("span", { class: "z-" + z.regime, title: MOOD[z.regime] }); sp.style.width = ((b - a) / (hi - lo) * 100) + "%"; bar.appendChild(sp);
+    });
+    var mk = el("i", { class: "mark" }); mk.style.left = ((last - lo) / (hi - lo) * 100) + "%"; bar.appendChild(mk);
+    wrap.appendChild(bar);
+    var tl = el("span", { class: "zone-lbl top" }, "Now " + Math.round(last).toLocaleString("en-US")); tl.style.left = ((last - lo) / (hi - lo) * 100) + "%"; wrap.appendChild(tl);
+    cuts.forEach(function (c) { var l = el("span", { class: "zone-lbl bot" }, Math.round(c).toLocaleString("en-US")); l.style.left = ((c - lo) / (hi - lo) * 100) + "%"; wrap.appendChild(l); });
+    rg.appendChild(wrap);
+    rg.appendChild(jg("p", { class: "note" }, X.text + ". Green: rising steadily. Grey: going sideways. Red: falling steadily. The gold mark is the latest monthly average.", X.tech));
+  }
+
+  // ---------- what is pushing gold ----------
+  function renderPush() {
+    var B = D.brief;
+    var heads = B.pressures.filter(function (p) { return p.usual_effect === "headwind"; }).length;
+    var sups = B.pressures.filter(function (p) { return p.usual_effect === "support"; }).length;
+    var mixed = B.pressures.filter(function (p) { return p.usual_effect === "mixed"; }).length;
+    $("sum-push").textContent = heads + " usually push gold down, " + sups + " up, " + mixed + " either way";
+    var pt = clear($("press-table"));
+    var h2 = el("tr"); [["What", ""], ["Now", ""], ["Usually pushes gold", ""], ["Why", ""]].forEach(function (h) { h2.appendChild(el("th", { class: h[1] }, h[0])); });
+    var th2 = el("thead"); th2.appendChild(h2); pt.appendChild(th2);
+    var tb2 = el("tbody");
+    B.pressures.forEach(function (p) {
+      var tr = el("tr");
+      tr.appendChild(el("td", { class: "line-name" }, p.factor));
+      tr.appendChild(jg("td", null, p.reading, p.tech));
+      var c = el("td"); c.appendChild(jg("span", { class: "fx fx-" + p.usual_effect.split(" ")[0] }, EFFECT_PLAIN[p.usual_effect] || p.usual_effect,
+        "Classification: " + p.usual_effect + " (theme " + p.theme + ")")); tr.appendChild(c);
+      tr.appendChild(el("td", { class: "line-note" }, p.why));
+      tb2.appendChild(tr);
+    });
+    pt.appendChild(tb2);
+    var cf = clear($("brief-conflicts"));
+    if (!B.conflicts.length) cf.appendChild(el("li", null, "No mixed signals right now."));
+    B.conflicts.forEach(function (c) { cf.appendChild(jg("li", null, c.text, c.tech)); });
+    renderBackdrop();
+  }
+
+  // ---------- gold price and mood ----------
   function sparkline(svgW, cur) {
     var ser = D.series, n = ser.months.length, k = 36, xs = ser[cur].slice(n - k), regs = ser["regime_" + cur].slice(n - k);
     var lo = Math.min.apply(null, xs), hi = Math.max.apply(null, xs), h = 46, pad = 4;
@@ -459,31 +651,32 @@ table.t tr:last-child td { border-bottom: 0; }
       var c = el("article", { class: "panel card" + (r.currency === S.cur ? " selected" : "") });
       var top = el("div", { class: "card-top" });
       var left = el("div");
-      left.appendChild(el("div", { class: "cur" }, "GOLD IN " + r.currency));
+      left.appendChild(el("div", { class: "cur" }, "GOLD IN " + (r.currency === "CHF" ? "FRANCS" : "DOLLARS")));
       var p = el("div", { class: "price" }, money(r.close, r.currency));
-      p.appendChild(el("small", null, "/ oz, " + monthName(r.month) + " average"));
+      p.appendChild(el("small", null, "an ounce, " + monthName(r.month) + " average"));
       left.appendChild(p);
       top.appendChild(left);
-      top.appendChild(el("span", { class: "pill r-" + r.regime }, r.regime));
+      top.appendChild(jg("span", { class: "pill r-" + r.regime }, MOOD[r.regime], "Regime: " + r.regime));
       c.appendChild(top);
       c.appendChild(sparkline(300, r.currency));
       var kv = el("dl", { class: "kv" });
-      [["12-month return", pct(r.return_12m), cls(r.return_12m)],
-       ["Efficiency ratio", r.efficiency_ratio.toFixed(2) + (r.efficiency_ratio >= 0.3 ? " (≥ 0.30)" : " (< 0.30)"), ""],
-       ["Trend reading", r.trend, ""],
-       ["12-1 momentum", pct(r.momentum_12_1), cls(r.momentum_12_1)],
-       ["12-1 rule", r.rule_mom, r.rule_mom === "In" ? "in" : "out"],
-       ["10-month rule", r.rule_10m, r.rule_10m === "In" ? "in" : "out"]].forEach(function (x) {
-        var d = el("div"); d.appendChild(el("dt", null, x[0])); d.appendChild(el("dd", { class: x[2] }, x[1])); kv.appendChild(d);
+      var trendPlain = { Up: "up", Flat: "mixed", Down: "down" };
+      [["Change over 12 months", updown(r.return_12m, 1), cls(r.return_12m), "12-month return " + pct(r.return_12m, 2)],
+       ["How steady the move was", r.efficiency_ratio >= 0.3 ? "steady" : "choppy", "", "Efficiency ratio " + r.efficiency_ratio.toFixed(3) + (r.efficiency_ratio >= 0.3 ? " (>= 0.30)" : " (< 0.30)")],
+       ["Overall trend", trendPlain[r.trend] || r.trend, "", "Trend reading " + r.trend + " (both rules In = Up, both Out = Down, else Flat)"],
+       ["Gold vs a year ago", updown(r.momentum_12_1), cls(r.momentum_12_1), "12-1 momentum " + pct(r.momentum_12_1, 2)],
+       ["Rule 1 (12-month trend)", ONOFF[r.rule_mom], r.rule_mom === "In" ? "in" : "out", "12-1 rule " + r.rule_mom],
+       ["Rule 2 (10-month average)", ONOFF[r.rule_10m], r.rule_10m === "In" ? "in" : "out", "10-month rule " + r.rule_10m]].forEach(function (x) {
+        var d = el("div"); d.appendChild(el("dt", null, x[0])); d.appendChild(jg("dd", { class: x[2] }, x[1], x[3])); kv.appendChild(d);
       });
       c.appendChild(kv);
-      c.appendChild(el("p", { class: "note" }, "Last 36 months, shaded by regime."));
+      c.appendChild(el("p", { class: "note" }, "The last 3 years, shaded by mood."));
       host.appendChild(c);
     });
     var chf = D.regime.filter(function (r) { return r.currency === "CHF"; })[0], usd = D.regime.filter(function (r) { return r.currency === "USD"; })[0];
-    $("regime-head").textContent = chf.regime === usd.regime
-      ? "Gold reads " + chf.regime + " in both currencies"
-      : "Gold reads " + chf.regime + " in francs and " + usd.regime + " in dollars";
+    setText("regime-head", chf.regime === usd.regime ? "Gold is " + MOOD[chf.regime].toLowerCase() + " in both currencies"
+      : "Gold is " + MOOD[chf.regime].toLowerCase() + " in francs and " + MOOD[usd.regime].toLowerCase() + " in dollars",
+      "Regime CHF " + chf.regime + ", USD " + usd.regime);
   }
 
   // ---------- price chart ----------
@@ -591,7 +784,7 @@ table.t tr:last-child td { border-bottom: 0; }
       dot.setAttribute("cx", x(i)); dot.setAttribute("cy", y(px[i])); dot.setAttribute("visibility", "visible");
       clear(tip);
       tip.appendChild(el("b", null, monthName(months[i])));
-      [["Price", money(px[i], cur)], ["10-month avg", ma[i] ? money(ma[i], cur) : "n/a"], ["Regime", regs[i] || "n/a"]].forEach(function (r) {
+      [["Average price", money(px[i], cur)], ["10-month average", ma[i] ? money(ma[i], cur) : "n/a"], ["Mood", regs[i] ? MOOD[regs[i]] : "n/a"]].forEach(function (r) {
         var row = el("div", { class: "row" }); row.appendChild(el("span", null, r[0])); row.appendChild(el("span", null, r[1])); tip.appendChild(row);
       });
       tip.hidden = false;
@@ -603,98 +796,144 @@ table.t tr:last-child td { border-bottom: 0; }
     hit.addEventListener("pointermove", move); hit.addEventListener("pointerdown", move); hit.addEventListener("pointerleave", leave);
 
     var lg = clear($("price-legend"));
-    [["sw", "var(--gold)", "Monthly average"], ["sw dash", "var(--fg)", "10-month average"], ["sw dot", "var(--muted)", "Key lines" + (cur === "CHF" ? " (USD lines at each month's rate)" : "")],
-     ["sw box", "var(--up-band)", "Up"], ["sw box", "var(--side-band)", "Sideways"], ["sw box", "var(--down-band)", "Down"]].forEach(function (L) {
+    [["sw", "var(--gold)", "Average price each month"], ["sw dash", "var(--fg)", "Average of the last 10 months"], ["sw dot", "var(--muted)", "Price levels to watch" + (cur === "CHF" ? " (dollar levels in francs at each month's rate)" : "")],
+     ["sw box", "var(--up-band)", "Rising steadily"], ["sw box", "var(--side-band)", "Going sideways"], ["sw box", "var(--down-band)", "Falling steadily"]].forEach(function (L) {
       var s = el("span"), i = el("i", { class: L[0] });
       if (L[0] === "sw box") i.style.background = L[1]; else { i.style.borderTopColor = L[1]; if (L[0] !== "sw") i.style.borderTopStyle = L[0] === "sw dash" ? "dashed" : "dotted"; }
       s.appendChild(i); s.appendChild(document.createTextNode(L[2])); lg.appendChild(s);
     });
     var last = px[k - 1], first = px[0];
-    $("price-head").textContent = money(last, cur) + " in " + monthName(months[k - 1]) + ", " + pct(last / first - 1, 0) + " over the period shown";
+    $("price-head").textContent = money(last, cur) + " an ounce in " + monthName(months[k - 1]) + ", " + (last >= first ? "up " : "down ") +
+      pct(Math.abs(last / first - 1), 0).replace("+", "") + " over the period shown";
   }
 
-  // ---------- key lines ----------
+  // ---------- price levels ----------
   function fmtLine(L, v) {
     if (v === null || v === undefined) return "n/a";
     if (L.type === "signal_zero_cross") return pct(v);
-    if (L.type === "stretch_percentile" || (L.id || L.line_id || "").indexOf("stretch") >= 0) return ord(v) + " pct";
+    if (L.type === "stretch_percentile" || (L.id || L.line_id || "").indexOf("stretch") >= 0) return "higher than " + Math.round(v) + "%";
     return money(v, L.currency);
   }
-  function watchText(w) { return w === "below" ? "Break below" : w === "above" ? "Break above" : "—"; }
+  function watchText(w) { return w === "below" ? "a drop below" : w === "above" ? "a rise above" : "—"; }
+  function stateCell(L, isReg, state) {
+    return isReg ? jg("span", { class: "pill r-" + state }, MOOD[state] || state, "Regime " + state)
+      : jg("span", { class: "pill s-" + state }, STATE_PLAIN[state] || state, "Line state: " + state);
+  }
   function renderLines() {
     var t = clear($("lines-table"));
     var head = el("tr");
-    [["Line", ""], ["State", ""], ["Watching", ""], ["Level", "n"], ["Close", "n"], ["Gap", "n"]].forEach(function (h) { head.appendChild(el("th", { class: h[1] }, h[0])); });
+    [["Level", ""], ["Status", ""], ["Watching for", ""], ["Level at", "n"], ["Latest reading", "n"], ["Gold vs level", "n"]].forEach(function (h) { head.appendChild(el("th", { class: h[1] }, h[0])); });
     var th = el("thead"); th.appendChild(head); t.appendChild(th);
     var tb = el("tbody");
     var rows = D.lines.filter(function (L) { return L.currency === S.cur || L.currency === null; });
     var alerts = 0;
     rows.forEach(function (L) {
-      var tr = el("tr");
+      var tr = el("tr"), isReg = L.type === "regime_change";
       var c0 = el("td");
-      c0.appendChild(el("div", { class: "line-name" }, L.label));
+      c0.appendChild(jg("div", { class: "line-name" }, isReg ? "Change in market mood" : L.label,
+        "Line " + L.id + " (" + (L.type || "") + ", severity " + L.severity + ")" + (L.since ? ", last change " + L.since : "")));
       var sub = el("div", { class: "line-note" });
-      sub.appendChild(el("span", { class: "sev sev-" + L.severity }, L.severity));
-      sub.appendChild(document.createTextNode(" · since " + L.since + (L.note ? " · " + L.note : "")));
+      sub.appendChild(el("span", { class: "sev sev-" + L.severity }, SEV_PLAIN[L.severity] || L.severity));
+      if (L.note) sub.appendChild(document.createTextNode(" · " + L.note));
       c0.appendChild(sub); tr.appendChild(c0);
-      var c1 = el("td"); var isReg = L.type === "regime_change";
-      c1.appendChild(el("span", { class: "pill " + (isReg ? "r-" : "s-") + L.state }, L.state)); tr.appendChild(c1);
-      tr.appendChild(el("td", null, isReg ? "Next change" : watchText(L.watching)));
+      var c1 = el("td"); c1.appendChild(stateCell(L, isReg, L.state)); tr.appendChild(c1);
+      tr.appendChild(el("td", null, isReg ? "the next change" : watchText(L.watching)));
       tr.appendChild(el("td", { class: "n" }, isReg ? "" : fmtLine(L, L.line_value)));
       tr.appendChild(el("td", { class: "n" }, isReg ? "" : fmtLine(L, L.close)));
-      tr.appendChild(el("td", { class: "n " + cls(L.distance) }, L.distance === null ? "" : pct(L.distance)));
+      tr.appendChild(el("td", { class: "n " + cls(L.distance) }, L.distance === null || L.distance === undefined ? "" :
+        pct(Math.abs(L.distance)).replace("+", "") + (L.distance >= 0 ? " above" : " below")));
       if (L.state === "confirmed" || L.state === "failed") alerts++;
       tb.appendChild(tr);
     });
     t.appendChild(tb);
     var near = rows.filter(function (L) { return L.state === "approaching"; }).length;
-    $("lines-head").textContent = alerts ? alerts + " line" + (alerts > 1 ? "s" : "") + " in an alert state in " + S.cur
-      : near ? near + " line" + (near > 1 ? "s" : "") + " approaching, none broken in " + S.cur : "All lines intact in " + S.cur;
+    $("lines-head").textContent = alerts ? alerts + " level" + (alerts > 1 ? "s" : "") + " crossed (in " + cname(S.cur) + ")"
+      : near ? near + " level" + (near > 1 ? "s" : "") + " getting close, none crossed (in " + cname(S.cur) + ")" : "No level crossed (in " + cname(S.cur) + ")";
+    renderTriggers();
   }
-
   function renderTriggers() {
     var t = clear($("trig-table"));
     var rows = D.triggers.filter(function (d) { return d.currency === S.cur || d.currency === null; });
     var hr = el("tr");
-    [["Close", ""], ["Line", ""], ["From", ""], ["To", ""], ["Value at close", "n"], ["Alert", ""]].forEach(function (h) { hr.appendChild(el("th", { class: h[1] }, h[0])); });
+    [["Month end", ""], ["Level", ""], ["From", ""], ["To", ""], ["Price then", "n"], ["Alert sent?", ""]].forEach(function (h) { hr.appendChild(el("th", { class: h[1] }, h[0])); });
     var th = el("thead"); th.appendChild(hr); t.appendChild(th);
     var tb = el("tbody");
     rows.forEach(function (d) {
       var tr = el("tr"), reg = d.line_id === "gold_regime", L = { type: null, id: d.line_id, currency: d.currency };
       if (d.line_id.indexOf("mom") >= 0) L.type = "signal_zero_cross";
       tr.appendChild(el("td", { class: "num" }, d.date));
-      tr.appendChild(el("td", null, d.label));
-      var a = el("td"); a.appendChild(el("span", { class: "pill " + (reg ? "r-" : "s-") + d.prev_state }, d.prev_state)); tr.appendChild(a);
-      var b = el("td"); b.appendChild(el("span", { class: "pill " + (reg ? "r-" : "s-") + d.state }, d.state)); tr.appendChild(b);
+      tr.appendChild(jg("td", null, reg ? "Change in market mood" : d.label, "Trigger " + d.trigger_id));
+      var a = el("td"); a.appendChild(stateCell(d, reg, d.prev_state)); tr.appendChild(a);
+      var b = el("td"); b.appendChild(stateCell(d, reg, d.state)); tr.appendChild(b);
       tr.appendChild(el("td", { class: "n" }, reg ? "" : fmtLine(L, d.close)));
-      tr.appendChild(el("td", null, d.alert ? "Alert" : "Dashboard only"));
+      tr.appendChild(el("td", null, d.alert ? "Yes" : "No, shown here only"));
       tb.appendChild(tr);
     });
-    if (!rows.length) { var tr = el("tr"), td = el("td", { colspan: 6 }, "No line changed state in the last 12 months."); tr.appendChild(td); tb.appendChild(tr); }
+    if (!rows.length) { var tr = el("tr"), td = el("td", { colspan: 6 }, "No changes in the last 12 months."); tr.appendChild(td); tb.appendChild(tr); }
     t.appendChild(tb);
     var al = rows.filter(function (d) { return d.alert; }).length;
-    $("trig-head").textContent = rows.length + " state changes in the last 12 months (" + S.cur + "), " + al + " of them alerts";
+    setText("trig-head", "Changes in the last 12 months: " + rows.length + ", of which " + al + " would have sent an alert",
+      rows.length + " line state transitions in the last 12 months (" + S.cur + "), " + al + " alerts (confirmed or failed)");
   }
 
   // ---------- stretch ----------
+  var STRETCH_PLAIN = { dist_10m_avg: "Gold vs its 10-month average", dist_3y_avg: "Gold vs its 3-year average",
+    dist_10y_avg: "Gold vs its 10-year average", return_3y: "Change over 3 years", fall_from_24m_high: "Distance below its 2-year high" };
   function renderStretch() {
     var host = clear($("stretch-list"));
     var rows = D.stretch[S.cur];
     rows.forEach(function (r) {
       var row = el("div", { class: "st-row" });
       var top = el("div", { class: "st-top" });
-      top.appendChild(el("span", null, r.label)); top.appendChild(el("span", { class: "v " + cls(r.value) }, pct(r.value)));
+      top.appendChild(jg("span", null, STRETCH_PLAIN[r.measure] || r.label, r.label + " (" + r.measure + ")"));
+      top.appendChild(el("span", { class: "v " + cls(r.value) }, pct(r.value)));
       row.appendChild(top);
-      var bar = el("div", { class: "st-bar", role: "img", "aria-label": r.label + ": " + ord(r.pct_since) + " percentile since 1971, " + ord(r.pct_10y) + " over 10 years" });
+      var bar = el("div", { class: "st-bar", role: "img", "aria-label": (STRETCH_PLAIN[r.measure] || r.label) + ": higher than " + Math.round(r.pct_since) + "% of months since 1971" });
       [50, 90].forEach(function (q) { var tk = el("span", { class: "tick" }); tk.style.left = q + "%"; bar.appendChild(tk); });
       var d2 = el("span", { class: "dot hollow" }); d2.style.left = Math.max(2, Math.min(98, r.pct_10y)) + "%"; bar.appendChild(d2);
       var d1 = el("span", { class: "dot" }); d1.style.left = Math.max(2, Math.min(98, r.pct_since)) + "%"; bar.appendChild(d1);
       row.appendChild(bar);
-      row.appendChild(el("div", { class: "st-meta" }, ord(r.pct_since) + " percentile since 1971 (n=" + r.n_since + ") · " + ord(r.pct_10y) + " over 10 years (n=" + r.n_10y + ")"));
+      row.appendChild(jg("div", { class: "st-meta" }, "Higher than " + Math.round(r.pct_since) + "% of months since 1971 · higher than " + Math.round(r.pct_10y) + "% of the last 10 years",
+        ord(r.pct_since) + " percentile since 1971 (n=" + r.n_since + ") · " + ord(r.pct_10y) + " over 10 years (n=" + r.n_10y + ")"));
       host.appendChild(row);
     });
     var top10 = rows.filter(function (r) { return r.pct_since >= 90; }).length;
-    $("stretch-head").textContent = top10 ? top10 + " of " + rows.length + " measures in the top decile since 1971" : "No measure in the top decile since 1971";
+    $("stretch-head").textContent = top10 ? top10 + " of " + rows.length + " measures are higher than in 90% of months since 1971" : "Nothing is unusually high compared with history";
+  }
+
+  // ---------- dates and reports ----------
+  function renderDates() {
+    var B = D.brief;
+    var up = clear($("brief-upcoming"));
+    B.upcoming.forEach(function (r) {
+      var when = r.window_start === r.window_end ? r.window_start : r.window_start + " to " + r.window_end;
+      var li = jg("li", null, null, r.name + " (" + r.period + "), window " + when + ". " + (r.why || ""));
+      li.appendChild(el("b", null, r.plain_name || r.name));
+      li.appendChild(document.createTextNode(", " + when + (r.plain_why ? ". " + r.plain_why : "")));
+      up.appendChild(li);
+    });
+    if (!B.upcoming.length) up.appendChild(el("li", null, "Nothing scheduled in the next few weeks."));
+    var t = clear($("rep-table"));
+    var rows = (D.reports || []).slice();
+    var hr = el("tr");
+    [["Expected", ""], ["Report", ""], ["Covers", ""], ["Status", ""]].forEach(function (h) { hr.appendChild(el("th", { class: h[1] }, h[0])); });
+    var th = el("thead"); th.appendChild(hr); t.appendChild(th);
+    var tb = el("tbody");
+    rows.forEach(function (r) {
+      var tr = el("tr");
+      var when = r.window_start === r.window_end ? r.window_start : r.window_start + " to " + r.window_end;
+      tr.appendChild(el("td", { class: "num" }, when));
+      tr.appendChild(jg("td", null, r.plain_name || r.name, r.name + (r.detail ? ". " + r.detail : "")));
+      tr.appendChild(el("td", { class: "num" }, r.period));
+      var c = el("td"); c.appendChild(jg("span", { class: "pill st-" + r.status }, REPORT_STATUS[r.status] || r.status, "Release status: " + r.status)); tr.appendChild(c);
+      tb.appendChild(tr);
+    });
+    if (!rows.length) { var tr = el("tr"); tr.appendChild(el("td", { colspan: 4 }, "Nothing in the calendar window.")); tb.appendChild(tr); }
+    t.appendChild(tb);
+    var next = rows.filter(function (r) { return r.status === "upcoming"; })[0];
+    var waiting = rows.filter(function (r) { return ["due", "late", "overdue", "enter"].indexOf(r.status) >= 0; }).length;
+    $("rep-head").textContent = (next ? "Next: " + (next.plain_name || next.name) + ", " + (next.window_start === next.window_end ? next.window_start : "from " + next.window_start) : "Nothing scheduled in the next 45 days") +
+      (waiting ? " · " + waiting + " waiting" : "");
   }
 
   // ---------- analogues ----------
@@ -707,7 +946,7 @@ table.t tr:last-child td { border-bottom: 0; }
     var W = Math.max(320, host.clientWidth || 800), narrow = W < 560, H = 150, m = { l: 16, r: 16, t: 34, b: 28 };
     var iw = W - m.l - m.r;
     function x(v) { return m.l + (v - lo) / (hi - lo) * iw; }
-    var svg = sv("svg", { viewBox: "0 0 " + W + " " + H, role: "img", "aria-label": "Next 12-month outcomes of the closest matches" });
+    var svg = sv("svg", { viewBox: "0 0 " + W + " " + H, role: "img", "aria-label": "What gold did in the 12 months after each similar month" });
     var g = sv("g", { class: "axis" });
     niceTicks(lo, hi, narrow ? 4 : 7).forEach(function (t) {
       g.appendChild(sv("line", { x1: x(t), x2: x(t), y1: m.t - 6, y2: H - m.b }));
@@ -722,11 +961,11 @@ table.t tr:last-child td { border-bottom: 0; }
     svg.appendChild(sv("line", { x1: x(0), x2: x(0), y1: m.t - 10, y2: H - m.b, stroke: "var(--fg)", "stroke-width": 1, opacity: 0.5 }));
     svg.appendChild(sv("line", { x1: x(base.median), x2: x(base.median), y1: mid - 20, y2: mid + 20, stroke: "var(--info)", "stroke-width": 2, "stroke-dasharray": "3 2" }));
     var bt = sv("text", { x: x(base.median), y: m.t - 14, "text-anchor": "middle", fill: "var(--info)", "font-size": 11, "font-family": "var(--font-body)" });
-    bt.textContent = "All months: " + pct(base.median, 0); svg.appendChild(bt);
+    bt.textContent = "A typical year: " + pct(base.median, 0); svg.appendChild(bt);
     outs.sort(function (a, b) { return a.v - b.v; });
     outs.forEach(function (o, i) {
       var c = sv("circle", { cx: x(o.v), cy: mid, r: 6, fill: o.v >= 0 ? "var(--up)" : "var(--down)", stroke: "var(--panel)", "stroke-width": 1.5 });
-      var ti = sv("title", {}); ti.textContent = monthName(o.m) + ": " + pct(o.v, 0) + " (distance " + o.d.toFixed(2) + ")"; c.appendChild(ti);
+      var ti = sv("title", {}); ti.textContent = monthName(o.m) + ": " + updown(o.v) + " in the next 12 months"; c.appendChild(ti);
       svg.appendChild(c);
       var lab = sv("text", { x: x(o.v), y: i % 2 ? mid + 24 : mid - 14, "text-anchor": "middle", fill: "var(--muted)", "font-size": 10.5, "font-family": "var(--font-data)" });
       lab.textContent = o.m.slice(0, 4); svg.appendChild(lab);
@@ -734,23 +973,24 @@ table.t tr:last-child td { border-bottom: 0; }
     host.appendChild(svg);
 
     var vals = outs.map(function (o) { return o.v; });
-    var med = vals.slice().sort(function (a, b) { return a - b; })[Math.floor((vals.length - 1) / 2)];
-    if (vals.length % 2 === 0) { var s2 = vals.slice().sort(function (a, b) { return a - b; }); med = (s2[vals.length / 2 - 1] + s2[vals.length / 2]) / 2; }
+    var sorted = vals.slice().sort(function (a, b) { return a - b; }), med = sorted.length % 2 ? sorted[(sorted.length - 1) / 2] : (sorted[sorted.length / 2 - 1] + sorted[sorted.length / 2]) / 2;
     var dis = vals.length && Math.min.apply(null, vals) < 0 && Math.max.apply(null, vals) > 0;
-    $("an-head").textContent = vals.length + " closest months to " + monthName(A.target) + (dis ? " point in opposite directions" : " agree on direction");
-    $("an-summary").textContent = "Gold in " + S.cur + " over the next 12 months after each match: from " + pct(Math.min.apply(null, vals), 0) + " to " + pct(Math.max.apply(null, vals), 0) +
-      ", median " + pct(med, 0) + " (n=" + vals.length + "). Across all months since 1971 the median was " + pct(base.median, 0) + " (n=" + base.n + "), rising in " + Math.round(base.share_positive * 100) + "% of them." +
-      (dis ? " The matches disagree, so the shape of the price does not settle the question." : "");
+    $("an-head").textContent = "The " + vals.length + " most similar past months " + (dis ? "disagree about what came next" : "agree on the direction of what came next");
+    setText("an-summary", "In the 12 months after each similar month, gold in " + cname(S.cur) + " went from " + updown(Math.min.apply(null, vals)) + " to " + updown(Math.max.apply(null, vals)) +
+      " (middle result: " + updown(med) + "). In a typical year since 1971 it went " + updown(base.median) + ", and it rose in " + Math.round(base.share_positive * 100) + "% of years." +
+      (dis ? " Because the similar months point both ways, they don't settle the question." : ""),
+      "Next-12-month outcomes of the " + vals.length + " closest matches (" + S.cur + "): min " + pct(Math.min.apply(null, vals), 1) + ", median " + pct(med, 1) + ", max " + pct(Math.max.apply(null, vals), 1) +
+      ". Unconditional median since 1971 " + pct(base.median, 1) + " (n=" + base.n + "), share positive " + Math.round(base.share_positive * 100) + "%.");
 
     var vd = clear($("an-verdict"));
     if (A.oos && A.oos.length) {
       var label = A.oos[A.oos.length - 1].label;
-      vd.appendChild(el("span", { class: "tag" + (label === "context only" ? " warn" : "") }, label === "context only" ? "Context only" : "Useful"));
+      vd.appendChild(el("span", { class: "tag" + (label === "context only" ? " warn" : ""), title: "Out-of-sample label: " + label }, label === "context only" ? "For context only" : "Useful"));
     }
 
     var t = clear($("an-table"));
     var hr = el("tr");
-    [["Month", ""], ["Distance", "n"], ["3m", "n"], ["6m", "n"], ["12m", "n"], ["24m", "n"], ["Worst / best in 12m", "n"], ["Regime 12m later", ""], ["What differed", ""]].forEach(function (h) { hr.appendChild(el("th", { class: h[1] }, h[0])); });
+    [["Similar month", ""], ["How close", "n"], ["After 3 months", "n"], ["6 months", "n"], ["12 months", "n"], ["24 months", "n"], ["Worst / best point in the next year", "n"], ["Mood a year later", ""], ["What was different", ""]].forEach(function (h) { hr.appendChild(el("th", { class: h[1] }, h[0])); });
     var th = el("thead"); th.appendChild(hr); t.appendChild(th);
     var tb = el("tbody"), sfx = "_" + S.cur.toLowerCase();
     A.matches.forEach(function (mm) {
@@ -758,12 +998,14 @@ table.t tr:last-child td { border-bottom: 0; }
       var c0 = el("td"); c0.appendChild(el("div", { class: "line-name" }, monthName(mm.month)));
       if (mm.key_moment) c0.appendChild(el("div", { class: "line-note" }, mm.key_moment));
       tr.appendChild(c0);
-      tr.appendChild(el("td", { class: "n" }, mm.distance.toFixed(2)));
+      var gd = Object.keys(mm.group_distance || {}).filter(function (g) { return mm.group_distance[g] !== null; })
+        .map(function (g) { return g + " " + mm.group_distance[g].toFixed(2); }).join(", ");
+      tr.appendChild(jg("td", { class: "n" }, mm.distance.toFixed(1), "Weighted Euclidean distance over standardised measures = " + mm.distance.toFixed(3) + (gd ? " (by group: " + gd + ")" : "") + ". Lower is closer."));
       ["fwd_3m", "fwd_6m", "fwd_12m", "fwd_24m"].forEach(function (k2) { var v = o[k2 + sfx]; tr.appendChild(el("td", { class: "n " + cls(v) }, pct(v, 0))); });
       tr.appendChild(el("td", { class: "n" }, pct(o["max_dd_12m" + sfx], 0) + " / " + pct(o["max_rise_12m" + sfx], 0)));
-      var rc = el("td"); if (o.regime_after_12m) rc.appendChild(el("span", { class: "pill r-" + o.regime_after_12m }, o.regime_after_12m)); tr.appendChild(rc);
+      var rc = el("td"); if (o.regime_after_12m) rc.appendChild(el("span", { class: "pill r-" + o.regime_after_12m }, MOOD[o.regime_after_12m])); tr.appendChild(rc);
       var dc = el("td", { class: "diff" }), ul = el("ul");
-      mm.differences.forEach(function (d) { ul.appendChild(el("li", null, d)); }); dc.appendChild(ul); tr.appendChild(dc);
+      mm.differences.forEach(function (d, i) { ul.appendChild(jg("li", null, d, (mm.differences_tech || [])[i])); }); dc.appendChild(ul); tr.appendChild(dc);
       tb.appendChild(tr);
     });
     t.appendChild(tb);
@@ -771,26 +1013,29 @@ table.t tr:last-child td { border-bottom: 0; }
     var ot = clear($("oos-table"));
     if (A.oos) {
       var h2 = el("tr");
-      [["Measures", ""], ["Inside range", "n"], ["Median closer", "n"], ["Direction right", "n"], ["Label", ""]].forEach(function (h) { h2.appendChild(el("th", { class: h[1] }, h[0])); });
+      [["Compared on", ""], ["Real result inside the matches' range", "n"], ["Beat \u201cgold usually rises\u201d", "n"], ["Got up or down right", "n"], ["Verdict", ""]].forEach(function (h) { h2.appendChild(el("th", { class: h[1] }, h[0])); });
       var th2 = el("thead"); th2.appendChild(h2); ot.appendChild(th2);
       var tb2 = el("tbody");
+      var GP = { "Price shape only": "Price pattern only" };
       A.oos.forEach(function (r) {
         var tr = el("tr");
-        tr.appendChild(el("td", null, r.groups + " (n=" + r.months + ")"));
-        tr.appendChild(el("td", { class: "n" }, Math.round(r.in_range * 100) + "%"));
-        tr.appendChild(el("td", { class: "n" }, Math.round(r.median_beats_baseline * 100) + "%"));
-        tr.appendChild(el("td", { class: "n" }, Math.round(r.direction_right * 100) + "% vs " + Math.round(r.baseline_direction_right * 100) + "%"));
-        tr.appendChild(el("td", null, r.label));
+        var nm = GP[r.groups] || r.groups.replace("Price + ", "Price + ").replace("rates money", "interest rates").replace("demand flow", "positioning").replace("chf", "franc").replace("Macro only", "Economy only");
+        tr.appendChild(jg("td", null, nm + " (" + r.months + " months)", r.groups + ", n=" + r.months));
+        tr.appendChild(jg("td", { class: "n" }, Math.round(r.in_range * 100) + "%", "Actual 12m outcome within [min, max] of matched outcomes"));
+        tr.appendChild(jg("td", { class: "n" }, Math.round(r.median_beats_baseline * 100) + "% of months", "Matched median closer to actual than the unconditional median"));
+        tr.appendChild(jg("td", { class: "n" }, Math.round(r.direction_right * 100) + "% vs " + Math.round(r.baseline_direction_right * 100) + "%", "Sign of matched median vs sign of unconditional median, compared with the actual outcome"));
+        tr.appendChild(jg("td", null, r.label === "context only" ? "for context only" : "useful", "Label: " + r.label));
         tb2.appendChild(tr);
       });
       ot.appendChild(tb2);
     }
-    $("an-measures").textContent = "Used: " + A.used.join(", ") + ". Not yet available, so left out rather than filled in: " + A.dropped.join(", ").replace(/_/g, " ") + ". Outcomes are USD unless the currency switch says CHF.";
+    setText("an-measures", "It compares today with past months on: " + A.used.join(", ") + ". Not available yet, so left out rather than guessed: " + (A.dropped_plain || A.dropped).join(", ") + ". Results are in " + cname(S.cur) + ".",
+      "State vector measures: " + (A.used_tech || []).join(", ") + ". Dropped (no data): " + A.dropped.join(", ") + ". Standardised as z-scores over the candidate pool.");
     var kt = clear($("km-table"));
-    var h3 = el("tr"); [["Moment", ""], ["Month", ""], ["Distance", "n"]].forEach(function (h) { h3.appendChild(el("th", { class: h[1] }, h[0])); });
+    var h3 = el("tr"); [["Moment", ""], ["Month", ""], ["How close", "n"]].forEach(function (h) { h3.appendChild(el("th", { class: h[1] }, h[0])); });
     var th3 = el("thead"); th3.appendChild(h3); kt.appendChild(th3);
     var tb3 = el("tbody");
-    A.key_moments.forEach(function (r) { var tr = el("tr"); tr.appendChild(el("td", null, r.moment)); tr.appendChild(el("td", { class: "num" }, monthName(r.month))); tr.appendChild(el("td", { class: "n" }, r.distance.toFixed(2))); tb3.appendChild(tr); });
+    A.key_moments.forEach(function (r) { var tr = el("tr"); tr.appendChild(el("td", null, r.moment)); tr.appendChild(el("td", { class: "num" }, monthName(r.month))); tr.appendChild(el("td", { class: "n" }, r.distance.toFixed(1))); tb3.appendChild(tr); });
     kt.appendChild(tb3);
   }
 
@@ -819,36 +1064,36 @@ table.t tr:last-child td { border-bottom: 0; }
     var tip = el("div", { class: "tip", hidden: "" });
     svg.addEventListener("pointermove", function (ev) {
       var rect = svg.getBoundingClientRect(), i = Math.max(0, Math.min(n - 1, Math.floor((ev.clientX - rect.left) / rect.width * n)));
-      clear(tip); tip.appendChild(el("b", null, monthName(ser.months[i]))); tip.appendChild(el("div", null, (regs[i] || "n/a") + " · " + money(ser.USD[i], "USD")));
+      clear(tip); tip.appendChild(el("b", null, monthName(ser.months[i]))); tip.appendChild(el("div", null, (regs[i] ? MOOD[regs[i]] : "n/a") + " · " + money(ser.USD[i], "USD")));
       tip.hidden = false; var left = ev.clientX - rect.left + 12; if (left + tip.offsetWidth > rect.width) left -= tip.offsetWidth + 24; tip.style.left = Math.max(0, left) + "px"; tip.style.top = "-6px";
     });
     svg.addEventListener("pointerleave", function () { tip.hidden = true; });
     host.appendChild(svg); host.appendChild(tip);
     var sh = D.study.shares;
-    $("hist-head").textContent = "Since the float, gold spent " + Math.round(sh.Sideways * 100) + "% of months sideways, " + Math.round(sh.Up * 100) + "% up and " + Math.round(sh.Down * 100) + "% down";
+    $("hist-head").textContent = "Since 1971, gold spent " + Math.round(sh.Sideways * 100) + "% of the time going sideways, " + Math.round(sh.Up * 100) + "% rising steadily and " + Math.round(sh.Down * 100) + "% falling steadily";
     var ep = clear($("episodes"));
     D.study.episodes.forEach(function (e) { ep.appendChild(el("span", null, e.start + " to " + e.end + " · " + e.months + "m")); });
 
     $("study-window").textContent = monthName(D.study.window[0]) + " to " + monthName(D.study.window[1]);
-    var names = { buy_and_hold: "Buy and hold", momentum_12_1: "12-1 momentum", ma_10m: "10-month average", momentum_chop_filter: "Momentum + chop filter (rejected)" };
+    var names = { buy_and_hold: "Just hold gold", momentum_12_1: "Rule 1 (12-month trend)", ma_10m: "Rule 2 (10-month average)", momentum_chop_filter: "Rule 1, paused when sideways (rejected)" };
     var t = clear($("study-table"));
-    var hr = el("tr"); [["Rule", ""], ["USD CAGR", "n"], ["USD max DD", "n"], ["CHF CAGR", "n"], ["CHF max DD", "n"], ["Switches", "n"]].forEach(function (h) { hr.appendChild(el("th", { class: h[1] }, h[0])); });
+    var hr = el("tr"); [["Approach", ""], ["Per year ($)", "n"], ["Worst fall ($)", "n"], ["Per year (CHF)", "n"], ["Worst fall (CHF)", "n"], ["Switches", "n"]].forEach(function (h) { hr.appendChild(el("th", { class: h[1] }, h[0])); });
     var th = el("thead"); th.appendChild(hr); t.appendChild(th);
     var tb = el("tbody");
     D.study.summary.forEach(function (r) {
       var tr = el("tr");
-      tr.appendChild(el("td", null, names[r.rule] || r.rule));
+      tr.appendChild(jg("td", null, names[r.rule] || r.rule, r.rule + ": CAGR and maximum drawdown, " + r.months + " months"));
       [r.usd_cagr, r.usd_max_dd, r.chf_cagr, r.chf_max_dd].forEach(function (v) { tr.appendChild(el("td", { class: "n " + cls(v) }, pct(v))); });
       tr.appendChild(el("td", { class: "n" }, String(r.switches)));
       tb.appendChild(tr);
     });
     t.appendChild(tb);
     var p = clear($("per-table"));
-    var h2 = el("tr"); [["Regime", ""], ["Months", "n"], ["Buy and hold", "n"], ["12-1 momentum", "n"], ["Switches", "n"]].forEach(function (h) { h2.appendChild(el("th", { class: h[1] }, h[0])); });
+    var h2 = el("tr"); [["Mood", ""], ["Months", "n"], ["Just hold gold", "n"], ["Rule 1", "n"], ["Switches", "n"]].forEach(function (h) { h2.appendChild(el("th", { class: h[1] }, h[0])); });
     var th2 = el("thead"); th2.appendChild(h2); p.appendChild(th2);
     var tb2 = el("tbody");
     D.study.per_regime.forEach(function (r) {
-      var tr = el("tr"), c = el("td"); c.appendChild(el("span", { class: "pill r-" + r.regime }, r.regime)); tr.appendChild(c);
+      var tr = el("tr"), c = el("td"); c.appendChild(jg("span", { class: "pill r-" + r.regime }, MOOD[r.regime], "Regime " + r.regime + "; returns annualised geometrically")); tr.appendChild(c);
       tr.appendChild(el("td", { class: "n" }, r.months + " (" + Math.round(r.share_of_months * 100) + "%)"));
       tr.appendChild(el("td", { class: "n " + cls(r.buy_hold_ann) }, pct(r.buy_hold_ann) + " a year"));
       tr.appendChild(el("td", { class: "n " + cls(r.strategy_ann) }, pct(r.strategy_ann) + " a year"));
@@ -858,7 +1103,6 @@ table.t tr:last-child td { border-bottom: 0; }
     p.appendChild(tb2);
   }
 
-  // ---------- backdrop ----------
   function fmtVal(r, v) {
     if (v === null || v === undefined) return "n/a";
     if (r.unit === "%") return v.toFixed(2) + "%";
@@ -873,13 +1117,17 @@ table.t tr:last-child td { border-bottom: 0; }
     if (r.unit === "$") return sign + "$" + Math.abs(v).toFixed(2);
     return sign + Math.abs(v).toFixed(v < 10 && v > -10 ? 4 : 2);
   }
+  var BD_PLAIN = { "US inflation (CPI, y/y)": "US inflation", "Real yield proxy (10y minus CPI)": "Interest rates after inflation (estimate)",
+    "US 10-year yield": "US 10-year interest rate", "10-year TIPS real yield": "Interest rates after inflation (official)",
+    "VIX (monthly average)": "Stock market fear gauge", "Brent crude": "Oil price (Brent)", "USD/CHF (francs per dollar)": "Francs per dollar",
+    "Geopolitical risk index": "War and political risk index" };
   function renderBackdrop() {
     var host = clear($("bd-tiles"));
     var rows = D.backdrop || [];
     rows.forEach(function (r) {
       var t = el("div", { class: "panel tile" });
-      t.appendChild(el("div", { class: "lbl" }, r.label));
-      t.appendChild(el("div", { class: "val" }, fmtVal(r, r.value)));
+      t.appendChild(jg("div", { class: "lbl" }, BD_PLAIN[r.label] || r.label, r.label + " (" + r.source + ")" + (r.note ? ". " + r.note : "")));
+      t.appendChild(el("div", { class: "val" }, fmtVal(r, r.value).replace(" pp", " points")));
       var pts = r.spark.filter(function (v) { return v !== null; });
       if (pts.length > 2) {
         var lo = Math.min.apply(null, pts), hi = Math.max.apply(null, pts), w = 200, h = 34;
@@ -888,196 +1136,73 @@ table.t tr:last-child td { border-bottom: 0; }
         svg.appendChild(sv("path", { d: d, fill: "none", stroke: "var(--fg)", "stroke-width": 1.4, opacity: 0.7, "vector-effect": "non-scaling-stroke" }));
         t.appendChild(svg);
       }
-      t.appendChild(el("div", { class: "meta" }, monthName(r.month) + " · 12m change " + fmtChg(r, r.chg_12m)));
-      if (r.pct !== null) t.appendChild(el("div", { class: "meta" }, ord(r.pct) + " percentile since " + monthName(r.since) + " (n=" + r.n + ")"));
-      if (r.note) t.appendChild(el("div", { class: "src" }, r.note));
-      t.appendChild(el("div", { class: "src" }, r.source));
+      var chg = r.chg_12m;
+      t.appendChild(jg("div", { class: "meta" }, monthName(r.month) + " · " + (chg === null ? "no change data" : (chg >= 0 ? "up " : "down ") + fmtChg(r, Math.abs(chg)).replace("+", "").replace(" pp", " points") + " on a year ago"),
+        "12-month change " + fmtChg(r, chg)));
+      if (r.pct !== null) t.appendChild(jg("div", { class: "meta" }, "Higher than " + Math.round(r.pct) + "% of months since " + monthName(r.since),
+        ord(r.pct) + " percentile since " + r.since + " (n=" + r.n + ")"));
       host.appendChild(t);
     });
-    var hi = rows.filter(function (r) { return r.pct !== null && r.pct >= 90; }).map(function (r) { return r.label.split(" (")[0]; });
-    $("bd-head").textContent = !rows.length ? "No macro data stored yet"
-      : hi.length ? hi.join(" and ") + (hi.length > 1 ? " are" : " is") + " in the top decile of history" : "No macro reading in the top decile of history";
+    var hi = rows.filter(function (r) { return r.pct !== null && r.pct >= 90; }).map(function (r) { return (BD_PLAIN[r.label] || r.label); });
+    var lowx = rows.filter(function (r) { return r.pct !== null && r.pct <= 10; }).map(function (r) { return (BD_PLAIN[r.label] || r.label); });
+    var parts = [];
+    if (hi.length) parts.push(hi.join(" and ") + (hi.length > 1 ? " are" : " is") + " higher than in 90% of past months");
+    if (lowx.length) parts.push(lowx.join(" and ") + (lowx.length > 1 ? " are" : " is") + " lower than in 90% of past months");
+    $("bd-head").textContent = !rows.length ? "No economic data stored yet" : parts.length ? parts.join("; ") : "Nothing unusual compared with history";
   }
 
-  // ---------- reports ----------
-  function renderReports() {
-    var t = clear($("rep-table"));
-    var rows = (D.reports || []).slice();
-    var hr = el("tr");
-    [["Expected", ""], ["Report", ""], ["Period", ""], ["Status", ""], ["Latest / note", ""]].forEach(function (h) { hr.appendChild(el("th", { class: h[1] }, h[0])); });
-    var th = el("thead"); th.appendChild(hr); t.appendChild(th);
-    var tb = el("tbody");
-    rows.forEach(function (r) {
-      var tr = el("tr");
-      var when = r.window_start === r.window_end ? r.window_start : r.window_start + " to " + r.window_end;
-      tr.appendChild(el("td", { class: "num" }, when));
-      tr.appendChild(el("td", null, r.name));
-      tr.appendChild(el("td", { class: "num" }, r.period));
-      var c = el("td"); c.appendChild(el("span", { class: "pill st-" + r.status }, r.status)); tr.appendChild(c);
-      tr.appendChild(el("td", { class: "line-note" }, r.detail || ""));
-      tb.appendChild(tr);
-    });
-    if (!rows.length) { var tr = el("tr"); tr.appendChild(el("td", { colspan: 5 }, "No releases in the calendar window.")); tb.appendChild(tr); }
-    t.appendChild(tb);
-    var next = rows.filter(function (r) { return r.status === "upcoming"; })[0];
-    var waiting = rows.filter(function (r) { return ["due", "late", "overdue", "enter"].indexOf(r.status) >= 0; }).length;
-    $("rep-head").textContent = (next ? "Next: " + next.name + " (" + next.period + "), " + (next.window_start === next.window_end ? next.window_start : "from " + next.window_start) : "Nothing scheduled in the next 45 days") +
-      (waiting ? " · " + waiting + " waiting" : "");
-  }
-
-  // ---------- decision brief ----------
-  // Plain text on the page; the technical version shows in a pop-up on hover, keyboard focus or tap.
-  var jgTip = null, jgPinned = null;
-  function jgShow(node) {
-    if (!jgTip) { jgTip = el("div", { class: "jgtip", role: "tooltip", hidden: "" }); document.body.appendChild(jgTip); }
-    clear(jgTip); jgTip.appendChild(el("b", null, "Technical version")); jgTip.appendChild(document.createTextNode(node.dataset.tech));
-    jgTip.hidden = false;
-    var r = node.getBoundingClientRect(), tw = jgTip.offsetWidth, th = jgTip.offsetHeight;
-    var left = Math.min(Math.max(16, r.left), window.innerWidth - tw - 16);
-    var top = r.bottom + 6; if (top + th > window.innerHeight - 8) top = Math.max(8, r.top - th - 6);
-    jgTip.style.left = left + "px"; jgTip.style.top = top + "px";
-  }
-  function jgHide() { if (jgTip) jgTip.hidden = true; if (jgPinned) jgPinned.classList.remove("on"); jgPinned = null; }
-  function jg(tag, attrs, text, tech) {
-    var e = el(tag, attrs, text);
-    if (tech) {
-      e.classList.add("jg"); e.dataset.tech = tech; e.tabIndex = 0;
-      e.addEventListener("mouseenter", function () { if (!jgPinned) jgShow(e); });
-      e.addEventListener("mouseleave", function () { if (!jgPinned) jgHide(); });
-      e.addEventListener("focus", function () { jgShow(e); });
-      e.addEventListener("blur", function () { if (jgPinned !== e) jgHide(); });
-      e.addEventListener("click", function (ev) {
-        ev.stopPropagation();
-        if (jgPinned === e) { jgHide(); return; }
-        jgHide(); jgPinned = e; e.classList.add("on"); jgShow(e);
-      });
-    }
-    return e;
-  }
-  document.addEventListener("click", function () { if (jgPinned) jgHide(); });
-  document.addEventListener("keydown", function (ev) { if (ev.key === "Escape") jgHide(); });
-  window.addEventListener("scroll", function () { if (!jgPinned) { if (jgTip) jgTip.hidden = true; } else jgShow(jgPinned); }, { passive: true });
-
-  var MOOD = { Up: "Rising steadily", Sideways: "Going sideways", Down: "Falling steadily" };
-  var STATE_PLAIN = { intact: "not crossed", approaching: "getting close", broken: "crossed", confirmed: "crossed and held", failed: "crossed, then recovered" };
-  var EFFECT_PLAIN = { headwind: "down", support: "up", mixed: "either way", neutral: "little effect now", crowded: "risk of a sharp drop",
-    "washed out": "room to recover", "lowers CHF returns": "down, in francs", "raises CHF returns": "up, in francs" };
-
-  function renderBrief() {
-    var B = D.brief; if (!B) return;
-    var h = $("brief-head"); h.textContent = B.headline;
-    if (!h.dataset.tech) { h.remove(); var nh = jg("h2", { id: "brief-head" }, B.headline, B.headline_tech); document.querySelector("#brief .sec-head > div").appendChild(nh); }
-    var cur = S.cur, R = B.rules[cur];
-    var host = clear($("brief-rules"));
-    [R.momentum, R.ma].forEach(function (r) {
-      var box = el("div", { class: "rule" });
-      var top = el("div", { class: "rule-top" });
-      var name = el("span"); name.appendChild(el("b", null, r.name)); name.appendChild(document.createTextNode(" · " + cur));
-      top.appendChild(name);
-      top.appendChild(jg("span", { class: "pill " + (r.state === "In" ? "in" : "out") }, r.onoff, "Rule state: " + r.state));
-      box.appendChild(top);
-      box.appendChild(jg("p", { class: "note" }, r.explain, r.tech));
-      var ul = el("ul", { class: "steps" });
-      if (r.steps) {
-        r.steps.forEach(function (st) { ul.appendChild(jg("li", { class: st.known ? "known" : "" }, st.text, st.tech)); });
-        ul.appendChild(jg("li", null, r.if_flat, r.if_flat_tech));
-      } else {
-        ul.appendChild(jg("li", { class: "known" }, r.text, "Breakeven next-month price = mean of the last 9 monthly averages = " +
-          r.threshold.toFixed(2) + "; SMA10 now " + r.average.toFixed(2)));
-      }
-      box.appendChild(ul);
-      host.appendChild(box);
-    });
-
-    var rg = clear($("brief-regime")), X = B.regimes[cur];
-    var t = el("div", { class: "rule-top" });
-    var nm = el("span"); nm.appendChild(el("b", null, "Now: " + MOOD[X.now].toLowerCase()));
-    nm.appendChild(document.createTextNode(" · " + (X.ret >= 0 ? "up " : "down ") + pct(Math.abs(X.ret)).replace("+", "") + " on a year ago"));
-    t.appendChild(nm);
-    t.appendChild(jg("span", { class: "pill r-" + X.now }, MOOD[X.now], "Regime label: " + X.now + " (r12 " + pct(X.ret) + ", efficiency ratio " + X.er.toFixed(2) + ")"));
-    rg.appendChild(t);
-    var last = D.regime.filter(function (r) { return r.currency === cur; })[0].close;
-    var cuts = [];
-    X.ranges.forEach(function (z) { if (z.high_cut) cuts.push(z.high_cut); });
-    var lo = Math.min(last, cuts.length ? cuts[0] : last) * 0.8, hi = Math.max(last, cuts.length ? cuts[cuts.length - 1] : last) * 1.12;
-    var wrap = el("div", { class: "zone-wrap" }), bar = el("div", { class: "zone", role: "img", "aria-label": X.text });
-    X.ranges.forEach(function (z) {
-      var a = Math.max(lo, z.low_cut || lo), b = Math.min(hi, z.high_cut || hi);
-      if (b <= a) return;
-      var sp = el("span", { class: "z-" + z.regime, title: MOOD[z.regime] }); sp.style.width = ((b - a) / (hi - lo) * 100) + "%"; bar.appendChild(sp);
-    });
-    var mk = el("i", { class: "mark" }); mk.style.left = ((last - lo) / (hi - lo) * 100) + "%"; bar.appendChild(mk);
-    wrap.appendChild(bar);
-    var tl = el("span", { class: "zone-lbl top" }, "Now " + Math.round(last).toLocaleString("en-US")); tl.style.left = ((last - lo) / (hi - lo) * 100) + "%"; wrap.appendChild(tl);
-    cuts.forEach(function (c) { var l = el("span", { class: "zone-lbl bot" }, Math.round(c).toLocaleString("en-US")); l.style.left = ((c - lo) / (hi - lo) * 100) + "%"; wrap.appendChild(l); });
-    rg.appendChild(wrap);
-    rg.appendChild(jg("p", { class: "note" }, X.text + ". Green: rising steadily. Grey: going sideways. Red: falling steadily. The gold mark is the latest monthly average.", X.tech));
-
-    var lt = clear($("brief-lines"));
-    var rows = B.near_lines.filter(function (L) { return L.currency === cur; });
-    var hr = el("tr"); [["Level", ""], ["Status", ""], ["Gold vs level", "n"]].forEach(function (h) { hr.appendChild(el("th", { class: h[1] }, h[0])); });
-    var th = el("thead"); th.appendChild(hr); lt.appendChild(th);
-    var tb = el("tbody");
-    rows.forEach(function (L) {
-      var tr = el("tr"), c0 = el("td");
-      c0.appendChild(jg("div", { class: "line-name" }, L.label + " (" + money(L.line_value, cur) + ")",
-        "Line " + L.id + " (" + (L.type || "") + ", severity " + L.severity + "): value " + L.line_value.toFixed(2) + " " + cur +
-        "; judged on closes with a 1% buffer; state machine intact > approaching > broken > confirmed > failed."));
-      if (L.note) c0.appendChild(el("div", { class: "line-note" }, L.note));
-      tr.appendChild(c0);
-      var c1 = el("td"); c1.appendChild(jg("span", { class: "pill s-" + L.state }, STATE_PLAIN[L.state] || L.state, "Line state: " + L.state + (L.watching ? ", watching for a break " + L.watching : ""))); tr.appendChild(c1);
-      tr.appendChild(jg("td", { class: "n " + cls(L.distance) }, pct(Math.abs(L.distance)).replace("+", "") + (L.distance >= 0 ? " above" : " below"),
-        "Distance = close / line - 1 = " + pct(L.distance, 2)));
-      tb.appendChild(tr);
-    });
-    lt.appendChild(tb);
-
-    var pt = clear($("press-table"));
-    var h2 = el("tr"); [["What", ""], ["Now", ""], ["Usually pushes gold", ""], ["Why", ""]].forEach(function (h) { h2.appendChild(el("th", { class: h[1] }, h[0])); });
-    var th2 = el("thead"); th2.appendChild(h2); pt.appendChild(th2);
-    var tb2 = el("tbody");
-    B.pressures.forEach(function (p) {
-      var tr = el("tr");
-      tr.appendChild(el("td", { class: "line-name" }, p.factor));
-      tr.appendChild(jg("td", null, p.reading, p.tech));
-      var c = el("td"); c.appendChild(jg("span", { class: "fx fx-" + p.usual_effect.split(" ")[0] }, EFFECT_PLAIN[p.usual_effect] || p.usual_effect,
-        "Classification: " + p.usual_effect + " (theme " + p.theme + ")")); tr.appendChild(c);
-      tr.appendChild(el("td", { class: "line-note" }, p.why));
-      tb2.appendChild(tr);
-    });
-    pt.appendChild(tb2);
-
-    var cf = clear($("brief-conflicts"));
-    if (!B.conflicts.length) cf.appendChild(el("li", null, "No mixed signals right now."));
-    B.conflicts.forEach(function (c) { cf.appendChild(jg("li", null, c.text, c.tech)); });
-    var up = clear($("brief-upcoming"));
-    B.upcoming.forEach(function (r) {
-      var when = r.window_start === r.window_end ? r.window_start : r.window_start + " to " + r.window_end;
-      var li = jg("li", null, null, r.name + " (" + r.period + "), window " + when + ". " + (r.why || ""));
-      li.appendChild(el("b", null, r.plain_name || r.name));
-      li.appendChild(document.createTextNode(", " + when + (r.plain_why ? ". " + r.plain_why : "")));
-      up.appendChild(li);
-    });
-    if (!B.upcoming.length) up.appendChild(el("li", null, "Nothing scheduled in the next few weeks."));
-    var gp = clear($("brief-gaps"));
-    B.gaps.forEach(function (g) { gp.appendChild(jg("li", null, g.text, g.tech)); });
-  }
-
-  // ---------- footer ----------
+  // ---------- data and gaps ----------
   function renderFoot() {
-    var ul = clear($("pending"));
-    D.pending.concat(D.line_notes).forEach(function (x) { ul.appendChild(el("li", null, x)); });
+    var gp = clear($("brief-gaps"));
+    D.brief.gaps.forEach(function (g) { gp.appendChild(jg("li", null, g.text, g.tech)); });
+    var ul = clear($("pending")); ul.className = "blist muted";
+    D.pending.forEach(function (x) { ul.appendChild(typeof x === "string" ? el("li", null, x) : jg("li", null, x.text, x.tech)); });
     var t = clear($("health"));
-    var hr = el("tr"); [["Source", ""], ["Latest month", ""], ["Status", ""]].forEach(function (h) { hr.appendChild(el("th", { class: h[1] }, h[0])); });
+    var hr = el("tr"); [["Source", ""], ["Latest", ""], ["Status", ""]].forEach(function (h) { hr.appendChild(el("th", { class: h[1] }, h[0])); });
     var th = el("thead"); th.appendChild(hr); t.appendChild(th);
     var tb = el("tbody");
-    var rows = D.health.length ? D.health : [{ source: "No fetch recorded", latest: null, status: "unknown" }];
-    rows.forEach(function (r) { var tr = el("tr"); tr.appendChild(el("td", null, r.source)); tr.appendChild(el("td", { class: "num" }, r.latest ? r.latest.slice(0, 7) : "—")); tr.appendChild(el("td", { class: r.status === "ok" ? "ok" : "neg" }, r.status)); tb.appendChild(tr); });
+    var rows = D.health.length ? D.health : [{ source: "none", plain: "No download recorded", latest: null, status: "unknown" }];
+    var ok = 0;
+    rows.forEach(function (r) {
+      if (r.status === "ok") ok++;
+      var tr = el("tr");
+      tr.appendChild(jg("td", null, r.plain || r.source, r.source + (r.error ? ": " + r.error : "")));
+      tr.appendChild(el("td", { class: "num" }, r.latest ? r.latest.slice(0, 7) : "—"));
+      tr.appendChild(jg("td", { class: r.status === "ok" ? "ok" : "neg" }, HEALTH_PLAIN(r.status), "Health status: " + r.status));
+      tb.appendChild(tr);
+    });
     t.appendChild(tb);
+    $("sum-data").textContent = ok + " of " + rows.length + " data sources up to date · " + (D.brief.gaps.length + D.pending.length) + " things not covered yet";
   }
+
+  // ---------- folding ----------
+  var FOLDS = ["d-rules", "d-push", "d-price", "d-lines", "d-stretch", "d-dates", "d-analogues", "d-history", "d-data"];
+  function saveOpen() {
+    try { localStorage.setItem("pmdash-open", JSON.stringify(FOLDS.filter(function (id) { return $(id).open; }))); } catch (e) {}
+    $("toggle-all").textContent = FOLDS.every(function (id) { return $(id).open; }) ? "Close all" : "Open all";
+  }
+  function restoreOpen() {
+    var open = [];
+    try { open = JSON.parse(localStorage.getItem("pmdash-open") || "[]"); } catch (e) {}
+    var hash = (location.hash || "").slice(1);
+    FOLDS.forEach(function (id) { $(id).open = open.indexOf(id) >= 0 || id === hash; });
+    saveOpen();
+  }
+  FOLDS.forEach(function (id) {
+    $(id).addEventListener("toggle", function () {
+      saveOpen();
+      if ($(id).open) { if (id === "d-price") renderPrice(); if (id === "d-analogues") renderAnalogues(); if (id === "d-history") renderHistory(); }
+    });
+  });
+  $("toggle-all").addEventListener("click", function () {
+    var all = FOLDS.every(function (id) { return $(id).open; });
+    FOLDS.forEach(function (id) { $(id).open = !all; });
+    saveOpen();
+  });
+  Array.prototype.forEach.call(document.querySelectorAll("[data-tech]"), jgWire);
 
   function renderAll() {
-    renderMast(); renderBrief(); renderRegime(); renderPrice(); renderBackdrop(); renderLines(); renderTriggers(); renderReports(); renderStretch(); renderAnalogues(); renderHistory(); renderFoot();
+    renderMast(); renderGlance(); renderRules(); renderPush(); renderRegime(); renderPrice(); renderLines(); renderStretch(); renderDates(); renderAnalogues(); renderHistory(); renderFoot();
   }
 
   Array.prototype.forEach.call(document.querySelectorAll("[data-cur]"), function (b) {
@@ -1088,6 +1213,7 @@ table.t tr:last-child td { border-bottom: 0; }
   });
   $("log-scale").addEventListener("change", function () { S.log = this.checked; renderPrice(); });
   if (S.range === "all") { S.log = true; $("log-scale").checked = true; }
+  restoreOpen();
 
   renderAll();
   var lastW = $("pm").clientWidth, pending = null;

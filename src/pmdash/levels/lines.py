@@ -112,7 +112,7 @@ def evaluate_market(market: str, prices: dict[str, pd.Series], levels_cfg: dict,
             continue
         if group == "macro":
             for item in items:
-                notes.append(f"{item['id']}: needs series {item.get('series')} (not ingested yet)")
+                notes.append(f"{item['id']}: macro line type {item['type']} on {item.get('series')} not evaluated yet")
     return transitions, notes
 
 
