@@ -251,7 +251,10 @@ def build_guess(gold_usd: pd.Series, gold_chf: pd.Series, regime: pd.Series, mom
     setups = monthly_setups(pu, regime[since:], mom[since:], ma[since:], expanding_pct(dist_10y[since:]))
     s = setups.get(setup_key) or next(iter(setups.values()))
     test12 = honesty_test(pu, s["cond"], 12, pd.Period("2000-01", "M"))
-    out = {"setup_plain": s["plain"], "setup_tech": s["tech"], "test12": test12, "currencies": {}}
+    story = {"combined": "your two trend rules disagree and the price is drifting sideways",
+             "rules": "your two trend rules disagree", "mood": "the price is drifting sideways",
+             "stretch": "gold is far above its long-run average"}.get(setup_key, s["plain"].lower())
+    out = {"setup_plain": s["plain"], "setup_story": story, "setup_tech": s["tech"], "test12": test12, "currencies": {}}
     for cur, p in (("USD", pu), ("CHF", gold_chf[since:])):
         cond = s["cond"].reindex(p.index).fillna(False)
         now = float(p.iloc[-1])
@@ -260,15 +263,15 @@ def build_guess(gold_usd: pd.Series, gold_chf: pd.Series, regime: pd.Series, mom
             r = rate(p, cond, h, setup_key)
             b = rate(p, pd.Series(True, index=p.index), h, "all")
             if r.n_spells < 10:
-                trust, why = "very low", f"only {r.n_spells} separate past situations like this had a {h // 12}-year outcome"
+                trust, plain, why = "very low", "very little", f"there are only {r.n_spells} similar times in the past to learn from"
             elif h == 12 and test12.get("label") == "useful":
-                trust, why = "moderate", "it passed the honesty test at 1 year"
+                trust, plain, why = "moderate", "somewhat", "when checked against past years, it did better than simply assuming gold tends to rise"
             elif h == 12:
-                trust, why = "low", "in testing it did not describe the next year better than 'gold usually rises'"
+                trust, plain, why = "low", "not much", "when checked against past years, it was no better than simply assuming gold tends to rise"
             else:
-                trust, why = "low", f"it can't be tested at {h // 12} years: too few independent periods"
+                trust, plain, why = "low", "not much", f"there aren't enough separate {h // 12}-year stretches in the past to check it"
             rows.append({
-                "months": h, "years": h // 12, "trust": trust, "trust_why": why,
+                "months": h, "years": h // 12, "trust": trust, "trust_plain": plain, "trust_why": why,
                 "like_today": {"n": r.n_periods, "spells": r.n_spells, "share_up": r.share_up, "median": r.median,
                                "p25": r.p25, "p75": r.p75, "price_mid": now * (1 + r.median),
                                "price_lo": now * (1 + r.p25), "price_hi": now * (1 + r.p75)},

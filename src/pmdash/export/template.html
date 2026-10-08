@@ -299,7 +299,7 @@ table.t tr:last-child td { border-bottom: 0; }
     <h2 id="brief-head" class="glance-head">—</h2>
     <div class="guess panel" id="guess">
       <div class="guess-head">
-        <div><div class="eyebrow jg" data-tech="Empirical outcome distributions (interquartile range and median of forward returns) after past months matching today's setup, applied to today's price. Not a forecast model.">Educated guess, from history</div>
+        <div><div class="eyebrow jg" data-tech="Empirical outcome distributions (interquartile range and median of forward returns) after past months matching today's setup, applied to today's price. Not a forecast model.">Educated guess: where gold might be, judging by the past</div>
         <p class="note" id="guess-sub">—</p></div>
       </div>
       <div class="guess-grid" id="guess-grid"></div>
@@ -630,34 +630,42 @@ table.t tr:last-child td { border-bottom: 0; }
   }
 
   // ---------- educated guess ----------
+  function inTen(x) { var n = Math.round(x * 10); return n <= 0 ? "almost never" : n >= 10 ? "almost always" : "about " + n + " in 10 times"; }
   function renderGuess() {
     var G = D.guess; if (!G) return;
     var C = G.currencies[S.cur], grid = clear($("guess-grid"));
-    $("guess-sub").textContent = "What gold did after past situations like today (" + G.setup_plain.toLowerCase() + "), applied to today's price of " +
-      money(C.now, S.cur) + ". The bold range is the middle half of past outcomes.";
+    setText("guess-sub", "We looked at past times that resembled today, when " + G.setup_story + ", and at what gold did next. " +
+      "Here is what that would mean from today's price of " + money(C.now, S.cur) + ".", "Matching months: " + G.setup_tech + " (" + G.setup_plain + ")");
     var lo = Infinity, hi = -Infinity;
     C.rows.forEach(function (r) { [r.like_today, r.any_time].forEach(function (x) { lo = Math.min(lo, x.price_lo); hi = Math.max(hi, x.price_hi); }); });
     lo = Math.min(lo, C.now) * 0.97; hi = Math.max(hi, C.now) * 1.03;
     function pos(v) { return ((v - lo) / (hi - lo) * 100).toFixed(1) + "%"; }
+    function vsNow(v) { var d = v / C.now - 1; return Math.abs(d) < 0.03 ? "about the same as now" : Math.round(Math.abs(d) * 100) + "% " + (d > 0 ? "above" : "below") + " today"; }
     C.rows.forEach(function (r) {
       var L = r.like_today, A = r.any_time, col = el("div", { class: "gcol" });
       col.appendChild(el("div", { class: "h" }, "In " + r.years + (r.years === 1 ? " year" : " years")));
-      col.appendChild(jg("div", { class: "rng" }, money(L.price_lo, S.cur) + " to " + money(L.price_hi, S.cur).replace("CHF ", ""),
+      col.appendChild(el("div", { class: "vs" }, "Usually between"));
+      col.appendChild(jg("div", { class: "rng" }, money(L.price_lo, S.cur) + " and " + money(L.price_hi, S.cur).replace("CHF ", ""),
         "Interquartile range of " + r.months + "-month returns after matching months: " + pct(L.p25, 1) + " to " + pct(L.p75, 1) + " (n=" + L.n + " months, " + L.spells + " spells), applied to " + C.now.toFixed(2)));
-      col.appendChild(jg("div", { class: "mid" }, "Middle: about " + money(L.price_mid, S.cur) + " (" + updown(L.median) + "). Higher in " + Math.round(L.share_up * 100) + "% of past months like this (" + L.spells + " separate situations).",
-        "Median " + pct(L.median, 1) + "; P(return > 0) = " + L.share_up.toFixed(3)));
+      col.appendChild(jg("div", { class: "mid" }, "Half of the past cases ended in this range. The most typical result was about " + money(L.price_mid, S.cur) + ", " + vsNow(L.price_mid) + ".",
+        "Median " + pct(L.median, 1) + "; P(return > 0) = " + L.share_up.toFixed(3) + "; " + L.spells + " separate spells"));
+      col.appendChild(el("div", { class: "mid" }, "Gold ended higher " + inTen(L.share_up) + "."));
       var sc = el("div", { class: "gscale", "aria-hidden": "true" });
       var b1 = el("span", { class: "band like" }); b1.style.left = pos(L.price_lo); b1.style.width = "calc(" + pos(L.price_hi) + " - " + pos(L.price_lo) + ")"; sc.appendChild(b1);
       var b2 = el("span", { class: "band any" }); b2.style.left = pos(A.price_lo); b2.style.width = "calc(" + pos(A.price_hi) + " - " + pos(A.price_lo) + ")"; sc.appendChild(b2);
       var nw = el("i", { class: "now" }); nw.style.left = pos(C.now); sc.appendChild(nw);
       col.appendChild(sc);
-      col.appendChild(jg("div", { class: "vs" }, "Any month since 1972: " + money(A.price_lo, S.cur) + " to " + money(A.price_hi, S.cur).replace("CHF ", "") + ", higher in " + Math.round(A.share_up * 100) + "%.",
-        "Unconditional: IQR " + pct(A.p25, 1) + " to " + pct(A.p75, 1) + ", median " + pct(A.median, 1) + ", n=" + A.n + " months"));
-      col.appendChild(jg("div", { class: "trust trust-" + r.trust.split(" ")[0] }, null, "Trust rule: under 10 separate spells = very low; 1 year untested or failed = low; passed the 1-year honesty test = moderate. Never high."));
-      var t = col.lastChild; t.appendChild(el("b", null, "How much to trust it: " + r.trust + ". ")); t.appendChild(document.createTextNode("Because " + r.trust_why + "."));
+      col.appendChild(jg("div", { class: "vs" }, "For comparison, at any time since 1972 it was usually between " + money(A.price_lo, S.cur) + " and " + money(A.price_hi, S.cur).replace("CHF ", "") + ", and ended higher " + inTen(A.share_up) + ".",
+        "Unconditional: IQR " + pct(A.p25, 1) + " to " + pct(A.p75, 1) + ", median " + pct(A.median, 1) + ", P(up) " + A.share_up.toFixed(3) + ", n=" + A.n + " months"));
+      var t = jg("div", { class: "trust trust-" + r.trust.split(" ")[0] }, null,
+        "Trust rule: under 10 separate spells = very low; 1 year untested or failed the walk-forward test = low; passed it = moderate. Never high. This horizon: " + r.trust + ".");
+      t.appendChild(el("b", null, "How much to rely on this: " + r.trust_plain + ". ")); t.appendChild(document.createTextNode("That's because " + r.trust_why + "."));
+      col.appendChild(t);
       grid.appendChild(col);
     });
-    $("guess-foot").textContent = "Gold bar: situations like today. Blue bar: any month. Black mark: today's price. This is history's range, not a prediction: nothing in this dashboard has beaten \u201cgold usually rises\u201d when tested, and ranges over 3 and 5 years rest on few independent periods." + (S.cur === "CHF" ? " Situations are defined on the dollar price; outcomes are in francs." : "");
+    $("guess-foot").textContent = "Gold bar: times like today. Blue bar: all times. Black line: today's price. These are ranges from the past, not a prediction. " +
+      "So far nothing on this page has been better at calling gold's direction than the simple rule that gold tends to rise over time." +
+      (S.cur === "CHF" ? " Which past times count as \u201clike today\u201d is judged on the dollar price; the results are shown in francs." : "");
   }
 
   // ---------- rules (brief) ----------
