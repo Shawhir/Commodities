@@ -76,7 +76,7 @@ def test_yahoo_and_stooq_parsers():
     js = {"chart": {"result": [{"timestamp": [1759708800, 1759795200],
                                 "indicators": {"quote": [{"open": [4000, 4010], "high": [4050, 4060], "low": [3990, 4000],
                                                           "close": [4020, None], "volume": [1000, 1200]}]}}]}}
-    f = YahooChart(source_id="gold_fut_daily", spec={"ticker": "GC=F", "prefix": "gold_fut"})
+    f = YahooChart(source_id="gold_fut_daily", spec={"ticker": "GC=F", "prefix": "gold_fut", "today": "2026-10-10"})
     assert "GC=F" in f.spec["url"]
     df = f.parse(json.dumps(js).encode())
     closes = df[df.series_id == "gold_fut_close"]
@@ -98,3 +98,12 @@ def test_load_daily_prefers_futures_and_falls_back():
     db.upsert_observations(con, "gold_fut_close", vals, "t")
     df, src = data.load_daily(con, "gold")
     assert "futures" in src
+
+
+def test_yahoo_drops_todays_unfinished_bar():
+    from pmdash.ingest.generic import YahooChart
+    js = {"chart": {"result": [{"timestamp": [1759708800, 1759795200],      # 2025-10-06, 2025-10-07
+                                "indicators": {"quote": [{"close": [4020, 4030]}]}}]}}
+    f = YahooChart(source_id="x", spec={"ticker": "GC=F", "prefix": "gold_fut", "today": "2025-10-07"})
+    df = f.parse(json.dumps(js).encode())
+    assert list(df.value) == [4020]

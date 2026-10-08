@@ -78,5 +78,7 @@ def load_daily(con, metal: str = "gold", as_of=None) -> tuple[pd.DataFrame | Non
             s = db.get_series(con, f"{prefix}_{f}", as_of=as_of)
             if len(s):
                 df[f] = s
+        cutoff = pd.Timestamp(as_of) if as_of else pd.Timestamp(pd.Timestamp.now(tz="UTC").date())
+        df = df[df.index < cutoff]          # a bar dated today is still trading, not a close
         return df.dropna(subset=["close"]), label
     return None, None

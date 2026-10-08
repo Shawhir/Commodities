@@ -149,7 +149,7 @@ def readings(ind: pd.DataFrame, cur_label: str = "$") -> list[dict]:
     if "atr_pct" in last and not pd.isna(last.get("atr_pct")):
         typ = ind["atr_pct"].median()
         add("atr", "Typical daily move", f"{last['atr_pct']:.1%} a day",
-            f"Gold has been moving about {last['atr_pct']:.1%} a day, {'more' if last['atr_pct'] > typ else 'less'} than its usual {typ:.1%}.",
+            f"The price has been moving about {last['atr_pct']:.1%} a day, {'more' if last['atr_pct'] > typ else 'less'} than its usual {typ:.1%}.",
             f"ATR(14) = {last['atr14']:.2f} = {last['atr_pct']:.2%} of price; median {typ:.2%}",
             "warn" if last["atr_pct"] > 1.5 * typ else "neutral")
     add("range52", "Past year's range", f"{abs(last['from_high']):.0%} below the high",
@@ -159,7 +159,8 @@ def readings(ind: pd.DataFrame, cur_label: str = "$") -> list[dict]:
     if "vol_ratio" in ind and not pd.isna(last.get("vol_ratio")):
         vr = last["vol_ratio"]
         add("volume", "Trading activity", f"{'busier' if vr > 1.1 else 'quieter' if vr < 0.9 else 'normal'}",
-            f"Futures trading over the last 20 days is {vr:.0%} of its usual level.",
-            f"Volume SMA20 / SMA100 = {vr:.2f} (front-month continuation; contract rolls distort volume)",
+            f"Futures trading over the last 20 days is {vr:.0%} of its usual level. The free volume data is patchy, so this is rough.",
+            f"Volume SMA20 / SMA100 = {vr:.2f}. Caution: Yahoo's front-month continuation volume is unreliable "
+            f"(repeated values, contract rolls), so treat this reading as rough.",
             "warn" if vr > 1.3 else "neutral")
     return out

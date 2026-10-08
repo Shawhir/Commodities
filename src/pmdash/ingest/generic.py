@@ -234,6 +234,11 @@ class YahooChart(Fetcher):
         r = res[0]
         ts = pd.to_datetime(pd.Series(r["timestamp"]), unit="s").dt.normalize()
         q = r["indicators"]["quote"][0]
+        # Today's bar is still trading (a price during the day, not a close): drop it. Closes, not touches.
+        today = pd.Timestamp(self.spec.get("today") or pd.Timestamp.now(tz="UTC").date())
+        keep = (ts < today).to_numpy()
+        ts = ts[keep].reset_index(drop=True)
+        q = {k: [v for v, kk in zip(vals, keep) if kk] for k, vals in q.items()}
         prefix = self.spec["prefix"]
         out = []
         for field in ("open", "high", "low", "close", "volume"):

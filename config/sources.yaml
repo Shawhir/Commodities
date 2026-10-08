@@ -156,7 +156,7 @@ sources:
     fetcher: stooq_daily
     symbol: xauusd
     prefix: gold_spot
-    schedule: daily
+    schedule: fallback        # not run daily: stooq.com answered with a bot-check page in Oct 2026
     stale_after_days: 5
     status: candidate
     note: Gold spot USD (stooq.com), fallback when Yahoo refuses. OHLC, no volume.
@@ -164,7 +164,7 @@ sources:
     fetcher: stooq_daily
     symbol: xagusd
     prefix: silver_spot
-    schedule: daily
+    schedule: fallback
     stale_after_days: 5
     status: candidate
     note: Silver spot USD (stooq.com).
