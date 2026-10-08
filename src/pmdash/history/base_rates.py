@@ -237,3 +237,44 @@ def to_markdown(history: dict | None, technical: dict | None) -> str:
                        f"{'Passed the honesty test' if a['test'].get('label') == 'useful' else 'For context only'}.")
         out.append("")
     return "\n".join(out) + "\n"
+
+
+# --- educated guess: history's ranges for 1, 3 and 5 years -------------------------------------------
+
+def build_guess(gold_usd: pd.Series, gold_chf: pd.Series, regime: pd.Series, mom: pd.Series, ma: pd.Series,
+                dist_10y: pd.Series, since: str = "1972-08", horizons=(12, 36, 60), setup_key: str = "combined") -> dict:
+    """For each horizon: the range of outcomes after past situations like today (and after any month),
+    turned into price ranges from today's price. Situations are defined on the USD price (as in the
+    section 8 study); CHF outcomes use the same months. A trust rating states how much weight the
+    numbers can bear: independent spells and the walk-forward honesty test (only testable at 1 year)."""
+    pu = gold_usd[since:]
+    setups = monthly_setups(pu, regime[since:], mom[since:], ma[since:], expanding_pct(dist_10y[since:]))
+    s = setups.get(setup_key) or next(iter(setups.values()))
+    test12 = honesty_test(pu, s["cond"], 12, pd.Period("2000-01", "M"))
+    out = {"setup_plain": s["plain"], "setup_tech": s["tech"], "test12": test12, "currencies": {}}
+    for cur, p in (("USD", pu), ("CHF", gold_chf[since:])):
+        cond = s["cond"].reindex(p.index).fillna(False)
+        now = float(p.iloc[-1])
+        rows = []
+        for h in horizons:
+            r = rate(p, cond, h, setup_key)
+            b = rate(p, pd.Series(True, index=p.index), h, "all")
+            if r.n_spells < 10:
+                trust, why = "very low", f"only {r.n_spells} separate past situations like this had a {h // 12}-year outcome"
+            elif h == 12 and test12.get("label") == "useful":
+                trust, why = "moderate", "it passed the honesty test at 1 year"
+            elif h == 12:
+                trust, why = "low", "in testing it did not describe the next year better than 'gold usually rises'"
+            else:
+                trust, why = "low", f"it can't be tested at {h // 12} years: too few independent periods"
+            rows.append({
+                "months": h, "years": h // 12, "trust": trust, "trust_why": why,
+                "like_today": {"n": r.n_periods, "spells": r.n_spells, "share_up": r.share_up, "median": r.median,
+                               "p25": r.p25, "p75": r.p75, "price_mid": now * (1 + r.median),
+                               "price_lo": now * (1 + r.p25), "price_hi": now * (1 + r.p75)},
+                "any_time": {"n": b.n_periods, "spells": b.n_spells, "share_up": b.share_up, "median": b.median,
+                             "p25": b.p25, "p75": b.p75, "price_mid": now * (1 + b.median),
+                             "price_lo": now * (1 + b.p25), "price_hi": now * (1 + b.p75)},
+            })
+        out["currencies"][cur] = {"now": now, "month": str(p.index[-1]), "rows": rows}
+    return out

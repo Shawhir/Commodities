@@ -101,6 +101,23 @@ details[open] > summary .chev { transform: rotate(-135deg); }
 .pm { gap: 14px; }
 .pm .glance-sec { margin-bottom: 10px; }
 
+/* educated guess */
+.guess { display: grid; gap: 12px; border-color: var(--gold); }
+.guess-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+.gcol { display: grid; gap: 6px; align-content: start; padding: 12px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--bg); min-width: 0; }
+.gcol .h { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.gcol .rng { font-family: var(--font-display); font-size: 22px; line-height: 1.2; font-variant-numeric: tabular-nums; }
+.gcol .mid { font-size: 13px; }
+.gcol .vs { font-size: 12.5px; color: var(--muted); }
+.gscale { position: relative; height: 22px; }
+.gscale .band { position: absolute; top: 4px; height: 6px; border-radius: 99px; }
+.gscale .band.like { background: var(--gold); opacity: 0.8; }
+.gscale .band.any { top: 14px; height: 4px; background: var(--info); opacity: 0.55; }
+.gscale .now { position: absolute; top: 0; bottom: 0; width: 2px; background: var(--fg); opacity: 0.7; }
+.trust { font-size: 12px; }
+.trust b { font-weight: 600; }
+.trust-very { color: var(--down); } .trust-low { color: var(--warn); } .trust-moderate { color: var(--up); }
+
 /* history counts and technical picture */
 .after-list { display: grid; gap: 12px; }
 .after { display: grid; gap: 8px; }
@@ -280,6 +297,14 @@ table.t tr:last-child td { border-bottom: 0; }
 
   <section class="glance-sec" id="glance-sec" aria-label="At a glance">
     <h2 id="brief-head" class="glance-head">—</h2>
+    <div class="guess panel" id="guess">
+      <div class="guess-head">
+        <div><div class="eyebrow jg" data-tech="Empirical outcome distributions (interquartile range and median of forward returns) after past months matching today's setup, applied to today's price. Not a forecast model.">Educated guess, from history</div>
+        <p class="note" id="guess-sub">—</p></div>
+      </div>
+      <div class="guess-grid" id="guess-grid"></div>
+      <p class="note" id="guess-foot">—</p>
+    </div>
     <div class="glance" id="glance"></div>
     <div class="glance-foot">
       <p class="note">Tap a box to see the detail. Hover over (or tap) <span class="jg-demo">underlined text</span> for the technical version. This page describes; it never tells you what to do.</p>
@@ -535,7 +560,8 @@ table.t tr:last-child td { border-bottom: 0; }
   var HEALTH_PLAIN = function (s) { return s === "ok" ? "up to date" : s === "never succeeded" ? "never loaded" :
     s.indexOf("stale") === 0 ? "out of date" : s === "last attempt failed" ? "last try failed" : s; };
   function cname(cur) { return cur === "CHF" ? "francs" : "dollars"; }
-  function updown(x, d) { return (x >= 0 ? "up " : "down ") + pct(Math.abs(x), d === undefined ? 0 : d).replace("+", ""); }
+  function updown(x, d) { d = d === undefined ? 0 : d; if (Math.abs(x) < 0.5 * Math.pow(10, -2 - d)) return "about unchanged";
+    return (x >= 0 ? "up " : "down ") + pct(Math.abs(x), d).replace("+", ""); }
 
   // ---------- masthead ----------
   function renderMast() {
@@ -601,6 +627,37 @@ table.t tr:last-child td { border-bottom: 0; }
     var nx = B.upcoming.filter(function (u) { return u.report_id !== "cftc_cot"; })[0] || B.upcoming[0];
     if (nx) host.appendChild(tile("Next date", nx.plain_name || nx.name, nx.window_start === nx.window_end ? nx.window_start : nx.window_start + " to " + nx.window_end, "d-dates",
       nx.name + " (" + nx.period + ")"));
+  }
+
+  // ---------- educated guess ----------
+  function renderGuess() {
+    var G = D.guess; if (!G) return;
+    var C = G.currencies[S.cur], grid = clear($("guess-grid"));
+    $("guess-sub").textContent = "What gold did after past situations like today (" + G.setup_plain.toLowerCase() + "), applied to today's price of " +
+      money(C.now, S.cur) + ". The bold range is the middle half of past outcomes.";
+    var lo = Infinity, hi = -Infinity;
+    C.rows.forEach(function (r) { [r.like_today, r.any_time].forEach(function (x) { lo = Math.min(lo, x.price_lo); hi = Math.max(hi, x.price_hi); }); });
+    lo = Math.min(lo, C.now) * 0.97; hi = Math.max(hi, C.now) * 1.03;
+    function pos(v) { return ((v - lo) / (hi - lo) * 100).toFixed(1) + "%"; }
+    C.rows.forEach(function (r) {
+      var L = r.like_today, A = r.any_time, col = el("div", { class: "gcol" });
+      col.appendChild(el("div", { class: "h" }, "In " + r.years + (r.years === 1 ? " year" : " years")));
+      col.appendChild(jg("div", { class: "rng" }, money(L.price_lo, S.cur) + " to " + money(L.price_hi, S.cur).replace("CHF ", ""),
+        "Interquartile range of " + r.months + "-month returns after matching months: " + pct(L.p25, 1) + " to " + pct(L.p75, 1) + " (n=" + L.n + " months, " + L.spells + " spells), applied to " + C.now.toFixed(2)));
+      col.appendChild(jg("div", { class: "mid" }, "Middle: about " + money(L.price_mid, S.cur) + " (" + updown(L.median) + "). Higher in " + Math.round(L.share_up * 100) + "% of past months like this (" + L.spells + " separate situations).",
+        "Median " + pct(L.median, 1) + "; P(return > 0) = " + L.share_up.toFixed(3)));
+      var sc = el("div", { class: "gscale", "aria-hidden": "true" });
+      var b1 = el("span", { class: "band like" }); b1.style.left = pos(L.price_lo); b1.style.width = "calc(" + pos(L.price_hi) + " - " + pos(L.price_lo) + ")"; sc.appendChild(b1);
+      var b2 = el("span", { class: "band any" }); b2.style.left = pos(A.price_lo); b2.style.width = "calc(" + pos(A.price_hi) + " - " + pos(A.price_lo) + ")"; sc.appendChild(b2);
+      var nw = el("i", { class: "now" }); nw.style.left = pos(C.now); sc.appendChild(nw);
+      col.appendChild(sc);
+      col.appendChild(jg("div", { class: "vs" }, "Any month since 1972: " + money(A.price_lo, S.cur) + " to " + money(A.price_hi, S.cur).replace("CHF ", "") + ", higher in " + Math.round(A.share_up * 100) + "%.",
+        "Unconditional: IQR " + pct(A.p25, 1) + " to " + pct(A.p75, 1) + ", median " + pct(A.median, 1) + ", n=" + A.n + " months"));
+      col.appendChild(jg("div", { class: "trust trust-" + r.trust.split(" ")[0] }, null, "Trust rule: under 10 separate spells = very low; 1 year untested or failed = low; passed the 1-year honesty test = moderate. Never high."));
+      var t = col.lastChild; t.appendChild(el("b", null, "How much to trust it: " + r.trust + ". ")); t.appendChild(document.createTextNode("Because " + r.trust_why + "."));
+      grid.appendChild(col);
+    });
+    $("guess-foot").textContent = "Gold bar: situations like today. Blue bar: any month. Black mark: today's price. This is history's range, not a prediction: nothing in this dashboard has beaten \u201cgold usually rises\u201d when tested, and ranges over 3 and 5 years rest on few independent periods." + (S.cur === "CHF" ? " Situations are defined on the dollar price; outcomes are in francs." : "");
   }
 
   // ---------- rules (brief) ----------
@@ -1392,7 +1449,7 @@ table.t tr:last-child td { border-bottom: 0; }
   Array.prototype.forEach.call(document.querySelectorAll("[data-tech]"), jgWire);
 
   function renderAll() {
-    renderMast(); renderGlance(); renderRules(); renderPush(); renderRegime(); renderPrice(); renderLines(); renderStretch(); renderDates(); renderAnalogues(); renderAfter(); renderTech(); renderHistory(); renderFoot();
+    renderMast(); renderGuess(); renderGlance(); renderRules(); renderPush(); renderRegime(); renderPrice(); renderLines(); renderStretch(); renderDates(); renderAnalogues(); renderAfter(); renderTech(); renderHistory(); renderFoot();
   }
 
   Array.prototype.forEach.call(document.querySelectorAll("[data-cur]"), function (b) {

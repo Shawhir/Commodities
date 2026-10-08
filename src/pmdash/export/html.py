@@ -291,12 +291,14 @@ def build_payload(gold: pd.Series, fx: pd.Series, health: pd.DataFrame | None = 
     from ..indicators.trend import ma_signal as _ma_sig, momentum_signal as _mom_sig
     history = base_rates.build_monthly(gold, reg_usd, _mom_sig(gold), _ma_sig(gold),
                                        _measures(gold.loc[float_start:])["dist_10y_avg"])
+    guess = base_rates.build_guess(gold, chf, reg_usd, _mom_sig(gold), _ma_sig(gold),
+                                   _measures(gold.loc[float_start:])["dist_10y_avg"])
     technical = {}
     for metal, (df_, src_) in (daily or {}).items():
         if df_ is not None:
             technical[metal] = base_rates.build_technical(df_, src_)
     return _clean({
-        "history": history, "technical": technical,
+        "history": history, "technical": technical, "guess": guess,
         "brief": brief,
         "as_of": str(as_of), "built": str(date.today()), "disclaimer": s["disclaimer"],
         "regime": regime, "series": series, "manual_lines": manual, "lines": lines,

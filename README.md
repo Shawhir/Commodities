@@ -106,6 +106,19 @@ lines, what is pulling on gold (each factor with its usual effect), conflicts be
 the next releases, and what it can't cover yet. It states conditions, never instructions, and a
 check rejects the brief if instruction language appears.
 
+## Educated guess, history counts and technical picture
+
+- **Educated guess** (top of the page): for 1, 3 and 5 years, the middle half of past outcomes
+  after situations like today, applied to today's price, next to the same range for any month,
+  with a trust rating. This is history's range, not a forecast model, and it says so. (The brief's
+  "no forecasting" rule was relaxed by the owner on 8 October 2026 for this ranged view.)
+- **What happened after setups like this**: counts for today's setups at 3, 6 and 12 months,
+  with separate spells and a walk-forward honesty test (`src/pmdash/history/base_rates.py`).
+- **Technical picture**: daily gold and silver (Yahoo Finance futures, unofficial) with RSI,
+  MACD, Bollinger bands, 50/200-day averages, ATR, the past year's range and volume, each with
+  the same counts and honesty test (`src/pmdash/indicators/technical.py`). On random prices about
+  1 in 25 signals still passes the test, so a single pass is weak evidence.
+
 ## Design notes
 
 - **Closes, not touches.** Lines are judged on closes with a buffer. With only monthly

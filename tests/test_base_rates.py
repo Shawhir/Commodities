@@ -107,3 +107,21 @@ def test_yahoo_drops_todays_unfinished_bar():
     f = YahooChart(source_id="x", spec={"ticker": "GC=F", "prefix": "gold_fut", "today": "2025-10-07"})
     df = f.parse(json.dumps(js).encode())
     assert list(df.value) == [4020]
+
+
+def test_educated_guess_ranges_and_trust(gold, fx, thresholds):
+    from pmdash.indicators.stretch import measures
+    from pmdash.indicators.trend import ma_signal, momentum_signal
+    from pmdash.regime.labeller import label_from_config
+    reg = label_from_config(gold, thresholds)["regime"]
+    g = br.build_guess(gold, (gold * fx).dropna(), reg, momentum_signal(gold), ma_signal(gold),
+                       measures(gold["1971-08":])["dist_10y_avg"])
+    for cur in ("USD", "CHF"):
+        rows = g["currencies"][cur]["rows"]
+        assert [r["years"] for r in rows] == [1, 3, 5]
+        for r in rows:
+            for k in ("like_today", "any_time"):
+                x = r[k]
+                assert x["price_lo"] <= x["price_mid"] <= x["price_hi"]
+            assert r["trust"] in ("very low", "low", "moderate")
+    assert g["currencies"]["USD"]["rows"][2]["trust"] == "very low"     # too few 5-year spells
