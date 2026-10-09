@@ -1,8 +1,6 @@
 name,status,bytes,seconds,error,cors
-pages_live,200,334009,2.2,,*
-tv_widget_js,200,12846,2.3,,*
-tv_sym_xauchf,403,146,2.4,HTTP Error 403: Forbidden,
-tv_sym_xagchf,403,146,2.2,HTTP Error 403: Forbidden,
-tv_sym_xauusd,403,146,2.1,HTTP Error 403: Forbidden,
-tv_sym_xagusd,403,146,2.1,HTTP Error 403: Forbidden,
-tv_sym_usdchf,403,146,2.2,HTTP Error 403: Forbidden,
+snb_plkopr,200,81307,3.1,,
+snb_plkoprinfla,200,46644,3.0,,
+snb_plkoprex,200,247913,3.4,,
+snb_rendoblim,200,142138,3.2,,
+fred_ch_cpi_search,200,37575,2.4,,
