@@ -28,7 +28,7 @@ on:
       job:
         description: "What to run"
         type: choice
-        options: [daily, release, weekly, backfill]
+        options: [daily, release, weekly, backfill, probe]
         default: daily
 
 permissions:
@@ -81,6 +81,12 @@ jobs:
         continue-on-error: true
         run: pmdash backfill --cftc-years 20
 
+      - name: Probe candidate sources (manual only)
+        timeout-minutes: 10
+        if: steps.job.outputs.job == 'probe'
+        continue-on-error: true
+        run: pmdash probe
+
       - name: Daily fetch
         timeout-minutes: 10
         if: steps.job.outputs.job == 'daily'
@@ -115,7 +121,7 @@ jobs:
         run: |
           git config user.name "pmdash bot"
           git config user.email "pmdash-bot@users.noreply.github.com"
-          for f in data/store data/dashboard.html data/weekly_summary.md; do [ -e "$f" ] && git add "$f"; done
+          for f in data/store data/dashboard.html data/weekly_summary.md data/research/probe; do [ -e "$f" ] && git add "$f"; done
           if git diff --cached --quiet; then echo "No data changes"; exit 0; fi
           git commit -m "data: ${{ steps.job.outputs.job }} run $(date -u +%F)"
           for i in 1 2 3; do git pull --rebase --autostash && git push && break; sleep 5; done
@@ -141,7 +147,7 @@ jobs:
   # One-time setup: Settings -> Pages -> Source: GitHub Actions.
   pages:
     needs: run
-    if: always() && needs.run.outputs.job != 'release'
+    if: always() && needs.run.outputs.job != 'release' && needs.run.outputs.job != 'probe'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:

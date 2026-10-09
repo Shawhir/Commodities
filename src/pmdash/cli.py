@@ -314,6 +314,15 @@ def cmd_health(args):
     return 0
 
 
+def cmd_probe(args):
+    from .ingest import probe
+    urls = config.load("probe")["urls"]
+    if args.only:
+        urls = {k: v for k, v in urls.items() if k in args.only.split(",")}
+    probe.run(urls, config.DATA_DIR / "research" / "probe")
+    return 0
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(prog="pmdash", description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -366,6 +375,8 @@ def main(argv=None) -> int:
     p.add_argument("--fragment", action="store_true", help="omit the <html> wrapper (for hosts that add their own)")
     p.add_argument("--no-oos", action="store_true", help="skip the out-of-sample test (faster)")
     add("health", cmd_health, "data health")
+    p = add("probe", cmd_probe, "try candidate source URLs (config/probe.yaml) and save what comes back")
+    p.add_argument("--only", help="comma-separated names")
     args = ap.parse_args(argv)
     return args.fn(args)
 
