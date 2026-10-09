@@ -89,9 +89,8 @@ body { background: var(--bg); color: var(--fg); font-family: var(--font-body); f
 .prices-foot { display: flex; justify-content: flex-end; align-items: center; gap: 12px; margin: 4px 0 2px; }
 .prices-foot[hidden] { display: none; }
 .prices-foot { flex-wrap: wrap; }
-.tv-panel { padding: 8px 12px; margin-bottom: 6px; }
-.tv-panel[hidden] { display: none; }
-#tv-host { min-height: 72px; }
+.pcard .tvq { min-height: 60px; margin: 2px 0 2px -2px; }
+.pcard .tvq .tradingview-widget-container, .pcard .tvq iframe { width: 100% !important; }
 .pcard .live { font-size: 12px; color: var(--up); display: flex; align-items: center; gap: 6px; }
 .pcard .live i { width: 7px; height: 7px; border-radius: 50%; background: var(--up); }
 
@@ -360,13 +359,9 @@ table.t tr:last-child td { border-bottom: 0; }
 
   <div class="prices" id="prices" aria-label="Latest prices" hidden></div>
   <div class="prices-foot" id="prices-foot" hidden>
-    <span class="note jg" data-tech="Spot prices from gold-api.com, fetched by your browser when the page opens and when you press Refresh. Not stored; every calculation uses the stored daily closes.">Spot prices are checked when the page opens.</span>
+    <span class="note" id="prices-foot-note">—</span>
     <button type="button" class="linkbtn" id="live-refresh">Refresh</button>
-    <button type="button" class="linkbtn" id="tv-toggle" aria-pressed="false" aria-controls="tv-stream">Stream live (TradingView)</button>
-  </div>
-  <div class="panel tv-panel" id="tv-stream" hidden>
-    <div id="tv-host"></div>
-    <p class="note">Streaming prices from TradingView (OANDA quotes). "Stop streaming" turns this off on this device. Their figures can differ slightly from the closes stored here, and nothing streamed is used in the page's calculations.</p>
+    <button type="button" class="linkbtn" id="tv-toggle" aria-pressed="false">Stream live (TradingView)</button>
   </div>
 
   <nav class="jump" aria-label="Jump to">
@@ -696,9 +691,16 @@ table.t tr:last-child td { border-bottom: 0; }
 
   // ---------- price strip ----------
   function renderPrices() {
-    var P = D.prices || [], host = clear($("prices"));
+    var P = D.prices || [], host = $("prices");
     if (!P.length) { host.hidden = true; $("prices-foot").hidden = true; return; }
     host.hidden = false; $("prices-foot").hidden = false;
+    setFoot();
+    if (STREAM && host.dataset.built === "tv") {          // keep the open streams; just move the highlight
+      Array.prototype.forEach.call(host.querySelectorAll("[data-cur]"), function (b) { b.className = b.dataset.cur === S.cur ? "sel" : ""; });
+      return;
+    }
+    clear(host);
+    host.dataset.built = STREAM ? "tv" : "own";
     var NAME = { gold: "Gold", silver: "Silver" };
     function fmt(x, cur, metal) {
       var dp = metal === "silver" ? 2 : 0;
@@ -712,16 +714,20 @@ table.t tr:last-child td { border-bottom: 0; }
     P.forEach(function (r) {
       var c = el("div", { class: "pcard" }), top = el("div", { class: "top" });
       top.appendChild(el("div", { class: "eyebrow" }, (NAME[r.metal] || r.metal) + " · per ounce"));
-      top.appendChild(jg("span", { class: "note" }, LIVE ? "spot price" : "close " + dayName(r.date) + (r.fx && r.fx.date < r.date ? " · franc rate " + dayName(r.fx.date) : ""),
+      top.appendChild(jg("span", { class: "note" }, STREAM ? "live, TradingView" : LIVE ? "spot price" : "close " + dayName(r.date) + (r.fx && r.fx.date < r.date ? " · franc rate " + dayName(r.fx.date) : ""),
         r.source + ", settlement " + r.date + (r.fx ? "; francs = dollars x USD/CHF " + r.fx.rate.toFixed(4) + " (" + r.fx.date + ")" : "")));
       c.appendChild(top);
       var pair = el("div", { class: "pair" });
       var lv = LIVE && LIVE[r.metal];
       ["CHF", "USD"].forEach(function (cur) {
         var v = r[cur]; if (!v) return;
-        var b = el("div", { class: cur === S.cur ? "sel" : "" });
+        var b = el("div", { class: cur === S.cur ? "sel" : "", "data-cur": cur });
         b.appendChild(el("div", { class: "cur" }, cur));
-        if (lv && lv[cur]) {
+        if (STREAM) {
+          b.appendChild(tvQuote(TV_SYM[r.metal + cur]));
+          b.appendChild(jg("div", { class: "chg" }, "last close " + fmt(v.price, cur, r.metal) + " (" + dayName(r.date) + ")",
+            "Last stored daily close: " + r.source + ". The live quote is OANDA spot via TradingView; futures usually trade a little above spot."));
+        } else if (lv && lv[cur]) {
           b.appendChild(jg("div", { class: "px" }, fmt(lv[cur], cur, r.metal), "Spot price from gold-api.com, fetched by your browser; francs use its rate " + LIVE.usdchf.toFixed(4) + " per dollar"));
           var lt = el("div", { class: "live" }); lt.appendChild(el("i", { "aria-hidden": "true" }));
           lt.appendChild(document.createTextNode("spot at " + LIVE.time));
@@ -730,7 +736,7 @@ table.t tr:last-child td { border-bottom: 0; }
             "Last stored daily close: " + r.source + ". Futures usually trade a little above spot, so the two are not directly comparable."));
         } else b.appendChild(el("div", { class: "px" }, fmt(v.price, cur, r.metal)));
         var ch = el("div", { class: "chg" });
-        if (!(lv && lv[cur])) ch.appendChild(chg("day", v.chg_1d));
+        if (!STREAM && !(lv && lv[cur])) ch.appendChild(chg("day", v.chg_1d));
         if (v.chg_1y !== null && v.chg_1y !== undefined) { if (ch.childNodes.length) ch.appendChild(document.createTextNode(" · ")); ch.appendChild(chg("year (to last close)", v.chg_1y)); }
         b.appendChild(ch);
         pair.appendChild(b);
@@ -750,7 +756,7 @@ table.t tr:last-child td { border-bottom: 0; }
       .then(function (r) { clearTimeout(t); if (!r.ok) throw new Error(r.status); return r.json(); });
   }
   function fetchLive() {
-    if (!window.fetch || !window.Promise || liveBusy) return;
+    if (!window.fetch || !window.Promise || liveBusy || STREAM) return;
     liveBusy = true; setRefresh("Checking…", true);
     Promise.all([getJSON(LIVE_URL + "XAU"), getJSON(LIVE_URL + "XAG"), getJSON(LIVE_URL + "XAU/CHF")]).then(function (a) {
       var au = +a[0].price, ag = +a[1].price, fx = +a[2].exchangeRate;
@@ -764,41 +770,41 @@ table.t tr:last-child td { border-bottom: 0; }
   }
   var LIVE_FAILED = false;
 
-  // ---------- streaming prices: TradingView's free ticker widget keeps one connection open and
-  // streams quotes. On by default (owner's choice, Oct 2026); switching it off is remembered.
-  var TV_SYMBOLS = [["OANDA:XAUCHF", "Gold in francs"], ["OANDA:XAUUSD", "Gold in dollars"],
-                    ["OANDA:XAGCHF", "Silver in francs"], ["OANDA:XAGUSD", "Silver in dollars"], ["OANDA:USDCHF", "Francs per dollar"]];
+  // ---------- streaming prices: TradingView's free single-quote widget, one in each price box.
+  // Each keeps a streaming connection open. On by default (owner's choice, Oct 2026); switching it
+  // off is remembered on the device. The page cannot read the widgets' numbers (they run in
+  // TradingView's own frame), so nothing streamed is used in any calculation.
+  var STREAM = false;
+  var TV_SYM = { goldCHF: "OANDA:XAUCHF", goldUSD: "OANDA:XAUUSD", silverCHF: "OANDA:XAGCHF", silverUSD: "OANDA:XAGUSD" };
   function tvTheme() {
     var t = document.documentElement.getAttribute("data-theme");
     if (t === "dark" || t === "light") return t;
     return window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
   }
-  function setStream(on) {
-    var panel = $("tv-stream"), host = $("tv-host"), b = $("tv-toggle");
-    panel.hidden = !on;
-    b.setAttribute("aria-pressed", String(on));
-    b.textContent = on ? "Stop streaming" : "Stream live (TradingView)";
-    clear(host);
-    if (!on) return;                       // removing the widget closes its connection
-    var box = el("div", { class: "tradingview-widget-container" });
+  function tvQuote(symbol) {
+    var wrap = el("div", { class: "tvq" }), box = el("div", { class: "tradingview-widget-container" });
     box.appendChild(el("div", { class: "tradingview-widget-container__widget" }));
-    var sc = document.createElement("script"), narrow = host.clientWidth < 640;
+    var sc = document.createElement("script");
+    sc.src = "https://s3.tradingview.com/external-embedding/embed-widget-single-quote.js";
     sc.async = true;
-    if (narrow) {          // phones: a list, so all five quotes show (the row only fits one)
-      sc.src = "https://s3.tradingview.com/external-embedding/embed-widget-market-quotes.js";
-      sc.textContent = JSON.stringify({
-        width: "100%", height: 330, locale: "en", colorTheme: tvTheme(), isTransparent: true, showSymbolLogo: false,
-        symbolsGroups: [{ name: "Gold and silver", symbols: TV_SYMBOLS.map(function (x) { return { name: x[0], displayName: x[1] }; }) }]
-      });
-    } else {
-      sc.src = "https://s3.tradingview.com/external-embedding/embed-widget-tickers.js";
-      sc.textContent = JSON.stringify({
-        symbols: TV_SYMBOLS.map(function (x) { return { proName: x[0], title: x[1] }; }),
-        colorTheme: tvTheme(), isTransparent: true, showSymbolLogo: false, locale: "en"
-      });
-    }
-    box.appendChild(sc);
-    host.appendChild(box);
+    sc.textContent = JSON.stringify({ symbol: symbol, width: "100%", isTransparent: true, colorTheme: tvTheme(), locale: "en" });
+    box.appendChild(sc); wrap.appendChild(box);
+    return wrap;
+  }
+  function setFoot() {
+    var b = $("tv-toggle");
+    b.setAttribute("aria-pressed", String(STREAM));
+    b.textContent = STREAM ? "Stop streaming" : "Stream live (TradingView)";
+    $("live-refresh").hidden = STREAM;
+    setText("prices-foot-note", STREAM ? "Prices stream live from TradingView (OANDA)." : "Spot prices are checked when the page opens.",
+      STREAM ? "TradingView single-quote widgets, one streaming connection each; display only, never stored or used in calculations."
+             : "Spot prices from gold-api.com, fetched by your browser when the page opens and when you press Refresh; not stored.");
+  }
+  function setStream(on) {
+    STREAM = on;
+    $("prices").dataset.built = "";                 // rebuild: removing the widgets closes their connections
+    renderPrices();
+    if (!on && !LIVE) fetchLive();
   }
   function setRefresh(text, busy) {
     var b = $("live-refresh"); if (!b) return;
@@ -1931,7 +1937,7 @@ table.t tr:last-child td { border-bottom: 0; }
   renderAll();
   $("live-refresh").addEventListener("click", fetchLive);
   $("tv-toggle").addEventListener("click", function () {
-    var on = $("tv-stream").hidden; setStream(on);
+    var on = !STREAM; setStream(on);
     try { localStorage.setItem("pmdash-stream", on ? "1" : "0"); } catch (e) {}
   });
   // on by default; "Stop streaming" is remembered on this device
