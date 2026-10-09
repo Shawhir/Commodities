@@ -2,13 +2,13 @@
 # `pmdash probe` downloads each and saves status + the first bytes under data/research/probe/.
 # {FRED_API_KEY} is filled from the environment and never written out.
 urls:
-  imf_irfcl_flow: "https://api.imf.org/external/sdmx/2.1/dataflow/IMF.STA/IRFCL/latest?references=descendants&detail=referencepartial"
-  imf_irfcl_chn_all: "https://api.imf.org/external/sdmx/2.1/data/IMF.STA,IRFCL/CHN..M?startPeriod=2026-01"
-  imf_irfcl_csv: "https://api.imf.org/external/sdmx/2.1/data/IMF.STA,IRFCL/CHN..M?startPeriod=2026-01&format=csv"
-  dbn_ifs_cn_gold_tail: "https://api.db.nomics.world/v22/series/IMF/IFS/M.CN.RAFAGOLDV_OZT?observations=1&format=json&metadata=false"
-  comtrade_ch_multi: "https://comtradeapi.un.org/public/v1/preview/C/M/HS?reporterCode=757&period=202601,202602,202603&cmdCode=7108&flowCode=X&partnerCode=156,699,826,842"
+  imf_dsd: "https://api.imf.org/external/sdmx/2.1/datastructure/IMF.STA/DSD_IRFCL/latest"
+  imf_k4: "https://api.imf.org/external/sdmx/2.1/data/IMF.STA,IRFCL/CHN...M?startPeriod=2026-01&format=csv"
+  imf_k5: "https://api.imf.org/external/sdmx/2.1/data/IMF.STA,IRFCL/CHN....M?startPeriod=2026-01&format=csv"
+  imf_all_chn: "https://api.imf.org/external/sdmx/2.1/data/IMF.STA,IRFCL/all?startPeriod=2026-05&c[COUNTRY]=CHN&format=csv"
+  imf_v3_chn: "https://api.imf.org/external/sdmx/3.0/data/dataflow/IMF.STA/IRFCL/+/CHN.*.*.M?c[TIME_PERIOD]=ge:2026-01&format=csv"
+  gld_api: "https://api.spdrgoldshares.com/api/v1/historical-archive?product=gld&exchange=NYSE&lang=en"
+  comtrade_ch_2p: "https://comtradeapi.un.org/public/v1/preview/C/M/HS?reporterCode=757&period=202604,202605&cmdCode=7108&flowCode=X"
+  comtrade_ch_latest: "https://comtradeapi.un.org/public/v1/preview/C/M/HS?reporterCode=757&period=202608&cmdCode=7108&flowCode=X"
   comtrade_hk_to_cn: "https://comtradeapi.un.org/public/v1/preview/C/M/HS?reporterCode=344&period=202606&cmdCode=7108&flowCode=X&partnerCode=156"
-  gld_xlsx: "https://www.spdrgoldshares.com/assets/dynamic/GLD/GLD_US_archive_EN.xlsx"
-  gld_page: "https://www.spdrgoldshares.com/usa/historical-data/"
-  fred_search_gold: "https://api.stlouisfed.org/fred/series/search?search_text=gold%20reserves&api_key={FRED_API_KEY}&file_type=json&limit=60"
-  fred_treseg_cn: "https://api.stlouisfed.org/fred/series/observations?series_id=TRESEGCNM052N&api_key={FRED_API_KEY}&file_type=json&sort_order=desc&limit=3"
+  comtrade_cn_imports: "https://comtradeapi.un.org/public/v1/preview/C/M/HS?reporterCode=156&period=202606&cmdCode=7108&flowCode=M&partnerCode=0"
