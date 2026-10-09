@@ -92,6 +92,80 @@ sources:
   # --- official sources: candidates, run on GitHub Actions -----------------------------------
   us_tbill_3m:        {fetcher: fred, fred_id: TB3MS,           period: month, release_lag_days: 5,  schedule: daily, stale_after_days: 45, status: candidate, note: "3-month US Treasury bill rate, monthly average, % a year, from 1934 (cash earning for time out of gold, USD)"}
   chf_3m_rate:        {fetcher: fred, fred_id: IR3TIB01CHM156N, period: month, release_lag_days: 40, schedule: daily, stale_after_days: 75, status: candidate, note: "3-month Swiss franc interbank rate (OECD), monthly, % a year (Libor CHF, then SARON-based); negative 2015-2022. Cash earning for time out of gold, CHF"}
+  # --- who's buying (checked from GitHub Actions with `pmdash probe`, Oct 2026) -----------------
+  cb_gold_imf:
+    fetcher: imf_gold
+    countries: {CHN: cn, IND: in, POL: pl, TUR: tr, CZE: cz, RUS: ru, JPN: jp, USA: us, DEU: de, CHE: ch}
+    start: "2000-01"
+    release_lag_days: 40
+    schedule: weekly
+    stale_after_days: 90
+    status: candidate
+    note: "Central bank gold holdings, tonnes (IMF IRFCL, fine troy ounces / 32,150.7466). Feeds cb_gold_t_<cc>."
+  trade_ch_exports:
+    fetcher: comtrade_monthly
+    reporter: 757
+    flow: X
+    all_partners: true
+    partners: {0: total, 156: cn, 344: hk, 699: in, 826: gb, 842: us, 792: tr, 784: ae, 682: sa, 702: sg, 764: th}
+    prefix: trade_ch_x
+    backfill_months: 36
+    recheck_months: 3
+    lag_months: 2
+    pause_seconds: 4
+    release_lag_days: 75
+    schedule: weekly
+    stale_after_days: 150
+    status: candidate
+    note: "Swiss gold exports by destination, tonnes a month (UN Comtrade HS 7108, free preview API)."
+  trade_in_imports:
+    fetcher: comtrade_monthly
+    reporter: 699
+    flow: M
+    partners: {0: total}
+    prefix: trade_in_m
+    backfill_months: 36
+    recheck_months: 3
+    lag_months: 2
+    pause_seconds: 4
+    release_lag_days: 75
+    schedule: weekly
+    stale_after_days: 150
+    status: candidate
+    note: "India's gold imports, tonnes a month (UN Comtrade HS 7108)."
+  trade_hk_to_cn:
+    fetcher: comtrade_monthly
+    reporter: 344
+    flow: X
+    partners: {156: cn}
+    prefix: trade_hk_x
+    backfill_months: 36
+    recheck_months: 3
+    lag_months: 2
+    pause_seconds: 4
+    release_lag_days: 75
+    schedule: weekly
+    stale_after_days: 150
+    status: candidate
+    note: "Hong Kong's gold exports to mainland China, tonnes a month (UN Comtrade HS 7108)."
+  gld_holdings:
+    fetcher: gld_holdings
+    url: "https://api.spdrgoldshares.com/api/v1/historical-archive?product=gld&exchange=NYSE&lang=en"
+    schedule: daily
+    stale_after_days: 7
+    status: candidate
+    note: "SPDR Gold Shares (GLD) holdings in tonnes, daily, from the issuer's archive workbook."
+  # Reserves excluding gold (IMF via FRED), millions of US dollars: the non-gold part of each central bank's reserves
+  res_exgold_cn: {fetcher: fred, fred_id: TRESEGCNM052N, period: month, scale: 1000000, release_lag_days: 45, schedule: weekly, stale_after_days: 120, status: candidate, note: "Reserves excluding gold, China, millions of USD (IMF IFS via FRED)"}
+  res_exgold_in: {fetcher: fred, fred_id: TRESEGINM052N, period: month, scale: 1000000, release_lag_days: 45, schedule: weekly, stale_after_days: 120, status: candidate, note: "Reserves excluding gold, India, millions of USD (IMF IFS via FRED)"}
+  res_exgold_pl: {fetcher: fred, fred_id: TRESEGPLM052N, period: month, scale: 1000000, release_lag_days: 45, schedule: weekly, stale_after_days: 120, status: candidate, note: "Reserves excluding gold, Poland, millions of USD (IMF IFS via FRED)"}
+  res_exgold_tr: {fetcher: fred, fred_id: TRESEGTRM052N, period: month, scale: 1000000, release_lag_days: 45, schedule: weekly, stale_after_days: 120, status: candidate, note: "Reserves excluding gold, Türkiye, millions of USD (IMF IFS via FRED)"}
+  res_exgold_cz: {fetcher: fred, fred_id: TRESEGCZM052N, period: month, scale: 1000000, release_lag_days: 45, schedule: weekly, stale_after_days: 120, status: candidate, note: "Reserves excluding gold, Czech Republic, millions of USD (IMF IFS via FRED)"}
+  res_exgold_ru: {fetcher: fred, fred_id: TRESEGRUM052N, period: month, scale: 1000000, release_lag_days: 45, schedule: weekly, stale_after_days: 120, status: candidate, note: "Reserves excluding gold, Russia, millions of USD (IMF IFS via FRED)"}
+  res_exgold_jp: {fetcher: fred, fred_id: TRESEGJPM052N, period: month, scale: 1000000, release_lag_days: 45, schedule: weekly, stale_after_days: 120, status: candidate, note: "Reserves excluding gold, Japan, millions of USD (IMF IFS via FRED)"}
+  res_exgold_us: {fetcher: fred, fred_id: TRESEGUSM052N, period: month, scale: 1000000, release_lag_days: 45, schedule: weekly, stale_after_days: 120, status: candidate, note: "Reserves excluding gold, United States, millions of USD (IMF IFS via FRED)"}
+  res_exgold_de: {fetcher: fred, fred_id: TRESEGDEM052N, period: month, scale: 1000000, release_lag_days: 45, schedule: weekly, stale_after_days: 120, status: candidate, note: "Reserves excluding gold, Germany, millions of USD (IMF IFS via FRED)"}
+  res_exgold_ch: {fetcher: fred, fred_id: TRESEGCHM052N, period: month, scale: 1000000, release_lag_days: 45, schedule: weekly, stale_after_days: 120, status: candidate, note: "Reserves excluding gold, Switzerland, millions of USD (IMF IFS via FRED)"}
   real_yield_10y:     {fetcher: fred, fred_id: DFII10,   period: day,   release_lag_days: 1,  schedule: daily, stale_after_days: 7,  status: candidate, note: "10-year TIPS real yield, from 2003"}
   breakeven_10y:      {fetcher: fred, fred_id: T10YIE,   period: day,   release_lag_days: 1,  schedule: daily, stale_after_days: 7,  status: candidate, note: "10-year breakeven inflation"}
   dollar_broad:       {fetcher: fred, fred_id: DTWEXBGS, period: day,   release_lag_days: 7,  schedule: daily, stale_after_days: 14, status: candidate, note: "Broad trade-weighted dollar (weekly H.10 release)"}

@@ -1,0 +1,96 @@
+# Who buys gold, what we watch for each group, and stated central bank targets.
+# Plain-language descriptions for the "Who's buying" section. Facts typed in by hand carry a
+# source and `verify: true` until checked against the publisher; review each year.
+#
+# kind: how the group's buying behaves with the price
+#   steady  - keeps buying almost regardless of price (pushes the price up over time)
+#   fickle  - buys when gold is rising, sells when it falls (amplifies moves both ways)
+#   cushion - buys more after falls, less after rises (steadies the price)
+
+groups:
+  central_banks:
+    plain: "Central banks"
+    kind: steady
+    share_note: "About 1,000 tonnes a year since 2022, roughly a fifth of all gold bought; about twice the 2010s pace."
+    watch: "Official monthly reserve figures; the World Gold Council's June survey of what central banks plan."
+    early: "Partly in advance: a few banks state targets, and the yearly survey asks about plans."
+  china:
+    plain: "China"
+    kind: cushion
+    share_note: "The largest buyer of jewellery, bars and coins; the central bank buys separately."
+    watch: "The central bank's monthly figure (about the 7th), Hong Kong's gold exports to the mainland, the Shanghai premium."
+    early: "Chinese New Year buying is seasonal and known in advance; the Shanghai premium moves with or before the price."
+  india:
+    plain: "India"
+    kind: cushion
+    share_note: "The second-largest consumer buyer; imports almost all of its gold."
+    watch: "Monthly gold imports, the local dealers' premium or discount, import duty changes."
+    early: "Festival and wedding seasons are known in advance; duty changes come with the budget (1 February)."
+  usa:
+    plain: "United States"
+    kind: fickle
+    share_note: "Mostly investment: gold funds, futures and coins."
+    watch: "Holdings of the largest gold fund (SPDR Gold Shares, GLD), speculators' futures bets, US Mint coin sales."
+    early: "Not in advance; fund holdings are published daily, so changes show quickly."
+  europe:
+    plain: "Europe"
+    kind: fickle
+    share_note: "Gold funds plus bar and coin buying, strongest in Germany and Switzerland."
+    watch: "European gold fund holdings and quarterly bar and coin figures (World Gold Council)."
+    early: "Not in advance; quarterly figures come weeks after the quarter."
+  switzerland:
+    plain: "Switzerland (the refining hub)"
+    kind: hub
+    share_note: "Most of the world's gold is refined here, so Swiss exports show where gold is flowing. The Swiss National Bank does not buy."
+    watch: "Swiss gold exports by destination (customs figures)."
+    early: "About two to three months late in the free data; shows the direction of flows rather than timing."
+  turkey_me:
+    plain: "Turkey and the Middle East"
+    kind: steady
+    share_note: "Turkish households and the central bank hedge against a weak lira; Gulf buyers are large in jewellery."
+    watch: "Turkey's central bank reserves."
+    early: "Monthly, after the fact."
+
+# Central banks tracked from official reserve figures (IMF codes). Holdings come from data;
+# nothing here is a holding figure.
+central_banks:
+  CN: {plain: "China (People's Bank of China)"}
+  IN: {plain: "India (Reserve Bank of India)"}
+  PL: {plain: "Poland (National Bank of Poland)"}
+  TR: {plain: "Turkey (Central Bank of the Republic of Türkiye)"}
+  CZ: {plain: "Czech Republic (Czech National Bank)"}
+  RU: {plain: "Russia (Bank of Russia)"}
+  JP: {plain: "Japan (Bank of Japan, for comparison)"}
+  US: {plain: "United States (for comparison)"}
+  DE: {plain: "Germany (Bundesbank, for comparison)"}
+  CH: {plain: "Switzerland (Swiss National Bank, for comparison)"}
+
+# Stated targets. Only a few central banks announce one.
+targets:
+  - bank: CZ
+    tonnes: 100
+    by: "2028-12"
+    stated: "2023"
+    source: "Czech National Bank Governor Aleš Michl, public statements on raising gold to 100 tonnes by the end of 2028"
+    verify: true
+  - bank: PL
+    tonnes: 700
+    by: null
+    share_of_reserves: 0.30
+    stated: "2025"
+    source: "National Bank of Poland: President Adam Glapiński's stated aims to raise gold to 30% of reserves and later to 700 tonnes"
+    verify: true
+
+# The "what if" gap: emerging-market central banks' gold share of reserves vs a chosen share.
+scenario:
+  banks: [CN, IN, PL, TR, CZ, RU]
+  shares: [0.15, 0.20, 0.30]       # gold as a share of total reserves (gold at today's price)
+  mine_supply_tonnes: 3600         # world mine output a year, rough round number (World Gold Council)
+
+# Seasonal and scheduled dates that move buying. Dates must be checked each year.
+dates:
+  - {date: "2026-11-06", group: india, plain: "Dhanteras, the main gold-buying day before Diwali", verify: true}
+  - {date: "2027-02-01", group: india, plain: "India's budget (import duty changes come here)", verify: true}
+  - {date: "2027-02-06", group: china, plain: "Chinese New Year (buying builds in the weeks before)", verify: true}
+  - {date: "2027-05-09", group: india, plain: "Akshaya Tritiya, a traditional gold-buying day", verify: true}
+  - {date: "2027-06-15", group: central_banks, plain: "World Gold Council central bank survey (usually mid-June)", verify: true}

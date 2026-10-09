@@ -28,8 +28,12 @@ on:
       job:
         description: "What to run"
         type: choice
-        options: [daily, release, weekly, backfill, probe]
+        options: [daily, release, weekly, backfill, probe, sources]
         default: daily
+      sources:
+        description: "For job 'sources': comma-separated source ids to fetch (full history for new ones)"
+        type: string
+        default: ""
 
 permissions:
   contents: write                 # commit data/store and the dashboard back
@@ -42,7 +46,7 @@ concurrency:
 jobs:
   run:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 50
     outputs:
       job: ${{ steps.job.outputs.job }}
     env:
@@ -87,6 +91,12 @@ jobs:
         continue-on-error: true
         run: pmdash probe
 
+      - name: Fetch named sources (manual only)
+        timeout-minutes: 30
+        if: steps.job.outputs.job == 'sources' && inputs.sources != ''
+        continue-on-error: true
+        run: pmdash fetch --source "${{ inputs.sources }}"
+
       - name: Daily fetch
         timeout-minutes: 10
         if: steps.job.outputs.job == 'daily'
@@ -94,7 +104,7 @@ jobs:
         run: pmdash fetch --schedule daily
 
       - name: Weekly fetch
-        timeout-minutes: 10
+        timeout-minutes: 20
         if: steps.job.outputs.job == 'weekly'
         continue-on-error: true
         run: pmdash fetch --schedule weekly,daily
