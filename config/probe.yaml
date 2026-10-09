@@ -1,14 +1,13 @@
 # Candidate sources to test from GitHub Actions (the dev sandbox cannot reach them).
-# `pmdash probe` downloads each and saves status + the first bytes under data/research/probe/.
-# {FRED_API_KEY} is filled from the environment and never written out.
+# `pmdash probe` downloads each and saves status, CORS headers and the first bytes under
+# data/research/probe/. {FRED_API_KEY} is filled from the environment and never written out.
 urls:
-  imf_dsd: "https://api.imf.org/external/sdmx/2.1/datastructure/IMF.STA/DSD_IRFCL/latest"
-  imf_k4: "https://api.imf.org/external/sdmx/2.1/data/IMF.STA,IRFCL/CHN...M?startPeriod=2026-01&format=csv"
-  imf_k5: "https://api.imf.org/external/sdmx/2.1/data/IMF.STA,IRFCL/CHN....M?startPeriod=2026-01&format=csv"
-  imf_all_chn: "https://api.imf.org/external/sdmx/2.1/data/IMF.STA,IRFCL/all?startPeriod=2026-05&c[COUNTRY]=CHN&format=csv"
-  imf_v3_chn: "https://api.imf.org/external/sdmx/3.0/data/dataflow/IMF.STA/IRFCL/+/CHN.*.*.M?c[TIME_PERIOD]=ge:2026-01&format=csv"
-  gld_api: "https://api.spdrgoldshares.com/api/v1/historical-archive?product=gld&exchange=NYSE&lang=en"
-  comtrade_ch_2p: "https://comtradeapi.un.org/public/v1/preview/C/M/HS?reporterCode=757&period=202604,202605&cmdCode=7108&flowCode=X"
-  comtrade_ch_latest: "https://comtradeapi.un.org/public/v1/preview/C/M/HS?reporterCode=757&period=202608&cmdCode=7108&flowCode=X"
-  comtrade_hk_to_cn: "https://comtradeapi.un.org/public/v1/preview/C/M/HS?reporterCode=344&period=202606&cmdCode=7108&flowCode=X&partnerCode=156"
-  comtrade_cn_imports: "https://comtradeapi.un.org/public/v1/preview/C/M/HS?reporterCode=156&period=202606&cmdCode=7108&flowCode=M&partnerCode=0"
+  goldapi_xau: "https://api.gold-api.com/price/XAU"
+  goldapi_xag: "https://api.gold-api.com/price/XAG"
+  goldapi_xau_chf: "https://api.gold-api.com/price/XAU/CHF"
+  swissquote_xau: "https://forex-data-feed.swissquote.com/public-quotes/bboquotes/instrument/XAU/USD"
+  swissquote_xag: "https://forex-data-feed.swissquote.com/public-quotes/bboquotes/instrument/XAG/USD"
+  swissquote_usdchf: "https://forex-data-feed.swissquote.com/public-quotes/bboquotes/instrument/USD/CHF"
+  frankfurter: "https://api.frankfurter.app/latest?from=USD&to=CHF"
+  metals_live: "https://api.metals.live/v1/spot"
+  kraken_paxg: "https://api.kraken.com/0/public/Ticker?pair=PAXGUSD"
