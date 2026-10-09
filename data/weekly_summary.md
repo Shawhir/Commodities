@@ -206,6 +206,7 @@ _Descriptive, not predictive. This tool does not forecast prices or give instruc
 | usdchf_daily | 2026-10 | ok |
 | usdchf_fred | 2026-10 | ok |
 | usdchf_monthly | 2026-09 | ok |
+| usdchf_yahoo_daily | 2026-10 | ok |
 | vix_daily_mirror | 2026-09 | stale (17 days) |
 | vix_fred | 2026-10 | ok |
 | wti_monthly | 2026-09 | ok |
