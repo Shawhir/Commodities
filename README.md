@@ -49,6 +49,9 @@ The HTML dashboard needs no server: open `data/dashboard.html` in a browser. It 
 from Google Fonts when online and falls back to system fonts offline. Every number on it is
 computed by the modules above; the template only lays them out and draws the charts.
 
+After each daily and weekly run the workflow also publishes it to GitHub Pages at
+https://shawhir.github.io/Commodities/ (one-time setup: Settings -> Pages -> Source: GitHub Actions).
+
 ## Scheduled runs (GitHub Actions)
 
 `.github/workflows/pmdash.yml` runs the tool on GitHub's machines:

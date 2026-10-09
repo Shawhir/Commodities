@@ -43,6 +43,8 @@ jobs:
   run:
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    outputs:
+      job: ${{ steps.job.outputs.job }}
     env:
       PMDASH_DB: ${{ github.workspace }}/data/pmdash.duckdb
       FRED_API_KEY: ${{ secrets.FRED_API_KEY }}   # free key; without it FRED's keyless CSV often stalls on CI
@@ -134,3 +136,37 @@ jobs:
           [ -f reports.md ] && cat reports.md >> "$GITHUB_STEP_SUMMARY"
           [ -s alerts.md ] && cat alerts.md >> "$GITHUB_STEP_SUMMARY"
           { echo "### Data health"; echo '```'; pmdash health || true; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+
+  # Publish the dashboard to GitHub Pages (https://shawhir.github.io/Commodities/).
+  # One-time setup: Settings -> Pages -> Source: GitHub Actions.
+  pages:
+    needs: run
+    if: always() && needs.run.outputs.job != 'release'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}     # the branch head, including the data commit just pushed
+
+      - name: Build site
+        run: |
+          mkdir -p _site
+          cp data/dashboard.html _site/index.html
+          touch _site/.nojekyll
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - id: deploy
+        uses: actions/deploy-pages@v4
