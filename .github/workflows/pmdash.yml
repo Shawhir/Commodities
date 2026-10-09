@@ -28,7 +28,7 @@ on:
       job:
         description: "What to run"
         type: choice
-        options: [daily, release, weekly, backfill, probe, sources]
+        options: [daily, release, weekly, backfill, probe, sources, screenshot]
         default: daily
       sources:
         description: "For job 'sources': comma-separated source ids to fetch (full history for new ones)"
@@ -45,6 +45,7 @@ concurrency:
 
 jobs:
   run:
+    if: github.event_name != 'workflow_dispatch' || inputs.job != 'screenshot'
     runs-on: ubuntu-latest
     timeout-minutes: 50
     outputs:
@@ -153,11 +154,36 @@ jobs:
           [ -s alerts.md ] && cat alerts.md >> "$GITHUB_STEP_SUMMARY"
           { echo "### Data health"; echo '```'; pmdash health || true; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
 
+  # Check the published page in a real browser (third-party widgets such as TradingView).
+  screenshot:
+    if: github.event_name == 'workflow_dispatch' && inputs.job == 'screenshot'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install browser
+        run: pip install playwright && python -m playwright install --with-deps chromium
+      - name: Screenshot the live page
+        run: python .github/scripts/screenshot_live.py data/research/screenshots
+      - name: Commit screenshots
+        run: |
+          git config user.name "pmdash bot"
+          git config user.email "pmdash-bot@users.noreply.github.com"
+          git add data/research/screenshots
+          git diff --cached --quiet && exit 0
+          git commit -m "screenshots: live page $(date -u +%F)"
+          for i in 1 2 3; do git pull --rebase --autostash && git push && break; sleep 5; done
+
   # Publish the dashboard to GitHub Pages (https://shawhir.github.io/Commodities/).
   # One-time setup: Settings -> Pages -> Source: GitHub Actions.
   pages:
     needs: run
-    if: always() && needs.run.outputs.job != 'release' && needs.run.outputs.job != 'probe'
+    if: always() && needs.run.result == 'success' && needs.run.outputs.job != 'release' && needs.run.outputs.job != 'probe'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:

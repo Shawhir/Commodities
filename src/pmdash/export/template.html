@@ -366,7 +366,7 @@ table.t tr:last-child td { border-bottom: 0; }
   </div>
   <div class="panel tv-panel" id="tv-stream" hidden>
     <div id="tv-host"></div>
-    <p class="note">Streaming prices from TradingView (OANDA quotes), loaded only when you ask. Their figures can differ slightly from the closes stored here, and nothing streamed is used in the page's calculations.</p>
+    <p class="note">Streaming prices from TradingView (OANDA quotes). "Stop streaming" turns this off on this device. Their figures can differ slightly from the closes stored here, and nothing streamed is used in the page's calculations.</p>
   </div>
 
   <nav class="jump" aria-label="Jump to">
@@ -764,8 +764,8 @@ table.t tr:last-child td { border-bottom: 0; }
   }
   var LIVE_FAILED = false;
 
-  // ---------- streaming prices (opt-in): TradingView's free ticker widget keeps one connection
-  // open and streams quotes. Loaded only on request; the choice is remembered on this device.
+  // ---------- streaming prices: TradingView's free ticker widget keeps one connection open and
+  // streams quotes. On by default (owner's choice, Oct 2026); switching it off is remembered.
   var TV_SYMBOLS = [["OANDA:XAUCHF", "Gold in francs"], ["OANDA:XAUUSD", "Gold in dollars"],
                     ["OANDA:XAGCHF", "Silver in francs"], ["OANDA:XAGUSD", "Silver in dollars"], ["OANDA:USDCHF", "Francs per dollar"]];
   function tvTheme() {
@@ -1926,7 +1926,10 @@ table.t tr:last-child td { border-bottom: 0; }
     var on = $("tv-stream").hidden; setStream(on);
     try { localStorage.setItem("pmdash-stream", on ? "1" : "0"); } catch (e) {}
   });
-  try { if (localStorage.getItem("pmdash-stream") === "1") setStream(true); } catch (e) {}
+  // on by default; "Stop streaming" is remembered on this device
+  var streamOn = true;
+  try { streamOn = localStorage.getItem("pmdash-stream") !== "0"; } catch (e) {}
+  setStream(streamOn);
   startLive();
   var lastW = $("pm").clientWidth, pending = null;
   window.addEventListener("resize", function () {
