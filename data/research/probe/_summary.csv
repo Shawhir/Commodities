@@ -1,18 +1,11 @@
 name,status,bytes,seconds,error
-dbn_ifs_cn_gold,200,243927,1.2,
-dbn_imf_datasets,200,8251,0.4,
-dbn_irfcl_cn,200,208730,1.1,
-imf_sdmx3_flows,200,41693,0.5,
-imf_sdmx21_irfcl,200,3286,0.7,
-imf_old_ifs,,0,0.2,URLError: <urlopen error [Errno -2] Name or service not known>
-fred_search_gold,,0,0.0,InvalidURL: URL can't contain control characters. '/fred/series/search?search_text=gold%20reserves&api_key=***&file_type=json&limit=60' (found at least ' ')
-fred_treseg_cn,,0,0.0,InvalidURL: URL can't contain control characters. '/fred/series/observations?series_id=TRESEGCNM052N&api_key=***&file_type=json&sort_order=desc&limit=3' (found at least ' ')
-wgc_reserves_page,200,68558,0.2,
-gld_archive,200,696848,0.5,
-iau_holdings,200,1378467,0.8,
-comtrade_ch_exports,200,38725,3.4,
-comtrade_in_imports,200,965,2.5,
-comtrade_hk_to_cn,429,83,0.5,HTTP Error 429: Too Many Requests
-usmint_bullion,403,5601,0.3,HTTP Error 403: Forbidden
-snb_cube_list,200,999051,1.5,
-ecb_gold_cz,200,19388,1.1,
+imf_irfcl_flow,200,2735994,3.5,
+imf_irfcl_chn_all,200,3286,2.9,
+imf_irfcl_csv,200,3286,2.7,
+dbn_ifs_cn_gold_tail,200,16557,2.7,
+comtrade_ch_multi,400,69,2.7,HTTP Error 400: Bad Request
+comtrade_hk_to_cn,429,83,2.6,HTTP Error 429: Too Many Requests
+gld_xlsx,404,14626,2.8,HTTP Error 404: Not Found
+gld_page,200,1320822,2.4,
+fred_search_gold,200,55029,2.4,
+fred_treseg_cn,200,596,2.2,

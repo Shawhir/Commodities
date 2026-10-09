@@ -1,0 +1,1250 @@
+URL: https://api.imf.org/external/sdmx/2.1/dataflow/IMF.STA/IRFCL/latest?references=descendants&detail=referencepartial
+STATUS: 200
+BYTES: 2735994
+ERROR: 
+
+<?xml version='1.0' encoding='UTF-8'?>
+<mes:Structure xmlns:mes="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/message" xmlns:str="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/structure" xmlns:com="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/common" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xml="http://www.w3.org/XML/1998/namespace" xsi:schemaLocation="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/message ../../schemas/SDMXMessage.xsd">
+  <mes:Header>
+    <mes:ID>IDREF3542</mes:ID>
+    <mes:Test>false</mes:Test>
+    <mes:Prepared>2026-10-09T15:28:13.759059959Z</mes:Prepared>
+    <mes:Sender id="IMF"/>
+  </mes:Header>
+  <mes:Structures>
+    <str:Dataflows>
+      <str:Dataflow urn="urn:sdmx:org.sdmx.infomodel.datastructure.Dataflow=IMF.STA:IRFCL(12.0.0)" agencyID="IMF.STA" id="IRFCL" version="12.0.0" isFinal="true" isExternalReference="false">
+        <com:Annotations>
+          <com:Annotation id="@IMF">
+            <com:AnnotationTitle>Data Template on International Reserves and Foreign Currency Liquidity (IRFCL)</com:AnnotationTitle>
+            <com:AnnotationType>DATAFLOW_PRESENTATION</com:AnnotationType>
+            <com:AnnotationText xml:lang="en">presentation_title=Data Template on International Reserves and Foreign Currency Liquidity (IRFCL); presentation_description=The Data Template on International Reserves and Foreign Currency Liquidity provides a comprehensive account of official foreign currency assets and drains on such resources arising from various liabilities and commitments of the authorities</com:AnnotationText>
+          </com:Annotation>
+          <com:Annotation id="@SDMX">
+            <com:AnnotationTitle>Data Template on International Reserves and Foreign Currency Liquidity (IRFCL)</com:AnnotationTitle>
+            <com:AnnotationType>SHORT_LABEL</com:AnnotationType>
+            <com:AnnotationText xml:lang="en">presentation_title=Data Template on International Reserves and Foreign Currency Liquidity (IRFCL); presentation_description=The Data Template on International Reserves and Foreign Currency Liquidity provides a comprehensive account of official foreign currency assets and drains on such resources arising from various liabilities and commitments of the authorities</com:AnnotationText>
+          </com:Annotation>
+          <com:Annotation id="dataEngineSettings"/>
+          <com:Annotation id="origin"/>
+          <com:Annotation id="DataEngine">
+            <com:AnnotationTitle>timeseries_v2</com:AnnotationTitle>
+          </com:Annotation>
+          <com:Annotation id="isFinal"/>
+          <com:Annotation id="lastUpdatedAt"/>
+        </com:Annotations>
+        <com:Name xml:lang="en">International Reserves and Foreign Currency Liquidity (IRFCL)</com:Name>
+        <com:Description xml:lang="en">The International Reserves and Foreign Currency Liquidity (IRFCL, or the “Reserves Data Template”) dataset includes data on the amount and composition of countries’ official reserve assets, other foreign currency assets held by monetary authorities and central governments, and short-term foreign currency obligations and related activities of monetary authorities and central governments that can lead to drains on official reserves and other foreign currency assets. This website re-disseminates IMF member countries' data on international reserves and foreign currency liquidity in a common template and in a common currency (the U.S. dollar). Historical data by country are also available. Please note that the re-dissemination of the template data by the Fund does not constitute endorsement of the quality of the data by the Fund.</com:Description>
+        <str:Structure>
+          <Ref agencyID="IMF.STA" id="DSD_IRFCL_PUB" version="13.0.0" package="datastructure" class="DataStructure"/>
+        </str:Structure>
+      </str:Dataflow>
+    </str:Dataflows>
+    <str:Codelists>
+      <str:Codelist urn="urn:sdmx:org.sdmx.infomodel.codelist.Codelist=IMF:CL_CLASSIFICATION_TYPE(1.0.1)" agencyID="IMF" id="CL_CLASSIFICATION_TYPE" version="1.0.1" isFinal="true" isExternalReference="false" isPartial="false">
+        <com:Annotations>
+          <com:Annotation id="origin"/>
+          <com:Annotation id="isFinal"/>
+          <com:Annotation id="lastUpdatedAt"/>
+        </com:Annotations>
+        <com:Name xml:lang="en">Standard Classification Type</com:Name>
+        <com:Description xml:lang="en">This codelist identifies the standardized classification systems used for categorizing and organizing data within a resource. Examples include industry classifications, product classifications, or occupational classifications.</com:Description>
+        <str:Code id="CP18" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_CLASSIFICATION_TYPE(1.0.1).CP18">
+          <com:Name xml:lang="en">Classification of Individual Consumption According to Purpose (COICOP) 2018</com:Name>
+          <com:Description xml:lang="en">https://unstats.un.org/unsd/classifications/unsdclassifications/COICOP_2018_-_pre-edited_white_cover_version_-_2018-12-26.pdf</com:Description>
+        </str:Code>
+        <str:Code id="CP99" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_CLASSIFICATION_TYPE(1.0.1).CP99">
+          <com:Name xml:lang="en">Classification of Individual Consumption According to Purpose (COICOP) 1999</com:Name>
+          <com:Description xml:lang="en">https://unstats.un.org/unsd/classifications/Econ/Download/In%20Text/CPCprov_english.pdf</com:Description>
+        </str:Code>
+        <str:Code id="CPC21" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_CLASSIFICATION_TYPE(1.0.1).CPC21">
+          <com:Name xml:lang="en">Central Product Classification (CPC)</com:Name>
+          <com:Description xml:lang="en">https://unstats.un.org/unsd/classifications/unsdclassifications/cpcv21.pdf</com:Description>
+        </str:Code>
+        <str:Code id="CPA" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_CLASSIFICATION_TYPE(1.0.1).CPA">
+          <com:Name xml:lang="en">Statistical classification of products by activity (CPA) 2008</com:Name>
+          <com:Description xml:lang="en">https://ec.europa.eu/eurostat/ramon/nomenclatures/index.cfm?TargetUrl=LST_NOM_DTL&amp;StrNom=CPA_2008&amp;StrLanguageCode=EN&amp;IntPcKey=&amp;StrLayoutCode=HIERARCHIC</com:Description>
+        </str:Code>
+        <str:Code id="ISIC3" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_CLASSIFICATION_TYPE(1.0.1).ISIC3">
+          <com:Name xml:lang="en">International Standard Industrial Classification of All Economic Activities, Rev. 3 (ISIC Rev. 3)</com:Name>
+          <com:Description xml:lang="en">https://unstats.un.org/unsd/classifications/Econ/ISIC.cshtml</com:Description>
+        </str:Code>
+        <str:Code id="ISIC31" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_CLASSIFICATION_TYPE(1.0.1).ISIC31">
+          <com:Name xml:lang="en">International Standard Industrial Classification of All Economic Activities, Rev. 3.1 (ISIC Rev. 3.1) 2004</com:Name>
+          <com:Description xml:lang="en">https://unstats.un.org/unsd/classifications/Econ/ISIC.cshtml</com:Description>
+        </str:Code>
+        <str:Code id="ISIC4" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_CLASSIFICATION_TYPE(1.0.1).ISIC4">
+          <com:Name xml:lang="en">International Standard Industrial Classification of All Economic Activities, Rev. 4 (ISIC Rev. 4) 2008</com:Name>
+          <com:Description xml:lang="en">https://unstats.un.org/unsd/classifications/Econ/ISIC.cshtml</com:Description>
+        </str:Code>
+        <str:Code id="NACE2" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_CLASSIFICATION_TYPE(1.0.1).NACE2">
+          <com:Name xml:lang="en">Statistical Classification of Economic Activities in the European Community, Rev. 2 (NACE Rev. 2) 2008</com:Name>
+          <com:Description xml:lang="en">https://ec.europa.eu/eurostat/documents/3859598/5902521/KS-RA-07-015-EN.PDF
+https://ec.europa.eu/eurostat/ramon/nomenclatures/index.cfm?TargetUrl=LST_NOM_DTL&amp;StrNom=NACE_REV2&amp;StrLanguageCode=EN</com:Description>
+        </str:Code>
+        <str:Code id="SITC4" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_CLASSIFICATION_TYPE(1.0.1).SITC4">
+          <com:Name xml:lang="en">Standard International Trade Classification, Rev. 4 (SITC Rev. 4) 2007</com:Name>
+          <com:Description xml:lang="en">https://unstats.un.org/unsd/publications/catalogue?selectID=104</com:Description>
+        </str:Code>
+        <str:Code id="H5" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_CLASSIFICATION_TYPE(1.0.1).H5">
+          <com:Name xml:lang="en">Harmonized Commodity Description and Coding Systems (HS), Rev. 5</com:Name>
+          <com:Description xml:lang="en">https://unstats.un.org/unsd/tradekb/Knowledgebase/50018/Harmonized-Commodity-Description-and-Coding-Systems-HS</com:Description>
+        </str:Code>
+        <str:Code id="ICSE93" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_CLASSIFICATION_TYPE(1.0.1).ICSE93">
+          <com:Name xml:lang="en">International Classification of Status in Employment (ICSE) 1993</com:Name>
+          <com:Description xml:lang="en">http://www.ilo.org/global/statistics-and-databases/statistics-overview-and-topics/status-in-employment/current-guidelines/lang--en/index.htm</com:Description>
+        </str:Code>
+        <str:Code id="ISCED11" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_CLASSIFICATION_TYPE(1.0.1).ISCED11">
+          <com:Name xml:lang="en">International Standard Classification of Education (ISCED) 2011</com:Name>
+          <com:Description xml:lang="en">http://www.uis.unesco.org/Education/Pages/international-standard-classification-of-education.aspx</com:Description>
+        </str:Code>
+        <str:Code id="IRSTS08" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_CLASSIFICATION_TYPE(1.0.1).IRSTS08">
+          <com:Name xml:lang="en">International Recommendations for Tourism Statistics 2008 (IRTS) 2008</com:Name>
+          <com:Description xml:lang="en">https://unstats.un.org/unsd/tradekb/Knowledgebase/50551/IRTS-2008</com:Description>
+        </str:Code>
+        <str:Code id="PR" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_CLASSIFICATION_TYPE(1.0.1).PR">
+          <com:Name xml:lang="en">Per National Definition</com:Name>
+        </str:Code>
+        <str:Code id="BEC" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_CLASSIFICATION_TYPE(1.0.1).BEC">
+          <com:Name xml:lang="en">Classification by Broad Economic Categories (BEC)</com:Name>
+          <com:Description xml:lang="en">https://unstats.un.org/unsd/trade/classifications/bec.asp</com:Description>
+        </str:Code>
+        <str:Code id="SITC2" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_CLASSIFICATION_TYPE(1.0.1).SITC2">
+          <com:Name xml:lang="en">Standard International Trade Classification, Rev. 2 (SITC Rev. 2) 1975</com:Name>
+          <com:Description xml:lang="en">https://unstats.un.org/unsd/classifications/Family/Detail/1070</com:Description>
+        </str:Code>
+      </str:Codelist>
+      <str:Codelist urn="urn:sdmx:org.sdmx.infomodel.codelist.Codelist=IMF.STA:CL_IRFCL_CALLS(1.0.0)" agencyID="IMF.STA" id="CL_IRFCL_CALLS" version="1.0.0" isFinal="true" isExternalReference="false" isPartial="false">
+        <com:Annotations>
+          <com:Annotation id="origin"/>
+          <com:Annotation id="isFinal"/>
+          <com:Annotation id="lastUpdatedAt"/>
+        </com:Annotations>
+        <com:Name xml:lang="en">International Reserves and Foreign Currency Liquidity (IRFCL) Options Classes</com:Name>
+        <str:Code id="EC17" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF.STA:CL_IRFCL_CALLS(1.0.0).EC17">
+          <com:Name xml:lang="en">Bought calls</com:Name>
+          <com:Description xml:lang="en">Bought calls</com:Description>
+        </str:Code>
+        <str:Code id="EC9" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF.STA:CL_IRFCL_CALLS(1.0.0).EC9">
+          <com:Name xml:lang="en">Written Puts</com:Name>
+          <com:Description xml:lang="en">Written Puts</com:Description>
+        </str:Code>
+        <str:Code id="EC11" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF.STA:CL_IRFCL_CALLS(1.0.0).EC11">
+          <com:Name xml:lang="en">In-the-money Options, - 10 % (Appreciation of 10%)</com:Name>
+          <com:Description xml:lang="en">In-the-money Options, - 10 % (Appreciation of 10%)</com:Description>
+        </str:Code>
+        <str:Code id="EC12" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF.STA:CL_IRFCL_CALLS(1.0.0).EC12">
+          <com:Name xml:lang="en">In-the-money Options, - 5 % (Appreciation of 5%)</com:Name>
+          <com:Description xml:lang="en">In-the-money Options, - 5 % (Appreciation of 5%)</com:Description>
+        </str:Code>
+        <str:Code id="EC14" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF.STA:CL_IRFCL_CALLS(1.0.0).EC14">
+          <com:Name xml:lang="en">In-the-money Options, + 5 % (Depreciation of 5%)</com:Name>
+          <com:Description xml:lang="en">In-the-money Options, + 5 % (Depreciation of 5%)</com:Description>
+        </str:Code>
+        <str:Code id="EC5" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF.STA:CL_IRFCL_CALLS(1.0.0).EC5">
+          <com:Name xml:lang="en">In-the-money Options, +10 % (Depreciation of 10%)</com:Name>
+          <com:Description xml:lang="en">In-the-money Options, +10 % (Depreciation of 10%)</com:Description>
+        </str:Code>
+        <str:Code id="EC15" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF.STA:CL_IRFCL_CALLS(1.0.0).EC15">
+          <com:Name xml:lang="en">In-the-money Options, At Current Exchange Rate</com:Name>
+          <com:Description xml:lang="en">In-the-money Options, At Current Exchange Rate</com:Description>
+        </str:Code>
+        <str:Code id="EC10" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF.STA:CL_IRFCL_CALLS(1.0.0).EC10">
+          <com:Name xml:lang="en">In-the-money Options, Other</com:Name>
+          <com:Description xml:lang="en">In-the-money Options, Other</com:Description>
+        </str:Code>
+        <str:Code id="EC2" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF.STA:CL_IRFCL_CALLS(1.0.0).EC2">
+          <com:Name xml:lang="en">Bought Puts</com:Name>
+          <com:Description xml:lang="en">Bought Puts</com:Description>
+        </str:Code>
+        <str:Code id="EC1" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF.STA:CL_IRFCL_CALLS(1.0.0).EC1">
+          <com:Name xml:lang="en">Written Calls</com:Name>
+          <com:Description xml:lang="en">Written Calls</com:Description>
+        </str:Code>
+        <str:Code id="EC13" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF.STA:CL_IRFCL_CALLS(1.0.0).EC13">
+          <com:Name xml:lang="en">In-the-money Options, + 10 % (Depreciation of 10%)</com:Name>
+          <com:Description xml:lang="en">In-the-money Options, + 10 % (Depreciation of 10%)</com:Description>
+        </str:Code>
+      </str:Codelist>
+      <str:Codelist urn="urn:sdmx:org.sdmx.infomodel.codelist.Codelist=IMF:CL_LANGUAGE(1.1.0)" agencyID="IMF" id="CL_LANGUAGE" version="1.1.0" isFinal="true" isExternalReference="false" isPartial="false">
+        <com:Annotations>
+          <com:Annotation id="origin"/>
+          <com:Annotation id="isFinal"/>
+          <com:Annotation id="lastUpdatedAt"/>
+        </com:Annotations>
+        <com:Name xml:lang="en">Language</com:Name>
+        <com:Description xml:lang="en">This codelist identifies the natural languages in which a data resource is available or presented, using standardized codes based on the ISO 639-1 standard.</com:Description>
+        <str:Code id="AF" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).AF">
+          <com:Name xml:lang="en">Afrikaans</com:Name>
+        </str:Code>
+        <str:Code id="AM" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).AM">
+          <com:Name xml:lang="ar">الأمهرية</com:Name>
+          <com:Name xml:lang="ru">Амхарский</com:Name>
+          <com:Name xml:lang="ja">アムハラ語</com:Name>
+          <com:Name xml:lang="en">Amharic</com:Name>
+          <com:Name xml:lang="fr">Amharique</com:Name>
+          <com:Name xml:lang="es">Amhárico</com:Name>
+          <com:Name xml:lang="zh">阿姆哈拉语</com:Name>
+        </str:Code>
+        <str:Code id="AR" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).AR">
+          <com:Name xml:lang="ar">العربية</com:Name>
+          <com:Name xml:lang="ru">Арабский</com:Name>
+          <com:Name xml:lang="ja">アラビア語</com:Name>
+          <com:Name xml:lang="en">Arabic</com:Name>
+          <com:Name xml:lang="fr">Arabe</com:Name>
+          <com:Name xml:lang="es">Árabe</com:Name>
+          <com:Name xml:lang="zh">阿拉伯语</com:Name>
+        </str:Code>
+        <str:Code id="AY" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).AY">
+          <com:Name xml:lang="en">Aymara</com:Name>
+        </str:Code>
+        <str:Code id="AZ" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).AZ">
+          <com:Name xml:lang="en">Azerbaijani</com:Name>
+        </str:Code>
+        <str:Code id="BE" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).BE">
+          <com:Name xml:lang="en">Belarusian</com:Name>
+        </str:Code>
+        <str:Code id="BG" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).BG">
+          <com:Name xml:lang="en">Bulgarian</com:Name>
+        </str:Code>
+        <str:Code id="BI" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).BI">
+          <com:Name xml:lang="en">Bislama</com:Name>
+        </str:Code>
+        <str:Code id="BN" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).BN">
+          <com:Name xml:lang="en">Bengali</com:Name>
+        </str:Code>
+        <str:Code id="BS" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).BS">
+          <com:Name xml:lang="en">Bosnian</com:Name>
+        </str:Code>
+        <str:Code id="CA" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).CA">
+          <com:Name xml:lang="en">Catalan</com:Name>
+        </str:Code>
+        <str:Code id="CS" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).CS">
+          <com:Name xml:lang="ar">التشيكية</com:Name>
+          <com:Name xml:lang="ru">Чешский</com:Name>
+          <com:Name xml:lang="ja">チェコ語</com:Name>
+          <com:Name xml:lang="en">Czech</com:Name>
+          <com:Name xml:lang="fr">Tchèque</com:Name>
+          <com:Name xml:lang="es">Checo</com:Name>
+          <com:Name xml:lang="zh">捷克语</com:Name>
+        </str:Code>
+        <str:Code id="CY" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).CY">
+          <com:Name xml:lang="en">Welsh</com:Name>
+        </str:Code>
+        <str:Code id="DA" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).DA">
+          <com:Name xml:lang="ar">دانماركية</com:Name>
+          <com:Name xml:lang="ru">Датский</com:Name>
+          <com:Name xml:lang="ja">デンマーク語</com:Name>
+          <com:Name xml:lang="en">Danish</com:Name>
+          <com:Name xml:lang="fr">Danois</com:Name>
+          <com:Name xml:lang="es">Danés</com:Name>
+          <com:Name xml:lang="zh">丹麦语</com:Name>
+        </str:Code>
+        <str:Code id="DE" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).DE">
+          <com:Name xml:lang="ar">الألمانية</com:Name>
+          <com:Name xml:lang="ru">Немецкий</com:Name>
+          <com:Name xml:lang="ja">ドイツ語</com:Name>
+          <com:Name xml:lang="en">German</com:Name>
+          <com:Name xml:lang="fr">Allemand</com:Name>
+          <com:Name xml:lang="es">Alemán</com:Name>
+          <com:Name xml:lang="zh">德语</com:Name>
+        </str:Code>
+        <str:Code id="DZ" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).DZ">
+          <com:Name xml:lang="en">Dzongkha</com:Name>
+        </str:Code>
+        <str:Code id="EL" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).EL">
+          <com:Name xml:lang="en">Greek, Modern (1453-)</com:Name>
+        </str:Code>
+        <str:Code id="EN" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).EN">
+          <com:Name xml:lang="ar">الإنجليزية</com:Name>
+          <com:Name xml:lang="ru">Английский</com:Name>
+          <com:Name xml:lang="ja">英語</com:Name>
+          <com:Name xml:lang="en">English</com:Name>
+          <com:Name xml:lang="fr">Anglais</com:Name>
+          <com:Name xml:lang="es">Inglés</com:Name>
+          <com:Name xml:lang="zh">英语</com:Name>
+        </str:Code>
+        <str:Code id="ES" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).ES">
+          <com:Name xml:lang="ar">الإسبانية</com:Name>
+          <com:Name xml:lang="ru">Испанский</com:Name>
+          <com:Name xml:lang="ja">スペイン語</com:Name>
+          <com:Name xml:lang="en">Spanish</com:Name>
+          <com:Name xml:lang="fr">Espagnol</com:Name>
+          <com:Name xml:lang="es">Español</com:Name>
+          <com:Name xml:lang="zh">西班牙语</com:Name>
+        </str:Code>
+        <str:Code id="ET" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).ET">
+          <com:Name xml:lang="ar">إستونية</com:Name>
+          <com:Name xml:lang="ru">Эстонский</com:Name>
+          <com:Name xml:lang="ja">エストニア語</com:Name>
+          <com:Name xml:lang="en">Estonian</com:Name>
+          <com:Name xml:lang="fr">Estonien</com:Name>
+          <com:Name xml:lang="es">Estonio</com:Name>
+          <com:Name xml:lang="zh">爱沙尼亚语</com:Name>
+        </str:Code>
+        <str:Code id="FA" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).FA">
+          <com:Name xml:lang="ar">فارسية</com:Name>
+          <com:Name xml:lang="ru">Персидский</com:Name>
+          <com:Name xml:lang="ja">ペルシア語</com:Name>
+          <com:Name xml:lang="en">Persian (Farsi)</com:Name>
+          <com:Name xml:lang="fr">Persan</com:Name>
+          <com:Name xml:lang="es">Persa (Farsi)</com:Name>
+          <com:Name xml:lang="zh">波斯语</com:Name>
+        </str:Code>
+        <str:Code id="FI" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).FI">
+          <com:Name xml:lang="en">Finnish</com:Name>
+        </str:Code>
+        <str:Code id="FO" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).FO">
+          <com:Name xml:lang="ar">الفاروية</com:Name>
+          <com:Name xml:lang="ru">Фарерский</com:Name>
+          <com:Name xml:lang="ja">フェロー語</com:Name>
+          <com:Name xml:lang="en">Faroese</com:Name>
+          <com:Name xml:lang="fr">Féroïen</com:Name>
+          <com:Name xml:lang="es">Feroés</com:Name>
+          <com:Name xml:lang="zh">法罗语</com:Name>
+        </str:Code>
+        <str:Code id="FR" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).FR">
+          <com:Name xml:lang="ar">فرنسية</com:Name>
+          <com:Name xml:lang="ru">Французский</com:Name>
+          <com:Name xml:lang="ja">フランス語</com:Name>
+          <com:Name xml:lang="en">French</com:Name>
+          <com:Name xml:lang="fr">Français</com:Name>
+          <com:Name xml:lang="es">Francés</com:Name>
+          <com:Name xml:lang="zh">法语</com:Name>
+        </str:Code>
+        <str:Code id="GA" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).GA">
+          <com:Name xml:lang="ar">الأيرلندية</com:Name>
+          <com:Name xml:lang="ru">Ирландский</com:Name>
+          <com:Name xml:lang="ja">アイルランド語</com:Name>
+          <com:Name xml:lang="en">Irish</com:Name>
+          <com:Name xml:lang="fr">Irlandais</com:Name>
+          <com:Name xml:lang="es">Irlandés</com:Name>
+          <com:Name xml:lang="zh">爱尔兰语</com:Name>
+        </str:Code>
+        <str:Code id="GN" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).GN">
+          <com:Name xml:lang="en">Guarani</com:Name>
+        </str:Code>
+        <str:Code id="HE" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).HE">
+          <com:Name xml:lang="ar">العبرية</com:Name>
+          <com:Name xml:lang="ru">Иврит</com:Name>
+          <com:Name xml:lang="ja">ヘブライ語</com:Name>
+          <com:Name xml:lang="en">Hebrew</com:Name>
+          <com:Name xml:lang="fr">Hébreu</com:Name>
+          <com:Name xml:lang="es">Hebreo</com:Name>
+          <com:Name xml:lang="zh">希伯来语</com:Name>
+        </str:Code>
+        <str:Code id="HI" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).HI">
+          <com:Name xml:lang="ar">हिन्दी</com:Name>
+          <com:Name xml:lang="ru">Хинди</com:Name>
+          <com:Name xml:lang="ja">ヒンディー語</com:Name>
+          <com:Name xml:lang="en">Hindi</com:Name>
+          <com:Name xml:lang="fr">Hindi</com:Name>
+          <com:Name xml:lang="es">Hindi</com:Name>
+          <com:Name xml:lang="zh">印地语</com:Name>
+        </str:Code>
+        <str:Code id="HR" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).HR">
+          <com:Name xml:lang="ar">كرواتية</com:Name>
+          <com:Name xml:lang="ru">Хорватский</com:Name>
+          <com:Name xml:lang="ja">クロアチア語</com:Name>
+          <com:Name xml:lang="en">Croatian</com:Name>
+          <com:Name xml:lang="fr">Croate</com:Name>
+          <com:Name xml:lang="es">Croata</com:Name>
+          <com:Name xml:lang="zh">克罗地亚语</com:Name>
+        </str:Code>
+        <str:Code id="HT" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).HT">
+          <com:Name xml:lang="ar">Kreyòl ayisyen</com:Name>
+          <com:Name xml:lang="ru">Гаитянский креольский</com:Name>
+          <com:Name xml:lang="ja">ハイチクレオール語</com:Name>
+          <com:Name xml:lang="en">Haitian Creole</com:Name>
+          <com:Name xml:lang="fr">Créole haïtien</com:Name>
+          <com:Name xml:lang="es">Criollo haitiano</com:Name>
+          <com:Name xml:lang="zh">海地克里奥尔语</com:Name>
+        </str:Code>
+        <str:Code id="HU" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).HU">
+          <com:Name xml:lang="ar">المجرية</com:Name>
+          <com:Name xml:lang="ru">Венгерский</com:Name>
+          <com:Name xml:lang="ja">ハンガリー語</com:Name>
+          <com:Name xml:lang="en">Hungarian</com:Name>
+          <com:Name xml:lang="fr">Hongrois</com:Name>
+          <com:Name xml:lang="es">Húngaro</com:Name>
+          <com:Name xml:lang="zh">匈牙利语</com:Name>
+        </str:Code>
+        <str:Code id="HY" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).HY">
+          <com:Name xml:lang="en">Armenian</com:Name>
+        </str:Code>
+        <str:Code id="ID" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).ID">
+          <com:Name xml:lang="ar">الأندونيسية</com:Name>
+          <com:Name xml:lang="ru">Индонезийский</com:Name>
+          <com:Name xml:lang="ja">インドネシア語</com:Name>
+          <com:Name xml:lang="en">Indonesian</com:Name>
+          <com:Name xml:lang="fr">Indonésien</com:Name>
+          <com:Name xml:lang="es">Indonesio</com:Name>
+          <com:Name xml:lang="zh">印尼语</com:Name>
+        </str:Code>
+        <str:Code id="IS" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).IS">
+          <com:Name xml:lang="ar">الأيسلندية</com:Name>
+          <com:Name xml:lang="ru">Исландский</com:Name>
+          <com:Name xml:lang="ja">アイスランド語</com:Name>
+          <com:Name xml:lang="en">Icelandic</com:Name>
+          <com:Name xml:lang="fr">Islandais</com:Name>
+          <com:Name xml:lang="es">Islandés</com:Name>
+          <com:Name xml:lang="zh">冰岛语</com:Name>
+        </str:Code>
+        <str:Code id="IT" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).IT">
+          <com:Name xml:lang="ar">الإيطالية</com:Name>
+          <com:Name xml:lang="ru">Итальянский</com:Name>
+          <com:Name xml:lang="ja">イタリア語</com:Name>
+          <com:Name xml:lang="en">Italian</com:Name>
+          <com:Name xml:lang="fr">Italien</com:Name>
+          <com:Name xml:lang="es">Italiano</com:Name>
+          <com:Name xml:lang="zh">意大利语</com:Name>
+        </str:Code>
+        <str:Code id="JA" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).JA">
+          <com:Name xml:lang="ar">اليابانية</com:Name>
+          <com:Name xml:lang="ru">Японский</com:Name>
+          <com:Name xml:lang="ja">日本語</com:Name>
+          <com:Name xml:lang="en">Japanese</com:Name>
+          <com:Name xml:lang="fr">Japonais</com:Name>
+          <com:Name xml:lang="es">Japonés</com:Name>
+          <com:Name xml:lang="zh">日语</com:Name>
+        </str:Code>
+        <str:Code id="KA" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).KA">
+          <com:Name xml:lang="ar">الجورجية</com:Name>
+          <com:Name xml:lang="ru">Грузинский</com:Name>
+          <com:Name xml:lang="ja">グルジア語</com:Name>
+          <com:Name xml:lang="en">Georgian</com:Name>
+          <com:Name xml:lang="fr">Géorgien</com:Name>
+          <com:Name xml:lang="es">Georgiano</com:Name>
+          <com:Name xml:lang="zh">格鲁吉亚语</com:Name>
+        </str:Code>
+        <str:Code id="KK" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).KK">
+          <com:Name xml:lang="ar">қазақ тілі</com:Name>
+          <com:Name xml:lang="ru">Казахский</com:Name>
+          <com:Name xml:lang="ja">カザフ語</com:Name>
+          <com:Name xml:lang="en">Kazakh</com:Name>
+          <com:Name xml:lang="fr">Kazakh</com:Name>
+          <com:Name xml:lang="es">Kazajo</com:Name>
+          <com:Name xml:lang="zh">哈萨克语</com:Name>
+        </str:Code>
+        <str:Code id="KM" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).KM">
+          <com:Name xml:lang="en">Central Khmer</com:Name>
+        </str:Code>
+        <str:Code id="KO" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).KO">
+          <com:Name xml:lang="ar">한국어</com:Name>
+          <com:Name xml:lang="ru">Корейский</com:Name>
+          <com:Name xml:lang="ja">韓国語</com:Name>
+          <com:Name xml:lang="en">Korean</com:Name>
+          <com:Name xml:lang="fr">Coréen</com:Name>
+          <com:Name xml:lang="es">Coreano</com:Name>
+          <com:Name xml:lang="zh">韩语</com:Name>
+        </str:Code>
+        <str:Code id="KY" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).KY">
+          <com:Name xml:lang="ar">Кыргыз тили</com:Name>
+          <com:Name xml:lang="ru">Киргизский</com:Name>
+          <com:Name xml:lang="ja">キルギス語</com:Name>
+          <com:Name xml:lang="en">Kyrgyz</com:Name>
+          <com:Name xml:lang="fr">Kirghiz</com:Name>
+          <com:Name xml:lang="es">Kirguís</com:Name>
+          <com:Name xml:lang="zh">吉尔吉斯语</com:Name>
+        </str:Code>
+        <str:Code id="LA" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).LA">
+          <com:Name xml:lang="en">Latin</com:Name>
+        </str:Code>
+        <str:Code id="LB" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).LB">
+          <com:Name xml:lang="ar">Lëtzebuergesch</com:Name>
+          <com:Name xml:lang="ru">Люксембургский</com:Name>
+          <com:Name xml:lang="ja">ルクセンブルク語</com:Name>
+          <com:Name xml:lang="en">Luxembourgish</com:Name>
+          <com:Name xml:lang="fr">Luxembourgeois</com:Name>
+          <com:Name xml:lang="es">Luxemburgués</com:Name>
+          <com:Name xml:lang="zh">卢森堡语</com:Name>
+        </str:Code>
+        <str:Code id="LO" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).LO">
+          <com:Name xml:lang="ar">ພາສາລາວ</com:Name>
+          <com:Name xml:lang="ru">Лаосский</com:Name>
+          <com:Name xml:lang="ja">ラオス語</com:Name>
+          <com:Name xml:lang="en">Lao</com:Name>
+          <com:Name xml:lang="fr">Laotien</com:Name>
+          <com:Name xml:lang="es">Laosiano</com:Name>
+          <com:Name xml:lang="zh">老挝语</com:Name>
+        </str:Code>
+        <str:Code id="LT" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).LT">
+          <com:Name xml:lang="ar">Lietuvių kalba</com:Name>
+          <com:Name xml:lang="ru">Литовский</com:Name>
+          <com:Name xml:lang="ja">リトアニア語</com:Name>
+          <com:Name xml:lang="en">Lithuanian</com:Name>
+          <com:Name xml:lang="fr">Lituanien</com:Name>
+          <com:Name xml:lang="es">Lituano</com:Name>
+          <com:Name xml:lang="zh">立陶宛语</com:Name>
+        </str:Code>
+        <str:Code id="LV" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).LV">
+          <com:Name xml:lang="ar">Latviešu valoda</com:Name>
+          <com:Name xml:lang="ru">Латышский</com:Name>
+          <com:Name xml:lang="ja">ラトビア語</com:Name>
+          <com:Name xml:lang="en">Latvian</com:Name>
+          <com:Name xml:lang="fr">Letton</com:Name>
+          <com:Name xml:lang="es">Letón</com:Name>
+          <com:Name xml:lang="zh">拉脱维亚语</com:Name>
+        </str:Code>
+        <str:Code id="MG" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).MG">
+          <com:Name xml:lang="ar">Malagasy</com:Name>
+          <com:Name xml:lang="ru">Малагасийский</com:Name>
+          <com:Name xml:lang="ja">マダガスカル語</com:Name>
+          <com:Name xml:lang="en">Malagasy</com:Name>
+          <com:Name xml:lang="fr">Malgache</com:Name>
+          <com:Name xml:lang="es">Malgache</com:Name>
+          <com:Name xml:lang="zh">马达加斯加语</com:Name>
+        </str:Code>
+        <str:Code id="MH" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).MH">
+          <com:Name xml:lang="en">Marshallese</com:Name>
+        </str:Code>
+        <str:Code id="MI" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).MI">
+          <com:Name xml:lang="en">Maori</com:Name>
+        </str:Code>
+        <str:Code id="MK" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).MK">
+          <com:Name xml:lang="ar">Македонски јазик</com:Name>
+          <com:Name xml:lang="ru">Македонский</com:Name>
+          <com:Name xml:lang="ja">マケドニア語</com:Name>
+          <com:Name xml:lang="en">Macedonian</com:Name>
+          <com:Name xml:lang="fr">Macédonien</com:Name>
+          <com:Name xml:lang="es">Macedonio</com:Name>
+          <com:Name xml:lang="zh">马其顿语</com:Name>
+        </str:Code>
+        <str:Code id="MN" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).MN">
+          <com:Name xml:lang="ar">منغولية</com:Name>
+          <com:Name xml:lang="ru">Монгольский</com:Name>
+          <com:Name xml:lang="ja">モンゴル語</com:Name>
+          <com:Name xml:lang="en">Mongolian</com:Name>
+          <com:Name xml:lang="fr">Mongol</com:Name>
+          <com:Name xml:lang="es">Mongol</com:Name>
+          <com:Name xml:lang="zh">蒙古语</com:Name>
+        </str:Code>
+        <str:Code id="MS" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).MS">
+          <com:Name xml:lang="ar">ملايو</com:Name>
+          <com:Name xml:lang="ru">Малайский</com:Name>
+          <com:Name xml:lang="ja">マレー語</com:Name>
+          <com:Name xml:lang="en">Malay</com:Name>
+          <com:Name xml:lang="fr">Malais</com:Name>
+          <com:Name xml:lang="es">Malayo</com:Name>
+          <com:Name xml:lang="zh">马来语</com:Name>
+        </str:Code>
+        <str:Code id="MT" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).MT">
+          <com:Name xml:lang="ar">مالطية</com:Name>
+          <com:Name xml:lang="ru">Мальтийский</com:Name>
+          <com:Name xml:lang="ja">マルタ語</com:Name>
+          <com:Name xml:lang="en">Maltese</com:Name>
+          <com:Name xml:lang="fr">Maltais</com:Name>
+          <com:Name xml:lang="es">Maltés</com:Name>
+          <com:Name xml:lang="zh">马耳他语</com:Name>
+        </str:Code>
+        <str:Code id="MY" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).MY">
+          <com:Name xml:lang="ar">البورمية</com:Name>
+          <com:Name xml:lang="ru">Бирманский</com:Name>
+          <com:Name xml:lang="ja">ビルマ語</com:Name>
+          <com:Name xml:lang="en">Burmese</com:Name>
+          <com:Name xml:lang="fr">Birman</com:Name>
+          <com:Name xml:lang="es">Birmano</com:Name>
+          <com:Name xml:lang="zh">缅甸语</com:Name>
+        </str:Code>
+        <str:Code id="NA" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).NA">
+          <com:Name xml:lang="ar">ناورونية</com:Name>
+          <com:Name xml:lang="ru">Науруанский</com:Name>
+          <com:Name xml:lang="ja">ナウル語</com:Name>
+          <com:Name xml:lang="en">Nauruan</com:Name>
+          <com:Name xml:lang="fr">Nauruan</com:Name>
+          <com:Name xml:lang="es">Nauruano</com:Name>
+          <com:Name xml:lang="zh">瑙鲁语</com:Name>
+        </str:Code>
+        <str:Code id="NB" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).NB">
+          <com:Name xml:lang="en">Bokmål, Norwegian</com:Name>
+        </str:Code>
+        <str:Code id="NE" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).NE">
+          <com:Name xml:lang="ar">نيبالية</com:Name>
+          <com:Name xml:lang="ru">Непальский</com:Name>
+          <com:Name xml:lang="ja">ネパール語</com:Name>
+          <com:Name xml:lang="en">Nepali</com:Name>
+          <com:Name xml:lang="fr">Népalais</com:Name>
+          <com:Name xml:lang="es">Nepalés</com:Name>
+          <com:Name xml:lang="zh">尼泊尔语</com:Name>
+        </str:Code>
+        <str:Code id="NL" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).NL">
+          <com:Name xml:lang="ar">هولندية</com:Name>
+          <com:Name xml:lang="ru">Голландский</com:Name>
+          <com:Name xml:lang="ja">オランダ語</com:Name>
+          <com:Name xml:lang="en">Dutch</com:Name>
+          <com:Name xml:lang="fr">Néerlandais</com:Name>
+          <com:Name xml:lang="es">Neerlandés</com:Name>
+          <com:Name xml:lang="zh">荷兰语</com:Name>
+        </str:Code>
+        <str:Code id="NO" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).NO">
+          <com:Name xml:lang="ar">نرويجية</com:Name>
+          <com:Name xml:lang="ru">Норвежский</com:Name>
+          <com:Name xml:lang="ja">ノルウェー語</com:Name>
+          <com:Name xml:lang="en">Norwegian</com:Name>
+          <com:Name xml:lang="fr">Norvégien</com:Name>
+          <com:Name xml:lang="es">Noruego</com:Name>
+          <com:Name xml:lang="zh">挪威语</com:Name>
+        </str:Code>
+        <str:Code id="NY" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).NY">
+          <com:Name xml:lang="en">Chichewa</com:Name>
+        </str:Code>
+        <str:Code id="PL" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).PL">
+          <com:Name xml:lang="ar">بولندية</com:Name>
+          <com:Name xml:lang="ru">Польский</com:Name>
+          <com:Name xml:lang="ja">ポーランド語</com:Name>
+          <com:Name xml:lang="en">Polish</com:Name>
+          <com:Name xml:lang="fr">Polonais</com:Name>
+          <com:Name xml:lang="es">Polaco</com:Name>
+          <com:Name xml:lang="zh">波兰语</com:Name>
+        </str:Code>
+        <str:Code id="PS" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).PS">
+          <com:Name xml:lang="en">Pashto</com:Name>
+        </str:Code>
+        <str:Code id="PT" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).PT">
+          <com:Name xml:lang="ar">برتغالية</com:Name>
+          <com:Name xml:lang="ru">Португальский</com:Name>
+          <com:Name xml:lang="ja">ポルトガル語</com:Name>
+          <com:Name xml:lang="en">Portuguese</com:Name>
+          <com:Name xml:lang="fr">Portugais</com:Name>
+          <com:Name xml:lang="es">Portugués</com:Name>
+          <com:Name xml:lang="zh">葡萄牙语</com:Name>
+        </str:Code>
+        <str:Code id="QU" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).QU">
+          <com:Name xml:lang="en">Quechua</com:Name>
+        </str:Code>
+        <str:Code id="RM" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).RM">
+          <com:Name xml:lang="en">Romansh</com:Name>
+        </str:Code>
+        <str:Code id="RN" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).RN">
+          <com:Name xml:lang="en">Rundi</com:Name>
+        </str:Code>
+        <str:Code id="RO" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).RO">
+          <com:Name xml:lang="ar">رومانية</com:Name>
+          <com:Name xml:lang="ru">Румынский</com:Name>
+          <com:Name xml:lang="ja">ルーマニア語</com:Name>
+          <com:Name xml:lang="en">Romanian</com:Name>
+          <com:Name xml:lang="fr">Roumain</com:Name>
+          <com:Name xml:lang="es">Rumano</com:Name>
+          <com:Name xml:lang="zh">罗马尼亚语</com:Name>
+        </str:Code>
+        <str:Code id="RU" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).RU">
+          <com:Name xml:lang="ar">الروسية</com:Name>
+          <com:Name xml:lang="ru">Русский</com:Name>
+          <com:Name xml:lang="ja">ロシア語</com:Name>
+          <com:Name xml:lang="en">Russian</com:Name>
+          <com:Name xml:lang="fr">Russe</com:Name>
+          <com:Name xml:lang="es">Ruso</com:Name>
+          <com:Name xml:lang="zh">俄语</com:Name>
+        </str:Code>
+        <str:Code id="RW" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).RW">
+          <com:Name xml:lang="en">Kinyarwanda</com:Name>
+        </str:Code>
+        <str:Code id="SK" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).SK">
+          <com:Name xml:lang="ar">سلوفاكية</com:Name>
+          <com:Name xml:lang="ru">Словацкий</com:Name>
+          <com:Name xml:lang="ja">スロバキア語</com:Name>
+          <com:Name xml:lang="en">Slovak</com:Name>
+          <com:Name xml:lang="fr">Slovaque</com:Name>
+          <com:Name xml:lang="es">Eslovaco</com:Name>
+          <com:Name xml:lang="zh">斯洛伐克语</com:Name>
+        </str:Code>
+        <str:Code id="SL" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).SL">
+          <com:Name xml:lang="ar">سلوفينية</com:Name>
+          <com:Name xml:lang="ru">Словенский</com:Name>
+          <com:Name xml:lang="ja">スロベニア語</com:Name>
+          <com:Name xml:lang="en">Slovene</com:Name>
+          <com:Name xml:lang="fr">Slovène</com:Name>
+          <com:Name xml:lang="es">Esloveno</com:Name>
+          <com:Name xml:lang="zh">斯洛文尼亚语</com:Name>
+        </str:Code>
+        <str:Code id="SM" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).SM">
+          <com:Name xml:lang="en">Samoan</com:Name>
+        </str:Code>
+        <str:Code id="SO" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).SO">
+          <com:Name xml:lang="en">Somali</com:Name>
+        </str:Code>
+        <str:Code id="SQ" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).SQ">
+          <com:Name xml:lang="ar">ألبانية</com:Name>
+          <com:Name xml:lang="ru">Албанский</com:Name>
+          <com:Name xml:lang="ja">アルバニア語</com:Name>
+          <com:Name xml:lang="en">Albanian</com:Name>
+          <com:Name xml:lang="fr">Albanais</com:Name>
+          <com:Name xml:lang="es">Albanés</com:Name>
+          <com:Name xml:lang="zh">阿尔巴尼亚语</com:Name>
+        </str:Code>
+        <str:Code id="SR" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).SR">
+          <com:Name xml:lang="ar">صربية</com:Name>
+          <com:Name xml:lang="ru">Сербский</com:Name>
+          <com:Name xml:lang="ja">セルビア語</com:Name>
+          <com:Name xml:lang="en">Serbian</com:Name>
+          <com:Name xml:lang="fr">Serbe</com:Name>
+          <com:Name xml:lang="es">Serbio</com:Name>
+          <com:Name xml:lang="zh">塞尔维亚语</com:Name>
+        </str:Code>
+        <str:Code id="SU" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).SU">
+          <com:Name xml:lang="en">Sundanese</com:Name>
+        </str:Code>
+        <str:Code id="SV" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).SV">
+          <com:Name xml:lang="ar">سويدية</com:Name>
+          <com:Name xml:lang="ru">Шведский</com:Name>
+          <com:Name xml:lang="ja">スウェーデン語</com:Name>
+          <com:Name xml:lang="en">Swedish</com:Name>
+          <com:Name xml:lang="fr">Suédois</com:Name>
+          <com:Name xml:lang="es">Sueco</com:Name>
+          <com:Name xml:lang="zh">瑞典语</com:Name>
+        </str:Code>
+        <str:Code id="SW" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).SW">
+          <com:Name xml:lang="en">Swahili</com:Name>
+        </str:Code>
+        <str:Code id="TA" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).TA">
+          <com:Name xml:lang="en">Tamil</com:Name>
+        </str:Code>
+        <str:Code id="TG" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).TG">
+          <com:Name xml:lang="ar">طاجيكية</com:Name>
+          <com:Name xml:lang="ru">Таджикский</com:Name>
+          <com:Name xml:lang="ja">タジク語</com:Name>
+          <com:Name xml:lang="en">Tajik</com:Name>
+          <com:Name xml:lang="fr">Tadjik</com:Name>
+          <com:Name xml:lang="es">Tayiko</com:Name>
+          <com:Name xml:lang="zh">塔吉克语</com:Name>
+        </str:Code>
+        <str:Code id="TH" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).TH">
+          <com:Name xml:lang="ar">تايلاندية</com:Name>
+          <com:Name xml:lang="ru">Тайский</com:Name>
+          <com:Name xml:lang="ja">タイ語</com:Name>
+          <com:Name xml:lang="en">Thai</com:Name>
+          <com:Name xml:lang="fr">Thaï</com:Name>
+          <com:Name xml:lang="es">Tailandés</com:Name>
+          <com:Name xml:lang="zh">泰语</com:Name>
+        </str:Code>
+        <str:Code id="TI" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).TI">
+          <com:Name xml:lang="en">Tigrinya</com:Name>
+        </str:Code>
+        <str:Code id="TK" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).TK">
+          <com:Name xml:lang="ar">تركمانية</com:Name>
+          <com:Name xml:lang="ru">Туркменский</com:Name>
+          <com:Name xml:lang="ja">トルクメン語</com:Name>
+          <com:Name xml:lang="en">Turkmen</com:Name>
+          <com:Name xml:lang="fr">Turkmène</com:Name>
+          <com:Name xml:lang="es">Turcomano</com:Name>
+          <com:Name xml:lang="zh">土库曼语</com:Name>
+        </str:Code>
+        <str:Code id="TO" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).TO">
+          <com:Name xml:lang="en">Tonga (Tonga Islands)</com:Name>
+        </str:Code>
+        <str:Code id="TR" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).TR">
+          <com:Name xml:lang="ar">تركية</com:Name>
+          <com:Name xml:lang="ru">Турецкий</com:Name>
+          <com:Name xml:lang="ja">トルコ語</com:Name>
+          <com:Name xml:lang="en">Turkish</com:Name>
+          <com:Name xml:lang="fr">Turc</com:Name>
+          <com:Name xml:lang="es">Turco</com:Name>
+          <com:Name xml:lang="zh">土耳其语</com:Name>
+        </str:Code>
+        <str:Code id="UK" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).UK">
+          <com:Name xml:lang="ar">الأوكرانية</com:Name>
+          <com:Name xml:lang="ru">Украинский</com:Name>
+          <com:Name xml:lang="ja">ウクライナ語</com:Name>
+          <com:Name xml:lang="en">Ukrainian</com:Name>
+          <com:Name xml:lang="fr">Ukrainien</com:Name>
+          <com:Name xml:lang="es">Ucraniano</com:Name>
+          <com:Name xml:lang="zh">乌克兰语</com:Name>
+        </str:Code>
+        <str:Code id="UR" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).UR">
+          <com:Name xml:lang="ar">أردية</com:Name>
+          <com:Name xml:lang="ru">Урду</com:Name>
+          <com:Name xml:lang="ja">ウルドゥー語</com:Name>
+          <com:Name xml:lang="en">Urdu</com:Name>
+          <com:Name xml:lang="fr">Urdu</com:Name>
+          <com:Name xml:lang="es">Urdu</com:Name>
+          <com:Name xml:lang="zh">乌尔都语</com:Name>
+        </str:Code>
+        <str:Code id="UZ" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).UZ">
+          <com:Name xml:lang="ar">أوزبكية</com:Name>
+          <com:Name xml:lang="ru">Узбекский</com:Name>
+          <com:Name xml:lang="ja">ウズベク語</com:Name>
+          <com:Name xml:lang="en">Uzbek</com:Name>
+          <com:Name xml:lang="fr">Ouzbek</com:Name>
+          <com:Name xml:lang="es">Uzbeko</com:Name>
+          <com:Name xml:lang="zh">乌兹别克语</com:Name>
+        </str:Code>
+        <str:Code id="VI" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).VI">
+          <com:Name xml:lang="ar">فيتنامية</com:Name>
+          <com:Name xml:lang="ru">Вьетнамский</com:Name>
+          <com:Name xml:lang="ja">ベトナム語</com:Name>
+          <com:Name xml:lang="en">Vietnamese</com:Name>
+          <com:Name xml:lang="fr">Vietnamien</com:Name>
+          <com:Name xml:lang="es">Vietnamita</com:Name>
+          <com:Name xml:lang="zh">越南语</com:Name>
+        </str:Code>
+        <str:Code id="WO" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).WO">
+          <com:Name xml:lang="en">Wolof</com:Name>
+        </str:Code>
+        <str:Code id="YI" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).YI">
+          <com:Name xml:lang="en">Yiddish</com:Name>
+        </str:Code>
+        <str:Code id="ZH" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).ZH">
+          <com:Name xml:lang="ar">صينية</com:Name>
+          <com:Name xml:lang="ru">Китайский</com:Name>
+          <com:Name xml:lang="ja">中国語</com:Name>
+          <com:Name xml:lang="en">Chinese</com:Name>
+          <com:Name xml:lang="fr">Chinois</com:Name>
+          <com:Name xml:lang="es">Chino</com:Name>
+          <com:Name xml:lang="zh">中文</com:Name>
+        </str:Code>
+        <str:Code id="ZU" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_LANGUAGE(1.1.0).ZU">
+          <com:Name xml:lang="en">Zulu</com:Name>
+        </str:Code>
+      </str:Codelist>
+      <str:Codelist urn="urn:sdmx:org.sdmx.infomodel.codelist.Codelist=IMF:CL_ORGANIZATION(2.8.0)" agencyID="IMF" id="CL_ORGANIZATION" version="2.8.0" isFinal="true" isExternalReference="false" isPartial="false">
+        <com:Annotations>
+          <com:Annotation id="origin"/>
+          <com:Annotation id="isFinal"/>
+          <com:Annotation id="lastUpdatedAt"/>
+        </com:Annotations>
+        <com:Name xml:lang="en">Organization</com:Name>
+        <com:Description xml:lang="en">This codelist identifies and categorizes institutions relevant to economic, financial, and statistical data, providing standardized codes and corresponding names. It includes international organizations, central banks, and government institutions involved in data collection and dissemination.</com:Description>
+        <str:Code id="_Z" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_ORGANIZATION(2.8.0)._Z">
+          <com:Name xml:lang="en">Not applicable</com:Name>
+        </str:Code>
+        <str:Code id="AACB" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_ORGANIZATION(2.8.0).AACB">
+          <com:Name xml:lang="en">Association of African Central Banks (AACB)</com:Name>
+        </str:Code>
+        <str:Code id="ABANK" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_ORGANIZATION(2.8.0).ABANK">
+          <com:Name xml:lang="en">ABank A.Ş.</com:Name>
+          <com:Description xml:lang="en">https://www.abank.com.tr/</com:Description>
+        </str:Code>
+        <str:Code id="ABE" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_ORGANIZATION(2.8.0).ABE">
+          <com:Name xml:lang="en">Aberdeen Group</com:Name>
+          <com:Description xml:lang="en">https://www.aberdeen.com/</com:Description>
+        </str:Code>
+        <str:Code id="ABECB" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_ORGANIZATION(2.8.0).ABECB">
+          <com:Name xml:lang="en">Abeceb.com</com:Name>
+          <com:Description xml:lang="en">https://www.abeceb.com/</com:Description>
+        </str:Code>
+        <str:Code id="ABFND" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_ORGANIZATION(2.8.0).ABFND">
+          <com:Name xml:lang="en">Australian Beef Industry Foundation (ABIF)</com:Name>
+          <com:Description xml:lang="en">https://www.abif.com.au/about</com:Description>
+        </str:Code>
+        <str:Code id="ABNAM" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_ORGANIZATION(2.8.0).ABNAM">
+          <com:Name xml:lang="en">ABN AMRO Bank N.V.</com:Name>
+          <com:Description xml:lang="en">https://www.abnamro.com/en/</com:Description>
+        </str:Code>
+        <str:Code id="ABSAG" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_ORGANIZATION(2.8.0).ABSAG">
+          <com:Name xml:lang="en">Absa Group Limited</com:Name>
+          <com:Description xml:lang="en">https://www.absa.africa/absaafrica/</com:Description>
+        </str:Code>
+        <str:Code id="ACCEC" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_ORGANIZATION(2.8.0).ACCEC">
+          <com:Name xml:lang="en">Access Economics</com:Name>
+        </str:Code>
+        <str:Code id="ACERD" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_ORGANIZATION(2.8.0).ACERD">
+          <com:Name xml:lang="en">Ateneo Center for Economic Research and Development</com:Name>
+          <com:Description xml:lang="en">https://www.ateneo.edu/</com:Description>
+        </str:Code>
+        <str:Code id="ACG" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_ORGANIZATION(2.8.0).ACG">
+          <com:Name xml:lang="en">African Consultative Group (ACG)</com:Name>
+        </str:Code>
+        <str:Code id="ACMCO" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_ORGANIZATION(2.8.0).ACMCO">
+          <com:Name xml:lang="en">ACM Consultores</com:Name>
+        </str:Code>
+        <str:Code id="ACMR" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_ORGANIZATION(2.8.0).ACMR">
+          <com:Name xml:lang="en">All China Marketing Research LLC (ACMR)</com:Name>
+          <com:Description xml:lang="en">https://chinadatacenter.net/AboutCDC/PartnersContent.aspx?id=29</com:Description>
+        </str:Code>
+        <str:Code id="ACP" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_ORGANIZATION(2.8.0).ACP">
+          <com:Name xml:lang="en">African, Caribbean and Pacific Group of States Secretariat (ACP)</com:Name>
+        </str:Code>
+        <str:Code id="ACRA" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_ORGANIZATION(2.8.0).ACRA">
+          <com:Name xml:lang="en">ACRA Credit Rating Agency Limited</com:Name>
+        </str:Code>
+        <str:Code id="ACRAE" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_ORGANIZATION(2.8.0).ACRAE">
+          <com:Name xml:lang="en">ACRA Europe</com:Name>
+        </str:Code>
+        <str:Code id="ACTEC" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_ORGANIZATION(2.8.0).ACTEC">
+          <com:Name xml:lang="en">Action Economics LLC</com:Name>
+          <com:Description xml:lang="en">https://www.actioneconomics.com/</com:Description>
+        </str:Code>
+        <str:Code id="ACTIN" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_ORGANIZATION(2.8.0).ACTIN">
+          <com:Name xml:lang="en">Actinver</com:Name>
+          <com:Description xml:lang="en">https://www.actinver.com/</com:Description>
+        </str:Code>
+        <str:Code id="ACYVA" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_ORGANIZATION(2.8.0).ACYVA">
+          <com:Name xml:lang="en">Acciones y Valores S.A. Comisionista de Bolsa</com:Name>
+          <com:Description xml:lang="en">https://www.accvalores.com/</com:Description>
+        </str:Code>
+        <str:Code id="ADB" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_ORGANIZATION(2.8.0).ADB">
+          <com:Name xml:lang="en">Asian Development Bank (ADB)</com:Name>
+        </str:Code>
+        <str:Code id="ADC" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_ORGANIZATION(2.8.0).ADC">
+          <com:Name xml:lang="en">Andean Development Corporation (CAF)</com:Name>
+          <com:Description xml:lang="en">It was replaced by Development Bank of Latin America and the Caribbean</com:Description>
+        </str:Code>
+        <str:Code id="ADDIK" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_ORGANIZATION(2.8.0).ADDIK">
+          <com:Name xml:lang="en">Addiko Bank d.d.</com:Name>
+          <com:Description xml:lang="en">https://www.addiko.hr/</com:Description>
+        </str:Code>
+        <str:Code id="AEAWEB" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_ORGANIZATION(2.8.0).AEAWEB">
+          <com:Name xml:lang="en">American Economic Association</com:Name>
+        </str:Code>
+        <str:Code id="AFD" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_ORGANIZATION(2.8.0).AFD">
+          <com:Name xml:lang="en">African Development Bank (AfDB)</com:Name>
+        </str:Code>
+        <str:Code id="AFESD" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_ORGANIZATION(2.8.0).AFESD">
+          <com:Name xml:lang="en">Arab Fund for Economic and Social Development (AFESD)</com:Name>
+        </str:Code>
+        <str:Code id="AFHWB" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_ORGANIZATION(2.8.0).AFHWB">
+          <com:Name xml:lang="en">Affin Hwang Investment Bank Berhad</com:Name>
+          <com:Description xml:lang="en">https://www.affinhwang.com/</com:Description>
+        </str:Code>
+        <str:Code id="AFI" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_ORGANIZATION(2.8.0).AFI">
+          <com:Name xml:lang="en">Analistas Financieros Internacionales (AFI)</com:Name>
+          <com:Description xml:lang="en">https://www.afi.es/</com:Description>
+        </str:Code>
+        <str:Code id="AFRISTAT" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_ORGANIZATION(2.8.0).AFRISTAT">
+          <com:Name xml:lang="en">AFRISTAT</com:Name>
+        </str:Code>
+        <str:Code id="AGPV" urn="urn:sdmx:org.sdmx.infomodel.codelist.Code=IMF:CL_ORGANIZATION(2.8.0).AGPV">
+          <com:Na
+
+... [cut] ...
+
+eptIdentity>
+                <Ref maintainableParentID="CS_MASTER_DATA" maintainableParentVersion="1.0.0" agencyID="IMF" id="OVERLAP" package="conceptscheme" class="Concept"/>
+              </str:ConceptIdentity>
+              <str:AttributeRelationship>
+                <str:Dimension>
+                  <Ref id="COUNTRY"/>
+                </str:Dimension>
+                <str:Dimension>
+                  <Ref id="INDICATOR"/>
+                </str:Dimension>
+                <str:Dimension>
+                  <Ref id="SECTOR"/>
+                </str:Dimension>
+                <str:Dimension>
+                  <Ref id="FREQUENCY"/>
+                </str:Dimension>
+              </str:AttributeRelationship>
+            </str:Attribute>
+            <str:Attribute id="STATUS" urn="urn:sdmx:org.sdmx.infomodel.datastructure.DataAttribute=IMF.STA:DSD_IRFCL_PUB(13.0.0).STATUS" assignmentStatus="Conditional">
+              <str:ConceptIdentity>
+                <Ref maintainableParentID="CS_MASTER" maintainableParentVersion="1.0.0" agencyID="IMF.STA" id="STATUS" package="conceptscheme" class="Concept"/>
+              </str:ConceptIdentity>
+              <str:AttributeRelationship>
+                <str:PrimaryMeasure>
+                  <Ref id="OBS_VALUE"/>
+                </str:PrimaryMeasure>
+              </str:AttributeRelationship>
+            </str:Attribute>
+            <str:Attribute id="DOI" urn="urn:sdmx:org.sdmx.infomodel.datastructure.DataAttribute=IMF.STA:DSD_IRFCL_PUB(13.0.0).DOI" assignmentStatus="Conditional">
+              <str:ConceptIdentity>
+                <Ref maintainableParentID="CS_MASTER" maintainableParentVersion="2.3.0" agencyID="IMF" id="DOI" package="conceptscheme" class="Concept"/>
+              </str:ConceptIdentity>
+              <str:AttributeRelationship>
+                <str:None/>
+              </str:AttributeRelationship>
+            </str:Attribute>
+            <str:Attribute id="FULL_DESCRIPTION" urn="urn:sdmx:org.sdmx.infomodel.datastructure.DataAttribute=IMF.STA:DSD_IRFCL_PUB(13.0.0).FULL_DESCRIPTION" assignmentStatus="Conditional">
+              <str:ConceptIdentity>
+                <Ref maintainableParentID="CS_MASTER" maintainableParentVersion="2.3.0" agencyID="IMF" id="FULL_DESCRIPTION" package="conceptscheme" class="Concept"/>
+              </str:ConceptIdentity>
+              <str:AttributeRelationship>
+                <str:None/>
+              </str:AttributeRelationship>
+            </str:Attribute>
+            <str:Attribute id="AUTHOR" urn="urn:sdmx:org.sdmx.infomodel.datastructure.DataAttribute=IMF.STA:DSD_IRFCL_PUB(13.0.0).AUTHOR" assignmentStatus="Conditional">
+              <str:ConceptIdentity>
+                <Ref maintainableParentID="CS_MASTER" maintainableParentVersion="2.3.0" agencyID="IMF" id="AUTHOR" package="conceptscheme" class="Concept"/>
+              </str:ConceptIdentity>
+              <str:AttributeRelationship>
+                <str:None/>
+              </str:AttributeRelationship>
+            </str:Attribute>
+            <str:Attribute id="PUBLISHER" urn="urn:sdmx:org.sdmx.infomodel.datastructure.DataAttribute=IMF.STA:DSD_IRFCL_PUB(13.0.0).PUBLISHER" assignmentStatus="Conditional">
+              <str:ConceptIdentity>
+                <Ref maintainableParentID="CS_MASTER" maintainableParentVersion="2.3.0" agencyID="IMF" id="PUBLISHER" package="conceptscheme" class="Concept"/>
+              </str:ConceptIdentity>
+              <str:LocalRepresentation>
+                <str:TextFormat textType="String"/>
+              </str:LocalRepresentation>
+              <str:AttributeRelationship>
+                <str:None/>
+              </str:AttributeRelationship>
+            </str:Attribute>
+            <str:Attribute id="DEPARTMENT" urn="urn:sdmx:org.sdmx.infomodel.datastructure.DataAttribute=IMF.STA:DSD_IRFCL_PUB(13.0.0).DEPARTMENT" assignmentStatus="Conditional">
+              <str:ConceptIdentity>
+                <Ref maintainableParentID="CS_MASTER" maintainableParentVersion="2.3.0" agencyID="IMF" id="DEPARTMENT" package="conceptscheme" class="Concept"/>
+              </str:ConceptIdentity>
+              <str:LocalRepresentation>
+                <str:TextFormat textType="String"/>
+              </str:LocalRepresentation>
+              <str:AttributeRelationship>
+                <str:None/>
+              </str:AttributeRelationship>
+            </str:Attribute>
+            <str:Attribute id="CONTACT_POINT" urn="urn:sdmx:org.sdmx.infomodel.datastructure.DataAttribute=IMF.STA:DSD_IRFCL_PUB(13.0.0).CONTACT_POINT" assignmentStatus="Conditional">
+              <str:ConceptIdentity>
+                <Ref maintainableParentID="CS_MASTER" maintainableParentVersion="2.3.0" agencyID="IMF" id="CONTACT_POINT" package="conceptscheme" class="Concept"/>
+              </str:ConceptIdentity>
+              <str:AttributeRelationship>
+                <str:None/>
+              </str:AttributeRelationship>
+            </str:Attribute>
+            <str:Attribute id="TOPIC" urn="urn:sdmx:org.sdmx.infomodel.datastructure.DataAttribute=IMF.STA:DSD_IRFCL_PUB(13.0.0).TOPIC" assignmentStatus="Conditional">
+              <str:ConceptIdentity>
+                <Ref maintainableParentID="CS_MASTER" maintainableParentVersion="2.3.0" agencyID="IMF" id="TOPIC" package="conceptscheme" class="Concept"/>
+              </str:ConceptIdentity>
+              <str:LocalRepresentation>
+                <str:TextFormat textType="String"/>
+              </str:LocalRepresentation>
+              <str:AttributeRelationship>
+                <str:Dimension>
+                  <Ref id="INDICATOR"/>
+                </str:Dimension>
+                <str:AttachmentGroup>
+                  <Ref id="GROUP_INDICATOR"/>
+                </str:AttachmentGroup>
+              </str:AttributeRelationship>
+            </str:Attribute>
+            <str:Attribute id="TOPIC_DATASET" urn="urn:sdmx:org.sdmx.infomodel.datastructure.DataAttribute=IMF.STA:DSD_IRFCL_PUB(13.0.0).TOPIC_DATASET" assignmentStatus="Conditional">
+              <str:ConceptIdentity>
+                <Ref maintainableParentID="CS_MASTER" maintainableParentVersion="2.3.0" agencyID="IMF" id="TOPIC_DATASET" package="conceptscheme" class="Concept"/>
+              </str:ConceptIdentity>
+              <str:LocalRepresentation>
+                <str:TextFormat textType="String"/>
+              </str:LocalRepresentation>
+              <str:AttributeRelationship>
+                <str:None/>
+              </str:AttributeRelationship>
+            </str:Attribute>
+            <str:Attribute id="KEYWORDS" urn="urn:sdmx:org.sdmx.infomodel.datastructure.DataAttribute=IMF.STA:DSD_IRFCL_PUB(13.0.0).KEYWORDS" assignmentStatus="Conditional">
+              <str:ConceptIdentity>
+                <Ref maintainableParentID="CS_MASTER" maintainableParentVersion="2.3.0" agencyID="IMF" id="KEYWORDS" package="conceptscheme" class="Concept"/>
+              </str:ConceptIdentity>
+              <str:LocalRepresentation>
+                <str:TextFormat textType="String"/>
+              </str:LocalRepresentation>
+              <str:AttributeRelationship>
+                <str:Dimension>
+                  <Ref id="INDICATOR"/>
+                </str:Dimension>
+                <str:AttachmentGroup>
+                  <Ref id="GROUP_INDICATOR"/>
+                </str:AttachmentGroup>
+              </str:AttributeRelationship>
+            </str:Attribute>
+            <str:Attribute id="KEYWORDS_DATASET" urn="urn:sdmx:org.sdmx.infomodel.datastructure.DataAttribute=IMF.STA:DSD_IRFCL_PUB(13.0.0).KEYWORDS_DATASET" assignmentStatus="Conditional">
+              <str:ConceptIdentity>
+                <Ref maintainableParentID="CS_MASTER" maintainableParentVersion="2.3.0" agencyID="IMF" id="KEYWORDS_DATASET" package="conceptscheme" class="Concept"/>
+              </str:ConceptIdentity>
+              <str:LocalRepresentation>
+                <str:TextFormat textType="String"/>
+              </str:LocalRepresentation>
+              <str:AttributeRelationship>
+                <str:None/>
+              </str:AttributeRelationship>
+            </str:Attribute>
+            <str:Attribute id="LANGUAGE" urn="urn:sdmx:org.sdmx.infomodel.datastructure.DataAttribute=IMF.STA:DSD_IRFCL_PUB(13.0.0).LANGUAGE" assignmentStatus="Conditional">
+              <str:ConceptIdentity>
+                <Ref maintainableParentID="CS_MASTER" maintainableParentVersion="2.3.0" agencyID="IMF" id="LANGUAGE" package="conceptscheme" class="Concept"/>
+              </str:ConceptIdentity>
+              <str:LocalRepresentation>
+                <str:TextFormat textType="String"/>
+              </str:LocalRepresentation>
+              <str:AttributeRelationship>
+                <str:None/>
+              </str:AttributeRelationship>
+            </str:Attribute>
+            <str:Attribute id="PUBLICATION_DATE" urn="urn:sdmx:org.sdmx.infomodel.datastructure.DataAttribute=IMF.STA:DSD_IRFCL_PUB(13.0.0).PUBLICATION_DATE" assignmentStatus="Conditional">
+              <str:ConceptIdentity>
+                <Ref maintainableParentID="CS_MASTER" maintainableParentVersion="2.3.0" agencyID="IMF" id="PUBLICATION_DATE" package="conceptscheme" class="Concept"/>
+              </str:ConceptIdentity>
+              <str:AttributeRelationship>
+                <str:None/>
+              </str:AttributeRelationship>
+            </str:Attribute>
+            <str:Attribute id="UPDATE_DATE" urn="urn:sdmx:org.sdmx.infomodel.datastructure.DataAttribute=IMF.STA:DSD_IRFCL_PUB(13.0.0).UPDATE_DATE" assignmentStatus="Conditional">
+              <str:ConceptIdentity>
+                <Ref maintainableParentID="CS_MASTER" maintainableParentVersion="2.3.0" agencyID="IMF" id="UPDATE_DATE" package="conceptscheme" class="Concept"/>
+              </str:ConceptIdentity>
+              <str:AttributeRelationship>
+                <str:None/>
+              </str:AttributeRelationship>
+            </str:Attribute>
+            <str:Attribute id="METHODOLOGY" urn="urn:sdmx:org.sdmx.infomodel.datastructure.DataAttribute=IMF.STA:DSD_IRFCL_PUB(13.0.0).METHODOLOGY" assignmentStatus="Conditional">
+              <str:ConceptIdentity>
+                <Ref maintainableParentID="CS_MASTER" maintainableParentVersion="2.3.0" agencyID="IMF" id="METHODOLOGY" package="conceptscheme" class="Concept"/>
+              </str:ConceptIdentity>
+              <str:LocalRepresentation>
+                <str:TextFormat textType="String"/>
+              </str:LocalRepresentation>
+              <str:AttributeRelationship>
+                <str:Dimension>
+                  <Ref id="COUNTRY"/>
+                </str:Dimension>
+                <str:Dimension>
+                  <Ref id="INDICATOR"/>
+                </str:Dimension>
+                <str:Dimension>
+                  <Ref id="SECTOR"/>
+                </str:Dimension>
+                <str:Dimension>
+                  <Ref id="FREQUENCY"/>
+                </str:Dimension>
+              </str:AttributeRelationship>
+            </str:Attribute>
+            <str:Attribute id="METHODOLOGY_NOTES" urn="urn:sdmx:org.sdmx.infomodel.datastructure.DataAttribute=IMF.STA:DSD_IRFCL_PUB(13.0.0).METHODOLOGY_NOTES" assignmentStatus="Conditional">
+              <str:ConceptIdentity>
+                <Ref maintainableParentID="CS_MASTER" maintainableParentVersion="2.3.0" agencyID="IMF" id="METHODOLOGY_NOTES" package="conceptscheme" class="Concept"/>
+              </str:ConceptIdentity>
+              <str:AttributeRelationship>
+                <str:None/>
+              </str:AttributeRelationship>
+            </str:Attribute>
+            <str:Attribute id="ACCESS_SHARING_LEVEL" urn="urn:sdmx:org.sdmx.infomodel.datastructure.DataAttribute=IMF.STA:DSD_IRFCL_PUB(13.0.0).ACCESS_SHARING_LEVEL" assignmentStatus="Conditional">
+              <str:ConceptIdentity>
+                <Ref maintainableParentID="CS_MASTER" maintainableParentVersion="2.3.0" agencyID="IMF" id="ACCESS_SHARING_LEVEL" package="conceptscheme" class="Concept"/>
+              </str:ConceptIdentity>
+              <str:LocalRepresentation>
+                <str:TextFormat textType="String"/>
+              </str:LocalRepresentation>
+              <str:AttributeRelationship>
+                <str:Dimension>
+                  <Ref id="COUNTRY"/>
+                </str:Dimension>
+                <str:Dimension>
+                  <Ref id="INDICATOR"/>
+                </str:Dimension>
+                <str:Dimension>
+                  <Ref id="SECTOR"/>
+                </str:Dimension>
+                <str:Dimension>
+                  <Ref id="FREQUENCY"/>
+                </str:Dimension>
+              </str:AttributeRelationship>
+            </str:Attribute>
+            <str:Attribute id="ACCESS_SHARING_NOTES" urn="urn:sdmx:org.sdmx.infomodel.datastructure.DataAttribute=IMF.STA:DSD_IRFCL_PUB(13.0.0).ACCESS_SHARING_NOTES" assignmentStatus="Conditional">
+              <str:ConceptIdentity>
+                <Ref maintainableParentID="CS_MASTER" maintainableParentVersion="2.3.0" agencyID="IMF" id="ACCESS_SHARING_NOTES" package="conceptscheme" class="Concept"/>
+              </str:ConceptIdentity>
+              <str:AttributeRelationship>
+                <str:Dimension>
+                  <Ref id="COUNTRY"/>
+                </str:Dimension>
+                <str:Dimension>
+                  <Ref id="INDICATOR"/>
+                </str:Dimension>
+                <str:Dimension>
+                  <Ref id="SECTOR"/>
+                </str:Dimension>
+                <str:Dimension>
+                  <Ref id="FREQUENCY"/>
+                </str:Dimension>
+              </str:AttributeRelationship>
+            </str:Attribute>
+            <str:Attribute id="SECURITY_CLASSIFICATION" urn="urn:sdmx:org.sdmx.infomodel.datastructure.DataAttribute=IMF.STA:DSD_IRFCL_PUB(13.0.0).SECURITY_CLASSIFICATION" assignmentStatus="Conditional">
+              <str:ConceptIdentity>
+                <Ref maintainableParentID="CS_MASTER" maintainableParentVersion="2.3.0" agencyID="IMF" id="SECURITY_CLASSIFICATION" package="conceptscheme" class="Concept"/>
+              </str:ConceptIdentity>
+              <str:LocalRepresentation>
+                <str:TextFormat textType="String"/>
+              </str:LocalRepresentation>
+              <str:AttributeRelationship>
+                <str:Dimension>
+                  <Ref id="COUNTRY"/>
+                </str:Dimension>
+                <str:Dimension>
+                  <Ref id="INDICATOR"/>
+                </str:Dimension>
+                <str:Dimension>
+                  <Ref id="SECTOR"/>
+                </str:Dimension>
+                <str:Dimension>
+                  <Ref id="FREQUENCY"/>
+                </str:Dimension>
+              </str:AttributeRelationship>
+            </str:Attribute>
+            <str:Attribute id="SOURCE" urn="urn:sdmx:org.sdmx.infomodel.datastructure.DataAttribute=IMF.STA:DSD_IRFCL_PUB(13.0.0).SOURCE" assignmentStatus="Conditional">
+              <str:ConceptIdentity>
+                <Ref maintainableParentID="CS_MASTER" maintainableParentVersion="2.3.0" agencyID="IMF" id="SOURCE" package="conceptscheme" class="Concept"/>
+              </str:ConceptIdentity>
+              <str:LocalRepresentation>
+                <str:TextFormat textType="String"/>
+              </str:LocalRepresentation>
+              <str:AttributeRelationship>
+                <str:PrimaryMeasure>
+                  <Ref id="OBS_VALUE"/>
+                </str:PrimaryMeasure>
+              </str:AttributeRelationship>
+            </str:Attribute>
+            <str:Attribute id="SHORT_SOURCE_CITATION" urn="urn:sdmx:org.sdmx.infomodel.datastructure.DataAttribute=IMF.STA:DSD_IRFCL_PUB(13.0.0).SHORT_SOURCE_CITATION" assignmentStatus="Conditional">
+              <str:ConceptIdentity>
+                <Ref maintainableParentID="CS_MASTER" maintainableParentVersion="2.3.0" agencyID="IMF" id="SHORT_SOURCE_CITATION" package="conceptscheme" class="Concept"/>
+              </str:ConceptIdentity>
+              <str:AttributeRelationship>
+                <str:None/>
+              </str:AttributeRelationship>
+            </str:Attribute>
+            <str:Attribute id="FULL_SOURCE_CITATION" urn="urn:sdmx:org.sdmx.infomodel.datastructure.DataAttribute=IMF.STA:DSD_IRFCL_PUB(13.0.0).FULL_SOURCE_CITATION" assignmentStatus="Conditional">
+              <str:ConceptIdentity>
+                <Ref maintainableParentID="CS_MASTER" maintainableParentVersion="2.3.0" agencyID="IMF" id="FULL_SOURCE_CITATION" package="conceptscheme" class="Concept"/>
+              </str:ConceptIdentity>
+              <str:AttributeRelationship>
+                <str:None/>
+              </str:AttributeRelationship>
+            </str:Attribute>
+            <str:Attribute id="LICENSE" urn="urn:sdmx:org.sdmx.infomodel.datastructure.DataAttribute=IMF.STA:DSD_IRFCL_PUB(13.0.0).LICENSE" assignmentStatus="Conditional">
+              <str:ConceptIdentity>
+                <Ref maintainableParentID="CS_MASTER" maintainableParentVersion="2.3.0" agencyID="IMF" id="LICENSE" package="conceptscheme" class="Concept"/>
+              </str:ConceptIdentity>
+              <str:AttributeRelationship>
+                <str:None/>
+              </str:AttributeRelationship>
+            </str:Attribute>
+            <str:Attribute id="SUGGESTED_CITATION" urn="urn:sdmx:org.sdmx.infomodel.datastructure.DataAttribute=IMF.STA:DSD_IRFCL_PUB(13.0.0).SUGGESTED_CITATION" assignmentStatus="Conditional">
+              <str:ConceptIdentity>
+                <Ref maintainableParentID="CS_MASTER" maintainableParentVersion="2.3.0" agencyID="IMF" id="SUGGESTED_CITATION" package="conceptscheme" class="Concept"/>
+              </str:ConceptIdentity>
+              <str:AttributeRelationship>
+                <str:None/>
+              </str:AttributeRelationship>
+            </str:Attribute>
+            <str:Attribute id="KEY_INDICATOR" urn="urn:sdmx:org.sdmx.infomodel.datastructure.DataAttribute=IMF.STA:DSD_IRFCL_PUB(13.0.0).KEY_INDICATOR" assignmentStatus="Conditional">
+              <str:ConceptIdentity>
+                <Ref maintainableParentID="CS_MASTER" maintainableParentVersion="2.3.0" agencyID="IMF" id="KEY_INDICATOR" package="conceptscheme" class="Concept"/>
+              </str:ConceptIdentity>
+              <str:AttributeRelationship>
+                <str:Dimension>
+                  <Ref id="INDICATOR"/>
+                </str:Dimension>
+                <str:AttachmentGroup>
+                  <Ref id="GROUP_INDICATOR"/>
+                </str:AttachmentGroup>
+              </str:AttributeRelationship>
+            </str:Attribute>
+            <str:Attribute id="SERIES_NAME" urn="urn:sdmx:org.sdmx.infomodel.datastructure.DataAttribute=IMF.STA:DSD_IRFCL_PUB(13.0.0).SERIES_NAME" assignmentStatus="Conditional">
+              <str:ConceptIdentity>
+                <Ref maintainableParentID="CS_MASTER" maintainableParentVersion="2.3.0" agencyID="IMF" id="SERIES_NAME" package="conceptscheme" class="Concept"/>
+              </str:ConceptIdentity>
+              <str:AttributeRelationship>
+                <str:Dimension>
+                  <Ref id="INDICATOR"/>
+                </str:Dimension>
+                <str:AttachmentGroup>
+                  <Ref id="GROUP_INDICATOR"/>
+                </str:AttachmentGroup>
+              </str:AttributeRelationship>
+            </str:Attribute>
+          </str:AttributeList>
+          <str:MeasureList id="MeasureDescriptor">
+            <str:PrimaryMeasure id="OBS_VALUE" urn="urn:sdmx:org.sdmx.infomodel.datastructure.PrimaryMeasure=IMF.STA:DSD_IRFCL_PUB(13.0.0).OBS_VALUE">
+              <str:ConceptIdentity>
+                <Ref maintainableParentID="CS_MASTER_SYSTEM" maintainableParentVersion="1.0.2" agencyID="IMF" id="OBS_VALUE" package="conceptscheme" class="Concept"/>
+              </str:ConceptIdentity>
+            </str:PrimaryMeasure>
+          </str:MeasureList>
+        </str:DataStructureComponents>
+      </str:DataStructure>
+    </str:DataStructures>
+  </mes:Structures>
+</mes:Structure>

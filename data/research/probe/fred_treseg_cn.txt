@@ -1,5 +1,6 @@
 URL: https://api.stlouisfed.org/fred/series/observations?series_id=TRESEGCNM052N&api_key={FRED_API_KEY}&file_type=json&sort_order=desc&limit=3
-STATUS: None
-BYTES: 0
-ERROR: InvalidURL: URL can't contain control characters. '/fred/series/observations?series_id=TRESEGCNM052N&api_key=***&file_type=json&sort_order=desc&limit=3' (found at least ' ')
+STATUS: 200
+BYTES: 596
+ERROR: 
 
+{"realtime_start":"2026-10-09","realtime_end":"2026-10-09","observation_start":"1600-01-01","observation_end":"9999-12-31","units":"lin","output_type":1,"file_type":"json","order_by":"observation_date","sort_order":"desc","count":583,"offset":0,"limit":3,"observations":[{"realtime_start":"2026-10-09","realtime_end":"2026-10-09","date":"2026-06-01","value":"3482385.620113452"},{"realtime_start":"2026-10-09","realtime_end":"2026-10-09","date":"2026-05-01","value":"3509458.162625652"},{"realtime_start":"2026-10-09","realtime_end":"2026-10-09","date":"2026-04-01","value":"3477516.923138242"}]}
