@@ -14,7 +14,7 @@ with sync_playwright() as pw:
     b = pw.chromium.launch()
     for w, h, name in ((1280, 900, "live_page"), (390, 844, "live_page_phone")):
         p = b.new_page(viewport={"width": w, "height": h})
-        p.goto(URL, wait_until="networkidle", timeout=60000)
+        p.goto(URL, wait_until="load", timeout=60000)   # streams never go idle
         p.wait_for_timeout(8000)                       # TradingView widget and live quotes
         p.screenshot(path=str(out / f"{name}.png"))
         frames = [f.url for f in p.frames if "tradingview" in f.url]
