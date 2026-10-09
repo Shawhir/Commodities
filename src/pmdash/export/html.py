@@ -19,7 +19,7 @@ from ..analogues.state import LABELS
 from ..digest import brief as decision_brief
 from ..digest.summary import build as build_summary
 from ..regime.labeller import label_from_config
-from ..testing.seed_study import run_study
+from ..testing.seed_study import month_end_closes, realistic, run_study
 
 TEMPLATE = Path(__file__).with_name("template.html")
 
@@ -172,7 +172,7 @@ def price_strip(daily: dict | None, fx_daily: pd.Series | None) -> list[dict]:
 def build_payload(gold: pd.Series, fx: pd.Series, health: pd.DataFrame | None = None, macro: dict | None = None,
                   include_oos: bool = True, reports: list[dict] | None = None,
                   fx_daily: pd.Series | None = None, daily: dict | None = None,
-                  fx_fresh: pd.Series | None = None) -> dict:
+                  fx_fresh: pd.Series | None = None, cash: dict | None = None) -> dict:
     th = config.load("thresholds")
     mk = config.load("markets")
     levels_cfg = config.load("levels")
@@ -221,7 +221,7 @@ def build_payload(gold: pd.Series, fx: pd.Series, health: pd.DataFrame | None = 
         if item.get("active_from") and pd.Period(str(item["active_from"])[:7], "M") > as_of:
             continue
         for cur, p in (("USD", gold), ("CHF", chf)):
-            if (item["id"], cur) in have:
+            if (item["id"], cur) in have or (item.get("currencies") and cur not in item["currencies"]):
                 continue
             if item["type"] == "manual_price":
                 lv = float(item["value_usd"]) * (1.0 if cur == "USD" else float(fx.loc[as_of]))
@@ -303,7 +303,16 @@ def build_payload(gold: pd.Series, fx: pd.Series, health: pd.DataFrame | None = 
         an["oos"] = _oos(st, gold, {g: ms for g, ms in a["groups"].items() if any(m in st.columns for m in ms)}, kw)
 
     # --- section 8 study ----------------------------------------------------------------------
-    study = run_study(gold, fx, dict(th, float_start=float_start))
+    study = run_study(gold, fx, dict(th, float_start=float_start), cash=cash)
+    # the realistic test: real month-end closes, cash rates, costs by how the gold is held
+    real = None
+    g_daily = (daily or {}).get("gold", (None, None))[0]
+    fx_for_closes = fx_fresh if fx_fresh is not None else fx_daily
+    if g_daily is not None and fx_for_closes is not None:
+        cu = month_end_closes(g_daily["close"], as_of)
+        cc = (cu * month_end_closes(fx_for_closes, as_of)).dropna()
+        if len(cc) > 36:
+            real = realistic(gold, cu, cc, th, cash)
     summ = study["summary"].reset_index().to_dict("records")
     per = study["per_regime"].reset_index().to_dict("records")
     eps = study["sideways_episodes"].to_dict("records")
@@ -337,7 +346,8 @@ def build_payload(gold: pd.Series, fx: pd.Series, health: pd.DataFrame | None = 
         "as_of": str(as_of), "built": str(date.today()), "disclaimer": s["disclaimer"],
         "regime": regime, "series": series, "manual_lines": manual, "lines": lines,
         "line_notes": s["level_notes"], "triggers": trig, "stretch": stretch, "analogues": an,
-        "study": {"summary": summ, "per_regime": per, "episodes": eps, "window": list(study["window"]),
+        "study": {"realistic": real, "main_rule": th["backtest"].get("main_rule", "momentum_12_1"), "cash": {k: v is not None and len(v) > 0 for k, v in (cash or {}).items()},
+                  "summary": summ, "per_regime": per, "episodes": eps, "window": list(study["window"]),
                   "shares": study["regime_shares_since_float"].to_dict()},
         "backdrop": backdrop(macro or {}, fx_daily, as_of, float_start),
         "reports": reports or [],

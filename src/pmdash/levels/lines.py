@@ -64,6 +64,8 @@ def evaluate_market(market: str, prices: dict[str, pd.Series], levels_cfg: dict,
     for item in levels_cfg.get(market, []):
         kind = item["type"]
         for cur, p in prices.items():
+            if item.get("currencies") and cur not in item["currencies"]:
+                continue
             p = p[since:].dropna()
             idx = p.index.to_timestamp(how="end").normalize()
             closes = pd.Series(p.to_numpy(), index=idx)

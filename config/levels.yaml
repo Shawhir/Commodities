@@ -37,13 +37,15 @@ gold:
     direction: above
     severity: info
   - id: gold_10m_avg
-    label: "10-month average (rule 2 switch point)"
+    label: "10-month average (warning light)"
+    currencies: [USD]           # both rules are decided on the dollar price (Oct 2026 review)
     type: derived_ma
     window_months: 10
     direction: both
     severity: important
   - id: gold_mom_12_1
-    label: "Rule 1 switch point (gold vs a year ago at zero)"
+    label: "Main switch point (gold vs a year ago at zero)"
+    currencies: [USD]
     type: signal_zero_cross
     signal: momentum_12_1
     direction: both

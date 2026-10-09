@@ -137,7 +137,8 @@ def monthly_setups(gold: pd.Series, regime: pd.Series, mom: pd.Series, ma: pd.Se
     ms, as_ = mom.get(t), ma.get(t)
     onoff = {1.0: "ON", 0.0: "OFF"}
     if not pd.isna(ms) and not pd.isna(as_):
-        out["rules"] = {"plain": f"Rule 1 {onoff[ms]} and rule 2 {onoff[as_]}",
+        light = {1.0: "warning light clear", 0.0: "warning light showing"}
+        out["rules"] = {"plain": f"Main switch {onoff[ms]}, {light[as_]}",
                         "tech": f"12-1 momentum signal {int(ms)}, SMA10 signal {int(as_)}",
                         "cond": (mom == ms) & (ma == as_)}
     r = regime.get(t)
@@ -256,9 +257,10 @@ def build_guess(gold_usd: pd.Series, gold_chf: pd.Series, regime: pd.Series, mom
     setups = monthly_setups(pu, regime[since:], mom[since:], ma[since:], expanding_pct(dist_10y[since:]))
     s = setups.get(setup_key) or next(iter(setups.values()))
     test12 = honesty_test(pu, s["cond"], 12, pd.Period("2000-01", "M"))
-    story = {"combined": "your two trend rules disagree and the price is drifting sideways",
-             "rules": "your two trend rules disagree", "mood": "the price is drifting sideways",
-             "stretch": "gold is far above its long-run average"}.get(setup_key, s["plain"].lower())
+    mood_now = setups.get("mood", {}).get("plain", "").replace("Market mood ", "the price is ")
+    rules_now = setups.get("rules", {}).get("plain", "").replace("Main switch", "your main switch is")
+    story = {"combined": f"{rules_now} and {mood_now}", "rules": rules_now, "mood": mood_now,
+             "stretch": "gold is far above its long-run average"}.get(setup_key) or s["plain"].lower()
     out = {"setup_plain": s["plain"], "setup_story": story, "setup_tech": s["tech"], "test12": test12, "currencies": {}}
     for cur, p in (("USD", pu), ("CHF", gold_chf[since:])):
         cond = s["cond"].reindex(p.index).fillna(False)

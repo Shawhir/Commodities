@@ -10,8 +10,52 @@ from ..regime.labeller import episodes, label_from_config
 from . import backtest as bt
 
 
-def run_study(gold_usd: pd.Series, usdchf: pd.Series, cfg: dict) -> dict:
-    """``gold_usd`` and ``usdchf`` are monthly Period-indexed series."""
+def monthly_cash(rate_pct: pd.Series | None) -> pd.Series | float:
+    """Monthly cash return from an annual % rate series (monthly Period index); 0 where missing."""
+    if rate_pct is None or len(rate_pct) == 0:
+        return 0.0
+    return (rate_pct.astype(float) / 100 / 12)
+
+
+def month_end_closes(daily_close: pd.Series, last_month: pd.Period | None = None) -> pd.Series:
+    """Last daily close of each month (a real, tradeable price, unlike the month's average)."""
+    c = daily_close.dropna()
+    m = c.groupby(c.index.to_period("M")).last()
+    return m.loc[:last_month] if last_month is not None else m
+
+
+def realistic(gold_avg_usd: pd.Series, close_usd: pd.Series, close_chf: pd.Series, cfg: dict,
+              cash: dict | None = None) -> dict:
+    """The rules as the dashboard runs them: decided on dollar monthly averages, traded at real
+    month-end closes, cash earning 3-month rates, for each way of holding gold (cost per switch)."""
+    b = cfg["backtest"]
+    start = b.get("realistic_start", "2001-01")
+    costs = b.get("costs", {"fund": b["cost_per_switch"]})
+    cash = cash or {}
+    mom, ma = momentum_signal(gold_avg_usd), ma_signal(gold_avg_usd, 10)
+    rules = {"buy_and_hold": pd.Series(1.0, index=gold_avg_usd.index), "momentum_12_1": mom, "ma_10m": ma,
+             "both_rules": (mom * ma).where(mom.notna() & ma.notna())}
+    end = str(min(close_usd.index[-1], close_chf.index[-1], gold_avg_usd.index[-1]))
+    rows = []
+    for holding, cost in costs.items():
+        for name, sig in rules.items():
+            row = {"rule": name, "holding": holding, "cost": cost}
+            for cur, px in (("usd", close_usd), ("chf", close_chf)):
+                c = monthly_cash(cash.get(cur.upper()))
+                res = bt.run(px, sig.reindex(px.index), start, end, cost=cost,
+                             cash_ret=c.reindex(px.index).ffill(limit=3).fillna(0.0) if isinstance(c, pd.Series) else c)
+                row[f"{cur}_cagr"], row[f"{cur}_max_dd"] = res.cagr(), res.max_drawdown()
+                row["switches"], row["months"] = res.n_switches(), len(res.returns)
+                row["in_market"] = float(res.position.mean())
+            rows.append(row)
+    has = {k: v is not None and len(v) > 0 for k, v in cash.items()}
+    return {"rows": rows, "window": [start, end], "costs": costs, "holding": b.get("holding", "fund"),
+            "cash": {"USD": has.get("USD", False), "CHF": has.get("CHF", False)}}
+
+
+def run_study(gold_usd: pd.Series, usdchf: pd.Series, cfg: dict, cash: dict | None = None) -> dict:
+    """``gold_usd`` and ``usdchf`` are monthly Period-indexed series. ``cash`` (optional) maps
+    USD / CHF to annual % cash rates; without it cash earns 0 (the section 8 reproduction)."""
     b = cfg["backtest"]
     start, cost = b["start"], b["cost_per_switch"]
     labels = label_from_config(gold_usd, cfg)
@@ -26,9 +70,11 @@ def run_study(gold_usd: pd.Series, usdchf: pd.Series, cfg: dict) -> dict:
     rules = {"buy_and_hold": ones, "momentum_12_1": mom, "ma_10m": ma, "momentum_chop_filter": chop}
     rows = []
     results = {}
+    cash = cash or {}
+    c_usd, c_chf = monthly_cash(cash.get("USD")), monthly_cash(cash.get("CHF"))
     for name, sig in rules.items():
-        usd = bt.run(gold_usd, sig, start, cost=cost)
-        chf = bt.run(gold_chf, sig, start, cost=cost)
+        usd = bt.run(gold_usd, sig, start, cost=cost, cash_ret=c_usd)
+        chf = bt.run(gold_chf, sig, start, cost=cost, cash_ret=c_chf)
         results[name] = (usd, chf)
         rows.append({
             "rule": name,

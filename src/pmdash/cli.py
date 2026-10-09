@@ -285,7 +285,17 @@ def _payload(con, args, include_oos: bool):
     fx_fresh = fx_yf.combine_first(fx_daily) if len(fx_yf) else fx_daily
     return build_payload(gold, fx, _health(con), data.load_macro(con, args.as_of), include_oos=include_oos,
                          reports=reports, fx_daily=fx_daily if len(fx_daily) else None, daily=daily,
-                         fx_fresh=fx_fresh if len(fx_fresh) else None)
+                         fx_fresh=fx_fresh if len(fx_fresh) else None, cash=_cash_rates(con, args.as_of))
+
+
+def _cash_rates(con, as_of=None) -> dict:
+    """3-month cash rates (% a year, monthly Period index) for the time out of gold."""
+    out = {}
+    for cur, sid in config.load("thresholds")["backtest"].get("cash_series", {}).items():
+        s = db.get_series(con, sid, as_of=as_of)
+        if len(s):
+            out[cur] = s.groupby(s.index.to_period("M")).last()
+    return out
 
 
 def cmd_export_html(args):

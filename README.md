@@ -109,6 +109,25 @@ lines, what is pulling on gold (each factor with its usual effect), conflicts be
 the next releases, and what it can't cover yet. It states conditions, never instructions, and a
 check rejects the brief if instruction language appears.
 
+### Rule review (October 2026)
+
+A review of the rules from a Swiss holder's point of view changed five things:
+
+1. **Dollar signal for every view.** Both rules are decided on gold's dollar monthly average,
+   because gold trades in dollars; franc-priced signals switched twice as often for worse results.
+   Franc results apply the dollar signal. The rule lines in `config/levels.yaml` carry
+   `currencies: [USD]`.
+2. **Main switch and warning light.** Rule 1 (12-1 momentum) is the main switch. Rule 2 (the
+   10-month average) is shown as a warning light: acted on alone, it lost money in choppy markets
+   (2020-22, 2026) once tested at real prices.
+3. **Realistic test.** `testing/seed_study.realistic` decides on monthly averages and trades at
+   real month-end closes (COMEX front month, from 2001). The long 1972 table on monthly averages
+   stays as the section 8 reproduction, labelled as smoothed.
+4. **Cash earns interest.** Time out of gold earns the US 3-month T-bill rate (FRED `TB3MS`) and
+   the Swiss 3-month rate (FRED `IR3TIB01CHM156N`, OECD, from mid-1999; negative 2015-22).
+5. **Costs by holding.** `backtest.costs` in `config/thresholds.yaml` sets a one-way cost per
+   switch for a fund, bars and coins; the page has a switch between them.
+
 ## Weighed-up odds, educated guess, history counts and technical picture
 
 - **Weighed-up odds** (top of the page, `src/pmdash/history/odds.py`): one probability each for

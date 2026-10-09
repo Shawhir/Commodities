@@ -72,3 +72,31 @@ def test_episode_gap_merge():
     reg = pd.Series(["Sideways"] * 8 + ["Up"] * 2 + ["Sideways"] * 6 + ["Up"] * 3 + ["Sideways"] * 11, index=idx)
     eps = episodes(reg, min_months=12, gap_merge=2)
     assert [(str(e.start), e.months) for e in eps] == [("2000-01", 16)]
+
+
+def test_realistic_uses_cash_costs_and_dollar_signal(gold, fx, thresholds):
+    import pandas as pd
+    from pmdash.testing.seed_study import realistic
+    close_usd = gold.loc["1995-01":] * 1.001          # stand-in for month-end closes
+    close_chf = (close_usd * fx).dropna()
+    cfg = {**thresholds, "backtest": {**thresholds["backtest"], "realistic_start": "2001-01",
+                                      "costs": {"fund": 0.002, "coins": 0.025}}}
+    zero = realistic(gold, close_usd, close_chf, cfg)
+    cash = {"USD": pd.Series(5.0, index=gold.index), "CHF": pd.Series(-1.0, index=gold.index)}
+    paid = realistic(gold, close_usd, close_chf, cfg, cash)
+    row = lambda X, rule, hold: next(r for r in X["rows"] if r["rule"] == rule and r["holding"] == hold)
+    # time out of gold earns cash: positive dollar rate helps, negative franc rate hurts
+    assert row(paid, "momentum_12_1", "fund")["usd_cagr"] > row(zero, "momentum_12_1", "fund")["usd_cagr"]
+    assert row(paid, "momentum_12_1", "fund")["chf_cagr"] < row(zero, "momentum_12_1", "fund")["chf_cagr"]
+    # dearer switching costs more; holding never switches after entry, so it barely changes
+    assert row(zero, "momentum_12_1", "coins")["chf_cagr"] < row(zero, "momentum_12_1", "fund")["chf_cagr"]
+    # both currencies use the same (dollar) signal, so they switch the same number of times
+    assert paid["cash"] == {"USD": True, "CHF": True} and zero["cash"] == {"USD": False, "CHF": False}
+
+
+def test_rule_lines_only_on_the_dollar_price(gold, fx, thresholds):
+    from pmdash import config
+    from pmdash.levels.lines import evaluate_market
+    trans, _ = evaluate_market("gold", {"USD": gold, "CHF": (gold * fx).dropna()}, config.load("levels"), thresholds, fx)
+    curs = {(t.line_id, t.currency) for t in trans if t.line_id in ("gold_mom_12_1", "gold_10m_avg")}
+    assert curs and all(c == "USD" for _, c in curs)

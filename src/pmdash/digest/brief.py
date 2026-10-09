@@ -19,6 +19,7 @@ from ..regime.labeller import label
 
 MOOD = {"Up": "rising steadily", "Sideways": "going sideways", "Down": "falling steadily"}
 ONOFF = {"In": "ON", "Out": "OFF"}
+LIGHT = {"In": "CLEAR", "Out": "WARNING"}      # rule 2 is a warning light, not a second switch
 
 FORBIDDEN = ("buy", "sell", "should", "recommend", "target price", "price target", "go long", "go short")
 
@@ -35,9 +36,14 @@ def ordinal(x: float) -> str:
 
 # --- 1. trend rules ----------------------------------------------------------------------------
 
-def momentum_rule(p: pd.Series, horizon: int = 3) -> dict:
+def _chf(x: float, chf_rate: float | None) -> str:
+    return f" (about CHF {x * chf_rate:,.0f} at today's exchange rate)" if chf_rate else ""
+
+
+def momentum_rule(p: pd.Series, horizon: int = 3, chf_rate: float | None = None) -> dict:
     """12-1 momentum now, and for each of the next closes either its known value or the price
-    that would flip it. Momentum at close t+k = p[t+k-1] / p[t+k-12] - 1."""
+    that would flip it. Momentum at close t+k = p[t+k-1] / p[t+k-12] - 1.
+    ``p`` is the dollar price: the rules are decided on it for every view (Oct 2026 review)."""
     t = len(p) - 1
     now = float(momentum_12_1(p).iloc[-1])
     state = "In" if now > 0 else "Out"
@@ -58,7 +64,7 @@ def momentum_rule(p: pd.Series, horizon: int = 3) -> dict:
             flip = "below" if state == "In" else "above"
             steps.append({"month": str(month), "known": False, "threshold": den, "depends_on": str(needed_month),
                           "text": f"End of {_month_name(month)}: switches {'OFF' if state == 'In' else 'ON'} if gold's "
-                                  f"average price in {_month_name(needed_month)} is {flip} {den:,.0f}",
+                                  f"average price in {_month_name(needed_month)} is {flip} ${den:,.0f}{_chf(den, chf_rate)}",
                           "tech": f"12-1 momentum at {month} close = P({needed_month}) / P({p.index[den_i]}) - 1; "
                                   f"sign flips when P({needed_month}) crosses P({p.index[den_i]}) = {den:,.2f}"})
     hold = float(p.iloc[-1])
@@ -71,20 +77,23 @@ def momentum_rule(p: pd.Series, horizon: int = 3) -> dict:
             turn = str(p.index[-1] + k)
             break
     up = "higher" if now > 0 else "lower"
-    return {"rule": "12-1 momentum", "name": "Rule 1: the 12-month trend", "state": state, "onoff": ONOFF[state],
+    return {"rule": "12-1 momentum", "name": "Main switch (rule 1): the 12-month trend", "role": "switch",
+            "state": state, "onoff": ONOFF[state],
             "value": now, "steps": steps,
             "tech": f"Time-series momentum, 12-1 (Moskowitz, Ooi and Pedersen 2012): sign of the return from t-12 to t-1 "
                     f"on monthly averages = {now:+.2%}, so In. Section 8.3: 9.1% CAGR in USD, max drawdown -36%, "
                     f"53 switches since 1972-08.",
             "if_flat_tech": f"Hold P = {hold:,.2f} for every future month; first close where the sign changes: {turn}",
-            "explain": f"ON when gold costs more than it did a year ago (leaving out the latest month). "
-                       f"Right now it is {abs(now):.0%} {up}, so the rule is {ONOFF[state]}.",
-            "if_flat": f"If gold stays around {hold:,.0f}, this rule switches {'OFF' if state == 'In' else 'ON'} at the end "
+            "explain": f"ON when gold's dollar price is higher than a year ago (leaving out the latest month). "
+                       f"Right now it is {abs(now):.0%} {up}, so the switch is {ONOFF[state]}. It is decided on the "
+                       f"dollar price in both views, because gold trades in dollars: the franc's jumps would otherwise "
+                       f"cause extra switching. Your results are still measured in francs.",
+            "if_flat": f"If gold stays around ${hold:,.0f}, the main switch turns {'OFF' if state == 'In' else 'ON'} at the end "
                        f"of {_month_name(pd.Period(turn, 'M'))}" if turn else
-                       f"If gold stays around {hold:,.0f}, this rule does not change within 12 months"}
+                       f"If gold stays around ${hold:,.0f}, the main switch does not change within 12 months"}
 
 
-def ma_rule(p: pd.Series, window: int = 10) -> dict:
+def ma_rule(p: pd.Series, window: int = 10, chf_rate: float | None = None) -> dict:
     """10-month rule now, and the next month's average that would flip it.
     In next month if P > (sum of last window-1 + P) / window, i.e. P > mean of the last window-1."""
     state = "In" if ma_signal(p, window).iloc[-1] == 1 else "Out"
@@ -93,16 +102,19 @@ def ma_rule(p: pd.Series, window: int = 10) -> dict:
     nxt = p.index[-1] + 1
     flip = "above" if state == "Out" else "below"
     pos = "above" if state == "In" else "below"
-    return {"rule": f"{window}-month average", "name": f"Rule 2: the {window}-month average", "state": state,
-            "onoff": ONOFF[state], "value": float(p.iloc[-1] / ma - 1), "average": ma,
+    return {"rule": f"{window}-month average", "name": f"Warning light (rule 2): the {window}-month average",
+            "role": "warning", "state": state,
+            "onoff": LIGHT[state], "value": float(p.iloc[-1] / ma - 1), "average": ma,
             "threshold": threshold, "month": str(nxt),
             "tech": f"{window}-month simple moving average rule: In if P > SMA{window}. P = {float(p.iloc[-1]):,.2f}, "
                     f"SMA{window} = {ma:,.2f} ({float(p.iloc[-1] / ma - 1):+.2%}), so {state}. Next month's breakeven "
                     f"P = mean of the last {window - 1} monthly averages = {threshold:,.2f}.",
-            "explain": f"ON when gold's price is above its average of the last {window} months. Now gold is "
-                       f"{float(p.iloc[-1]):,.0f}, {pos} its average of {ma:,.0f}, so the rule is {ONOFF[state]}.",
-            "text": f"Switches {'ON' if state == 'Out' else 'OFF'} if gold's average price in {_month_name(nxt)} is "
-                    f"{flip} {threshold:,.0f}"}
+            "explain": f"A warning light, not a second switch. It shows when gold's dollar price drops below its "
+                       f"average of the last {window} months. Now gold is ${float(p.iloc[-1]):,.0f}, {pos} its average of "
+                       f"${ma:,.0f}, so the light is {'showing' if state == 'Out' else 'clear'}. Tested at real month-end "
+                       f"prices, acting on this light alone lost money in choppy markets, so it is shown as a caution only.",
+            "text": f"{'Clears' if state == 'Out' else 'Shows'} if gold's average price in {_month_name(nxt)} is "
+                    f"{flip} ${threshold:,.0f}{_chf(threshold, chf_rate)}"}
 
 
 # --- 2. regime boundaries ----------------------------------------------------------------------
@@ -238,9 +250,9 @@ def conflicts(rules: dict, regimes: dict, stretch: dict, press: list[dict]) -> l
     out = []
     for cur, r in rules.items():
         m, a = r["momentum"]["state"], r["ma"]["state"]
-        if m != a:
-            out.append({"text": f"In {cur}, your two trend rules disagree: rule 1 (12-month trend) is {ONOFF[m]}, "
-                                f"rule 2 (10-month average) is {ONOFF[a]}.",
+        if m == "In" and a == "Out":
+            out.append({"text": "The main switch is ON, but the warning light is showing: gold is still above a year ago, "
+                                "yet below its 10-month average.",
                         "tech": f"{cur}: 12-1 momentum {m} ({r['momentum']['value']:+.2%}) vs 10-month SMA rule {a} "
                                 f"(P/SMA10 - 1 = {r['ma']['value']:+.2%})."})
     labs = {cur: x["now"] for cur, x in regimes.items()}
@@ -275,7 +287,9 @@ def build(gold: pd.Series, fx: pd.Series, state: pd.DataFrame, macro: dict, line
     today = today or date.today()
     chf = (gold * fx).dropna()
     series = {"CHF": chf, "USD": gold}
-    rules = {cur: {"momentum": momentum_rule(p), "ma": ma_rule(p)} for cur, p in series.items()}
+    rate = float(fx.dropna().iloc[-1]) if len(fx.dropna()) else None
+    # both rules are decided on the dollar price for every view; franc amounts are shown alongside
+    rules = {"USD": {"momentum": momentum_rule(gold, chf_rate=rate), "ma": ma_rule(gold, chf_rate=rate)}}
     regimes = {cur: regime_boundaries(p, thresholds) for cur, p in series.items()}
     as_of = gold.index[-1]
     row = state.loc[as_of] if as_of in state.index else pd.Series(dtype=object)
@@ -333,7 +347,8 @@ def headline(rules: dict, regimes: dict, press: list[dict]) -> str:
     parts = [f"In francs, gold has been {MOOD[rc]}; in dollars it has been {MOOD[ru]}." if rc != ru
              else f"Gold has been {MOOD[rc]} in both francs and dollars."]
     m, a = rules["USD"]["momentum"]["state"], rules["USD"]["ma"]["state"]
-    parts.append("Your two trend rules disagree." if m != a else f"Both your trend rules are {ONOFF[m]}.")
+    parts.append(f"Your main switch is {ONOFF[m]}" + (" and the warning light is showing." if a == "Out"
+                                                       else " and the warning light is clear."))
     heads = sum(p["usual_effect"] == "headwind" for p in press)
     sups = sum(p["usual_effect"] == "support" for p in press)
     parts.append(f"Of the outside influences, {heads} usually push{'es' * (heads == 1)} gold down and "
@@ -369,10 +384,11 @@ EFFECT_PLAIN = {"headwind": "down", "support": "up", "mixed": "either way", "neu
 
 def to_markdown(b: dict) -> str:
     out = [f"## This month at a glance (prices to {b['as_of']})", "", f"**{b['headline']}**", "",
-           "What your rules say and what would change them. Not advice.", "", "### Your two trend rules"]
+           "What your rules say and what would change them. Not advice.", "",
+           "### Your main switch and warning light (decided on the dollar price)"]
     for cur, r in b["rules"].items():
         for rule in (r["momentum"], r["ma"]):
-            out.append(f"- **{cur}, {rule['name']}: {rule['onoff']}.** {rule['explain']}")
+            out.append(f"- **{rule['name']}: {rule['onoff']}.** {rule['explain']}")
             if rule.get("steps"):
                 out += [f"  - {s['text']}." for s in rule["steps"]] + [f"  - {rule['if_flat']}."]
             else:

@@ -51,7 +51,17 @@ def test_brief_has_no_instruction_language(gold, fx, thresholds):
     st = state.build(gold, fx)
     b = brief.build(gold, fx, st, {}, [], [], {"CHF": 97, "USD": 91}, thresholds, date(2026, 10, 8))
     assert brief.check_language(b) == []
-    assert "disagree" in b["headline"]
+    assert "main switch is ON" in b["headline"] and "warning light is showing" in b["headline"]
+
+
+def test_rules_are_decided_on_the_dollar_price_only(gold, fx, thresholds):
+    st = state.build(gold, fx)
+    b = brief.build(gold, fx, st, {}, [], [], {"CHF": 97, "USD": 91}, thresholds, date(2026, 10, 8))
+    assert list(b["rules"]) == ["USD"]
+    m, a = b["rules"]["USD"]["momentum"], b["rules"]["USD"]["ma"]
+    assert m["role"] == "switch" and a["role"] == "warning"
+    assert a["onoff"] in ("CLEAR", "WARNING")
+    assert "CHF" in a["text"] and "$" in a["text"]          # dollar trigger with its franc equivalent
 
 
 def test_language_check_catches_instructions():

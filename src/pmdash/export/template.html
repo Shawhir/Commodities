@@ -86,6 +86,9 @@ body { background: var(--bg); color: var(--fg); font-family: var(--font-body); f
 .pcard .chg { font-family: var(--font-data); font-variant-numeric: tabular-nums; font-size: 12px; color: var(--muted); }
 .pcard .chg .pos { color: var(--up); } .pcard .chg .neg { color: var(--down); }
 .pcard .sel .cur { color: var(--gold); }
+.real-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px 16px; margin-bottom: 8px; }
+.t tr.main td { font-weight: 600; }
+#real-table td:first-child { min-width: 9.5em; }
 /* layout: glance first, details folded */
 .glance-sec { display: grid; gap: 12px; }
 .glance-head { font-family: var(--font-display); font-weight: 500; font-size: 22px; line-height: 1.3; max-width: 62ch; }
@@ -217,7 +220,7 @@ details[open] > summary .chev { transform: rotate(-135deg); }
 .r-Up { color: var(--up); } .r-Sideways { color: var(--side); } .r-Down { color: var(--down); }
 .s-intact { color: var(--side); } .s-approaching { color: var(--warn); } .s-broken { color: var(--warn); }
 .s-confirmed { color: var(--down); } .s-failed { color: var(--info); }
-.in { color: var(--up); } .out { color: var(--down); }
+.in { color: var(--up); } .out { color: var(--down); } .lit { color: var(--warn); }
 .sev { font-size: 11px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); }
 .sev-important { color: var(--fg); font-weight: 600; }
 
@@ -347,7 +350,7 @@ table.t tr:last-child td { border-bottom: 0; }
   </section>
 
   <details class="sec fold" id="d-rules">
-    <summary><div><div class="eyebrow">Your two rules and what would switch them</div><h2 id="sum-rules">—</h2></div><span class="chev" aria-hidden="true"></span></summary>
+    <summary><div><div class="eyebrow">Your main switch and warning light, and what would change them</div><h2 id="sum-rules">—</h2></div><span class="chev" aria-hidden="true"></span></summary>
     <div class="fold-body">
       <div class="brief-grid">
         <div class="panel brief-card"><div id="brief-rules"></div></div>
@@ -481,9 +484,17 @@ table.t tr:last-child td { border-bottom: 0; }
         <div class="eyebrow jg" style="margin-top:14px" data-tech="Sideways episodes (USD regime, at least 12 months, gaps up to 2 months merged).">Long sideways stretches (in dollars, a year or longer)</div>
         <div class="episodes" id="episodes" style="margin-top:6px"></div>
       </div>
+      <div class="panel tbl-wrap" id="real-panel">
+        <div class="real-head">
+          <div class="eyebrow jg" data-tech="Signals from USD monthly averages (known at each month's end), applied to real month-end closes (COMEX front-month settlement; francs = USD close x USD/CHF month-end). Cash earns the 3-month rate (US T-bill TB3MS; CHF 3-month interbank, OECD IR3TIB01CHM156N) where held, 0 otherwise. One-way cost per switch by holding type (config/thresholds.yaml). Window starts in cash.">How the rules would really have done, <span id="real-window">—</span></div>
+          <div class="seg" role="group" aria-label="How you hold gold" id="hold-seg"></div>
+        </div>
+        <table class="t" id="real-table"></table>
+        <p class="note" id="real-note">—</p>
+      </div>
       <div class="two">
         <div class="panel tbl-wrap">
-          <div class="eyebrow jg" data-tech="Backtest, section 8.3: switching between gold and cash on monthly signals.">How the rules would have done, <span id="study-window">—</span></div>
+          <div class="eyebrow jg" data-tech="Backtest, section 8.3: switching between gold and cash on monthly signals, returns from monthly AVERAGE prices (not tradeable; smoothing hides whipsaw losses, especially for the 10-month rule).">Long history on smoothed monthly averages, <span id="study-window">—</span></div>
           <table class="t" id="study-table"></table>
         </div>
         <div class="panel tbl-wrap">
@@ -491,7 +502,7 @@ table.t tr:last-child td { border-bottom: 0; }
           <table class="t" id="per-table"></table>
         </div>
       </div>
-      <p class="note jg" data-tech="Signal on a month's close sets the next month's position. 0.2% cost per switch, cash at 0% (understates the rules until T-bill and SARON returns are added). CHF results apply the USD signal. The chop filter was tested and rejected.">Each rule's signal at the end of a month decides what it holds the next month. Each switch costs 0.2%. Time out of gold earns nothing here, which flatters "just hold gold" until interest on cash is added. Franc results use the dollar signals. Pausing rule 1 in sideways markets was tested and made results worse.</p>
+      <p class="note jg" id="long-note" data-tech="Signal on a month's close sets the next month's position. 0.2% cost per switch. Cash earns the 3-month rate where the series is held, 0 before. CHF results apply the USD signal. The chop filter was tested and rejected.">The long history goes back to 1972 but uses each month's average price, which nobody can actually trade at. Averaging smooths out the in-and-out losses, so it flatters the warning light (rule 2) most. Each switch costs 0.2%. Time out of gold earns US 3-month interest in dollars; in francs it earns Swiss 3-month interest from mid-1999 (where that series starts) and nothing before. Franc results use the dollar signals. Pausing the main switch in sideways markets was tested and made results worse.</p>
     </div>
   </details>
 
@@ -518,6 +529,7 @@ table.t tr:last-child td { border-bottom: 0; }
   "use strict";
   var D = JSON.parse(document.getElementById("pmdash-data").textContent);
   var S = { cur: "CHF", range: "10", log: false };
+  try { S.hold = localStorage.getItem("pmdash-hold") || null; } catch (e) {}
   try { var saved = JSON.parse(localStorage.getItem("pmdash-view") || "{}"); if (saved.cur) S.cur = saved.cur; if (saved.range) S.range = saved.range; } catch (e) {}
   function save() { try { localStorage.setItem("pmdash-view", JSON.stringify({ cur: S.cur, range: S.range })); } catch (e) {} }
 
@@ -671,17 +683,17 @@ table.t tr:last-child td { border-bottom: 0; }
       "Monthly average P = " + r.close.toFixed(2) + " " + cur + "; 12-month return " + pct(r.return_12m, 2)));
     host.appendChild(tile("Market mood", MOOD[r.regime], "In " + cname(other.currency) + ": " + MOOD[other.regime].toLowerCase(), "d-price",
       "Regime " + r.regime + " (" + cur + "), " + other.regime + " (" + other.currency + ")"));
-    var R = B.rules[cur], m = R.momentum, a = R.ma;
+    var R = B.rules.USD, m = R.momentum, a = R.ma;     // decided on the dollar price in both views
     var cands = [];
     m.steps.forEach(function (st) {
       if (!st.known) cands.push({ gap: Math.abs(st.threshold / r.close - 1),
-        text: "rule 1 turns " + (m.state === "In" ? "OFF" : "ON") + " if " + MONTHS_FULL[+st.depends_on.slice(5) - 1] + " averages " + (m.state === "In" ? "below " : "above ") + money(st.threshold, cur) });
+        text: "main switch turns " + (m.state === "In" ? "OFF" : "ON") + " if " + MONTHS_FULL[+st.depends_on.slice(5) - 1] + " averages " + (m.state === "In" ? "below " : "above ") + money(st.threshold, "USD") });
     });
     cands.push({ gap: Math.abs(a.threshold / r.close - 1),
-      text: "rule 2 turns " + (a.state === "Out" ? "ON" : "OFF") + " if " + MONTHS_FULL[+a.month.slice(5) - 1] + " averages " + (a.state === "Out" ? "above " : "below ") + money(a.threshold, cur) });
+      text: "warning light " + (a.state === "Out" ? "clears" : "shows") + " if " + MONTHS_FULL[+a.month.slice(5) - 1] + " averages " + (a.state === "Out" ? "above " : "below ") + money(a.threshold, "USD") });
     cands.sort(function (p, q) { return p.gap - q.gap; });
-    host.appendChild(tile("Your rules", "1 " + m.onoff + " · 2 " + a.onoff, "Nearest switch: " + cands[0].text, "d-rules",
-      "12-1 momentum " + m.state + ", SMA10 rule " + a.state));
+    host.appendChild(tile("Your rules", "Switch " + m.onoff + " · light " + (a.state === "Out" ? "showing" : "clear"), "Nearest change: " + cands[0].text, "d-rules",
+      "USD signals: 12-1 momentum " + m.state + " (main switch), SMA10 " + a.state + " (warning light)"));
     var heads = B.pressures.filter(function (p) { return p.usual_effect === "headwind"; }).map(function (p) { return p.factor; });
     var sups = B.pressures.filter(function (p) { return p.usual_effect === "support"; }).map(function (p) { return p.factor; });
     host.appendChild(tile("Pushing gold", heads.length + " down · " + sups.length + " up",
@@ -798,15 +810,15 @@ table.t tr:last-child td { border-bottom: 0; }
 
   // ---------- rules (brief) ----------
   function renderRules() {
-    var B = D.brief, cur = S.cur, R = B.rules[cur];
-    $("sum-rules").textContent = "Rule 1 is " + R.momentum.onoff + " and rule 2 is " + R.ma.onoff + " (in " + cname(cur) + ")";
+    var B = D.brief, cur = S.cur, R = B.rules.USD;
+    $("sum-rules").textContent = "Main switch " + R.momentum.onoff + ", warning light " + (R.ma.state === "Out" ? "showing" : "clear");
     var host = clear($("brief-rules"));
     [R.momentum, R.ma].forEach(function (r) {
       var box = el("div", { class: "rule" });
       var top = el("div", { class: "rule-top" });
-      var name = el("span"); name.appendChild(el("b", null, r.name)); name.appendChild(document.createTextNode(" · " + cur));
+      var name = el("span"); name.appendChild(el("b", null, r.name)); name.appendChild(document.createTextNode(" · dollar price"));
       top.appendChild(name);
-      top.appendChild(jg("span", { class: "pill " + (r.state === "In" ? "in" : "out") }, r.onoff, "Rule state: " + r.state));
+      top.appendChild(jg("span", { class: "pill " + (r.state === "In" ? "in" : r.role === "warning" ? "lit" : "out") }, r.onoff, "Rule state: " + r.state + (r.role === "warning" ? " (shown as a warning light, not a switch)" : " (main switch)")));
       box.appendChild(top);
       box.appendChild(jg("p", { class: "note" }, r.explain, r.tech));
       var ul = el("ul", { class: "steps" });
@@ -889,6 +901,7 @@ table.t tr:last-child td { border-bottom: 0; }
   function renderRegime() {
     var rows = D.regime.slice().sort(function (a, b) { return a.currency === S.cur ? -1 : b.currency === S.cur ? 1 : 0; });
     var host = clear($("regime-cards"));
+    var ru = D.regime.filter(function (x) { return x.currency === "USD"; })[0];   // rules use the dollar price
     rows.forEach(function (r) {
       var c = el("article", { class: "panel card" + (r.currency === S.cur ? " selected" : "") });
       var top = el("div", { class: "card-top" });
@@ -907,8 +920,8 @@ table.t tr:last-child td { border-bottom: 0; }
        ["How steady the move was", r.efficiency_ratio >= 0.3 ? "steady" : "choppy", "", "Efficiency ratio " + r.efficiency_ratio.toFixed(3) + (r.efficiency_ratio >= 0.3 ? " (>= 0.30)" : " (< 0.30)")],
        ["Overall trend", trendPlain[r.trend] || r.trend, "", "Trend reading " + r.trend + " (both rules In = Up, both Out = Down, else Flat)"],
        ["Gold vs a year ago", updown(r.momentum_12_1), cls(r.momentum_12_1), "12-1 momentum " + pct(r.momentum_12_1, 2)],
-       ["Rule 1 (12-month trend)", ONOFF[r.rule_mom], r.rule_mom === "In" ? "in" : "out", "12-1 rule " + r.rule_mom],
-       ["Rule 2 (10-month average)", ONOFF[r.rule_10m], r.rule_10m === "In" ? "in" : "out", "10-month rule " + r.rule_10m]].forEach(function (x) {
+       ["Main switch (dollar price)", ONOFF[ru.rule_mom], ru.rule_mom === "In" ? "in" : "out", "12-1 rule on the USD price: " + ru.rule_mom],
+       ["Warning light (dollar price)", ru.rule_10m === "In" ? "clear" : "showing", ru.rule_10m === "In" ? "in" : "lit", "10-month rule on the USD price: " + ru.rule_10m]].forEach(function (x) {
         var d = el("div"); d.appendChild(el("dt", null, x[0])); d.appendChild(jg("dd", { class: x[2] }, x[1], x[3])); kv.appendChild(d);
       });
       c.appendChild(kv);
@@ -1326,8 +1339,9 @@ table.t tr:last-child td { border-bottom: 0; }
     var ep = clear($("episodes"));
     D.study.episodes.forEach(function (e) { ep.appendChild(el("span", null, e.start + " to " + e.end + " · " + e.months + "m")); });
 
+    renderReal();
     $("study-window").textContent = monthName(D.study.window[0]) + " to " + monthName(D.study.window[1]);
-    var names = { buy_and_hold: "Just hold gold", momentum_12_1: "Rule 1 (12-month trend)", ma_10m: "Rule 2 (10-month average)", momentum_chop_filter: "Rule 1, paused when sideways (rejected)" };
+    var names = RULE_NAMES;
     var t = clear($("study-table"));
     var hr = el("tr"); [["Approach", ""], ["Per year ($)", "n"], ["Worst fall ($)", "n"], ["Per year (CHF)", "n"], ["Worst fall (CHF)", "n"], ["Switches", "n"]].forEach(function (h) { hr.appendChild(el("th", { class: h[1] }, h[0])); });
     var th = el("thead"); th.appendChild(hr); t.appendChild(th);
@@ -1341,7 +1355,7 @@ table.t tr:last-child td { border-bottom: 0; }
     });
     t.appendChild(tb);
     var p = clear($("per-table"));
-    var h2 = el("tr"); [["Mood", ""], ["Months", "n"], ["Just hold gold", "n"], ["Rule 1", "n"], ["Switches", "n"]].forEach(function (h) { h2.appendChild(el("th", { class: h[1] }, h[0])); });
+    var h2 = el("tr"); [["Mood", ""], ["Months", "n"], ["Just hold gold", "n"], ["Main switch", "n"], ["Switches", "n"]].forEach(function (h) { h2.appendChild(el("th", { class: h[1] }, h[0])); });
     var th2 = el("thead"); th2.appendChild(h2); p.appendChild(th2);
     var tb2 = el("tbody");
     D.study.per_regime.forEach(function (r) {
@@ -1355,6 +1369,44 @@ table.t tr:last-child td { border-bottom: 0; }
     p.appendChild(tb2);
   }
 
+  var RULE_NAMES = { buy_and_hold: "Just hold gold", momentum_12_1: "Main switch (rule 1)", ma_10m: "Warning light acted on (rule 2)",
+    both_rules: "In only when both agree", momentum_chop_filter: "Main switch, paused when sideways (rejected)" };
+  var HOLD_NAMES = { fund: "Fund", bars: "Bars", coins: "Coins" };
+  var HOLD_PLAIN = { fund: "an exchange-traded gold fund", bars: "bars bought through a bank", coins: "coins such as Vreneli or Krugerrand" };
+  function renderReal() {
+    var X = D.study.realistic, panel = $("real-panel");
+    if (!X) { panel.hidden = true; return; }
+    panel.hidden = false;
+    var holds = Object.keys(X.costs);
+    if (!S.hold || holds.indexOf(S.hold) < 0) S.hold = X.holding;
+    var seg = clear($("hold-seg"));
+    holds.forEach(function (h) {
+      var b = el("button", { type: "button", "aria-pressed": String(h === S.hold) }, HOLD_NAMES[h] || h);
+      b.addEventListener("click", function () { S.hold = h; try { localStorage.setItem("pmdash-hold", h); } catch (e) {} renderReal(); });
+      seg.appendChild(b);
+    });
+    $("real-window").textContent = monthName(X.window[0]) + " to " + monthName(X.window[1]);
+    var cost = X.costs[S.hold];
+    var t = clear($("real-table"));
+    var hr = el("tr"); [["Approach", ""], ["Per year (CHF)", "n"], ["Worst fall (CHF)", "n"], ["Per year ($)", "n"], ["Worst fall ($)", "n"], ["In gold", "n"], ["Switches", "n"]]
+      .forEach(function (h) { hr.appendChild(el("th", { class: h[1] }, h[0])); });
+    var th = el("thead"); th.appendChild(hr); t.appendChild(th);
+    var tb = el("tbody");
+    X.rows.filter(function (r) { return r.holding === S.hold; }).forEach(function (r) {
+      var tr = el("tr", r.rule === D.study.main_rule ? { class: "main" } : null);
+      tr.appendChild(jg("td", null, RULE_NAMES[r.rule] || r.rule, r.rule + ": CAGR and maximum drawdown on month-end closes, " + r.months + " months, " + (r.cost * 100).toFixed(1) + "% per switch"));
+      [r.chf_cagr, r.chf_max_dd, r.usd_cagr, r.usd_max_dd].forEach(function (v) { tr.appendChild(el("td", { class: "n " + cls(v) }, pct(v))); });
+      tr.appendChild(el("td", { class: "n" }, Math.round(r.in_market * 100) + "%"));
+      tr.appendChild(el("td", { class: "n" }, String(r.switches)));
+      tb.appendChild(tr);
+    });
+    t.appendChild(tb);
+    var cashTxt = X.cash.CHF && X.cash.USD ? "Time out of gold earns Swiss 3-month interest in the franc columns (it was below zero from 2015 to 2022) and US 3-month interest in the dollar columns."
+      : "Interest on cash isn't loaded yet, so time out of gold earns nothing here.";
+    setText("real-note", "Both rules are decided each month on gold's average dollar price and then traded at the real price on the last day of the month. " +
+      "Each switch costs " + (cost * 100).toFixed(1) + "%, a rough figure for " + (HOLD_PLAIN[S.hold] || S.hold) + ". " + cashTxt +
+      " The main switch is in bold.", "Holding " + S.hold + ": one-way cost " + cost + " per switch; cash series held: USD " + X.cash.USD + ", CHF " + X.cash.CHF);
+  }
   function fmtVal(r, v) {
     if (v === null || v === undefined) return "n/a";
     if (r.unit === "%") return v.toFixed(2) + "%";
