@@ -1,0 +1,13 @@
+URL: https://symbol-search.tradingview.com/symbol_search/v3/?text=XAUUSD&exchange=OANDA&hl=0&lang=en&domain=production
+STATUS: 403
+BYTES: 146
+ERROR: HTTP Error 403: Forbidden
+HEADERS: {}
+
+<html>
+<head><title>403 Forbidden</title></head>
+<body>
+<center><h1>403 Forbidden</h1></center>
+<hr><center>nginx</center>
+</body>
+</html>

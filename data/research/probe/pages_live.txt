@@ -1,0 +1,901 @@
+URL: https://shawhir.github.io/Commodities/
+STATUS: 200
+BYTES: 334009
+ERROR: 
+HEADERS: {'Content-Type': 'text/html; charset=utf-8', 'Access-Control-Allow-Origin': '*', 'Cache-Control': 'max-age=600'}
+
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+</head>
+<body>
+<title>Precious Metals Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:opsz,wght@6..72,500;6..72,600&display=swap">
+<style>
+/* Layout: an assay ledger. One column of sections, summary first, detail below; each section
+   opens with a small-caps label and the reading that matters, then the evidence. */
+:root {
+  --bg: #f4f5f6;
+  --panel: #ffffff;
+  --fg: #171a1e;
+  --muted: #5b636c;
+  --faint: #8b939b;
+  --line: #dde1e5;
+  --grid: #eceef0;
+  --gold: #94701a;
+  --gold-soft: rgba(148, 112, 26, 0.12);
+  --up: #2c7a57;
+  --side: #6f7b88;
+  --down: #b2463a;
+  --up-band: rgba(44, 122, 87, 0.10);
+  --side-band: rgba(111, 123, 136, 0.08);
+  --down-band: rgba(178, 70, 58, 0.11);
+  --warn: #a8701a;
+  --info: #3f63ad;
+  --font-display: "Newsreader", "Iowan Old Style", Georgia, serif;
+  --font-body: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
+  --font-data: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --radius: 6px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #101316; --panel: #171b1f; --fg: #e6e8eb; --muted: #a0a8b1; --faint: #727b85;
+    --line: #2a3036; --grid: #1f2429; --gold: #d6ab4c; --gold-soft: rgba(214, 171, 76, 0.14);
+    --up: #5db488; --side: #8e9aa7; --down: #e2715f;
+    --up-band: rgba(93, 180, 136, 0.12); --side-band: rgba(142, 154, 167, 0.08); --down-band: rgba(226, 113, 95, 0.13);
+    --warn: #dda44a; --info: #7f9de0; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #101316; --panel: #171b1f; --fg: #e6e8eb; --muted: #a0a8b1; --faint: #727b85;
+  --line: #2a3036; --grid: #1f2429; --gold: #d6ab4c; --gold-soft: rgba(214, 171, 76, 0.14);
+  --up: #5db488; --side: #8e9aa7; --down: #e2715f;
+  --up-band: rgba(93, 180, 136, 0.12); --side-band: rgba(142, 154, 167, 0.08); --down-band: rgba(226, 113, 95, 0.13);
+  --warn: #dda44a; --info: #7f9de0; color-scheme: dark;
+}
+
+body { background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 15px; line-height: 1.55; }
+.pm { max-width: 1180px; margin: 0 auto; padding-inline: 20px; padding-block: 20px 56px; display: grid; gap: 28px; }
+.pm * { box-sizing: border-box; }
+.pm h1, .pm h2, .pm h3 { text-wrap: balance; margin: 0; }
+.pm p { margin: 0; }
+.num { font-family: var(--font-data); font-variant-numeric: tabular-nums; }
+
+/* masthead */
+.mast { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px;
+  border-bottom: 1px solid var(--line); padding-bottom: 16px; }
+.mast h1 { font-family: var(--font-display); font-weight: 600; font-size: 30px; line-height: 1.1; letter-spacing: -0.01em; }
+.mast .sub { color: var(--muted); margin-top: 4px; }
+.mast .right { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.label-chip { font-size: 12px; color: var(--muted); border: 1px dashed var(--line); border-radius: 99px; padding: 3px 10px; }
+
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; background: var(--panel); }
+.seg button { font: 500 13px var(--font-body); color: var(--muted); background: transparent; border: 0; padding: 6px 12px; cursor: pointer; }
+.seg button + button { border-left: 1px solid var(--line); }
+.seg button[aria-pressed="true"] { color: var(--fg); background: var(--gold-soft); }
+.seg button:hover { color: var(--fg); }
+.pm button:focus-visible, .pm input:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+
+/* sections */
+.sec { display: grid; gap: 14px; min-width: 0; }
+.sec-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 16px; }
+.eyebrow { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.sec-head h2 { font-family: var(--font-display); font-weight: 500; font-size: 21px; line-height: 1.25; margin-top: 2px; max-width: 60ch; }
+.note { color: var(--muted); font-size: 13px; max-width: 75ch; }
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; min-width: 0; }
+
+/* price strip: today's prices in both currencies */
+.prices { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 10px; margin: 14px 0 4px; }
+.prices[hidden] { display: none; }
+.pcard { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 14px; min-width: 0; }
+.pcard .top { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.pcard .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 6px; }
+.pcard .cur { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; color: var(--muted); }
+.pcard .px { font-family: var(--font-data); font-variant-numeric: tabular-nums; font-size: 22px; font-weight: 500; line-height: 1.2; }
+.pcard .chg { font-family: var(--font-data); font-variant-numeric: tabular-nums; font-size: 12px; color: var(--muted); }
+.pcard .chg .pos { color: var(--up); } .pcard .chg .neg { color: var(--down); }
+.pcard .sel .cur { color: var(--gold); }
+.prices-foot { display: flex; justify-content: flex-end; align-items: center; gap: 12px; margin: 4px 0 2px; }
+.prices-foot[hidden] { display: none; }
+.prices-foot { flex-wrap: wrap; }
+.tv-panel { padding: 8px 12px; margin-bottom: 6px; }
+.tv-panel[hidden] { display: none; }
+#tv-host { min-height: 72px; }
+.pcard .live { font-size: 12px; color: var(--up); display: flex; align-items: center; gap: 6px; }
+.pcard .live i { width: 7px; height: 7px; border-radius: 50%; background: var(--up); }
+
+.real-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px 16px; margin-bottom: 8px; }
+.t tr.main td { font-weight: 600; }
+#real-table td:first-child { min-width: 9.5em; }
+.buyer-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
+.bcard { display: grid; gap: 8px; align-content: start; }
+.bcard h3 { font-family: var(--font-display); font-weight: 500; font-size: 18px; line-height: 1.25; }
+.bcard .kind { font-size: 12px; font-weight: 600; }
+.kind-steady { color: var(--up); } .kind-fickle { color: var(--warn); } .kind-cushion { color: var(--info); } .kind-hub { color: var(--muted); }
+.bcard dl { display: grid; gap: 6px; margin: 0; }
+.bcard dt { font-size: 12px; color: var(--muted); }
+.bcard dd { margin: 0; font-family: var(--font-data); font-variant-numeric: tabular-nums; font-size: 14px; }
+.bcard dd small { font-family: var(--font-body); color: var(--muted); font-size: 12px; }
+.bcard .dates { font-size: 12px; color: var(--muted); display: grid; gap: 2px; }
+.prog { height: 8px; background: var(--grid); border-radius: 99px; overflow: hidden; }
+.prog i { display: block; height: 100%; background: var(--gold); }
+.tag-verify { font-size: 11px; color: var(--warn); border: 1px solid var(--warn); border-radius: 99px; padding: 0 6px; margin-left: 6px; white-space: nowrap; }
+.jump { position: sticky; top: 0; z-index: 5; display: flex; gap: 6px; overflow-x: auto; padding: 8px 0; margin: 6px 0 4px;
+  background: var(--bg); border-bottom: 1px solid var(--line); scrollbar-width: none; }
+.jump::-webkit-scrollbar { display: none; }
+.jump a { flex: none; font-size: 13px; color: var(--muted); text-decoration: none; padding: 4px 10px; border: 1px solid var(--line); border-radius: 99px; background: var(--panel); }
+.jump a:hover, .jump a:focus-visible { color: var(--fg); border-color: var(--gold); outline: none; }
+.group-head, .ahead-head { font-family: var(--font-display); font-weight: 500; font-size: 24px; line-height: 1.2; margin: 34px 0 6px; display: grid; gap: 2px; scroll-margin-top: 56px; }
+.ahead-head { font-size: 21px; margin: 22px 0 0; }
+.group-head .eyebrow, .ahead-head .eyebrow { color: var(--gold); }
+#glance-sec { scroll-margin-top: 56px; }
+.note { font-size: 14px; }
+/* layout: glance first, details folded */
+.glance-sec { display: grid; gap: 12px; }
+.glance-head { font-family: var(--font-display); font-weight: 500; font-size: 22px; line-height: 1.3; max-width: 62ch; }
+.glance { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px; }
+.gtile { text-align: left; font: inherit; color: inherit; background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 12px 14px; display: grid; gap: 4px; align-content: start; cursor: pointer; min-width: 0; }
+.gtile:hover { border-color: var(--gold); }
+.gtile .k { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.gtile .v { font-family: var(--font-display); font-size: 21px; line-height: 1.2; font-weight: 500; }
+.gtile .d { font-size: 12.5px; color: var(--muted); }
+.gtile .more { font-size: 12px; color: var(--gold); }
+.glance-foot { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px 16px; }
+.linkbtn { font: 500 13px var(--font-body); color: var(--fg); background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 5px 12px; cursor: pointer; }
+.linkbtn:hover { border-color: var(--gold); }
+details.fold { border-top: 1px solid var(--line); padding-top: 4px; }
+details.fold > summary { list-style: none; display: flex; align-items: center; justify-content: space-between; gap: 12px; cursor: pointer; padding: 10px 0; }
+details.fold > summary::-webkit-details-marker { display: none; }
+details.fold > summary h2 { font-family: var(--font-display); font-weight: 500; font-size: 18px; line-height: 1.3; margin-top: 2px; }
+details.fold > summary:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; border-radius: 4px; }
+.chev { flex: none; width: 10px; height: 10px; border-right: 2px solid var(--muted); border-bottom: 2px solid var(--muted); transform: rotate(45deg); margin-right: 6px; transition: transform 150ms ease; }
+details[open] > summary .chev { transform: rotate(-135deg); }
+.fold-body { display: grid; gap: 14px; padding-bottom: 18px; min-width: 0; }
+.sub-head { font-family: var(--font-display); font-weight: 500; font-size: 17px; margin: 6px 0 0; }
+.pm { gap: 14px; }
+.pm .glance-sec { margin-bottom: 10px; }
+
+/* weighed-up odds */
+.odds { display: grid; gap: 12px; border-color: var(--gold); }
+.odds-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+.ocol { display: grid; gap: 4px; padding: 12px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--bg); }
+.ocol .h { font-size: 13px; font-weight: 600; }
+.ocol .pc { font-family: var(--font-display); font-size: 34px; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.ocol.rising .pc { color: var(--up); } .ocol.falling .pc { color: var(--down); } .ocol.sideways .pc { color: var(--side); }
+.ocol .sub { font-size: 12.5px; color: var(--muted); }
+.otrack { position: relative; height: 8px; background: var(--grid); border-radius: 99px; overflow: hidden; margin-top: 4px; }
+.otrack .f { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 99px; }
+.ocol.rising .f { background: var(--up); } .ocol.falling .f { background: var(--down); } .ocol.sideways .f { background: var(--side); }
+.otrack .n { position: absolute; top: -2px; bottom: -2px; width: 2px; background: var(--fg); opacity: 0.6; }
+.odds-why { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; font-size: 13px; }
+.odds-why ul { margin: 4px 0 0; padding-left: 18px; display: grid; gap: 3px; }
+
+/* educated guess */
+.guess { display: grid; gap: 12px; border-color: var(--gold); }
+.guess-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+.gcol { display: grid; gap: 6px; align-content: start; padding: 12px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--bg); min-width: 0; }
+.gcol .h { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.gcol .rng { font-family: var(--font-display); font-size: 22px; line-height: 1.2; font-variant-numeric: tabular-nums; }
+.gcol .mid { font-size: 13px; }
+.gcol .vs { font-size: 12.5px; color: var(--muted); }
+.gscale { position: relative; height: 22px; }
+.gscale .band { position: absolute; top: 4px; height: 6px; border-radius: 99px; }
+.gscale .band.like { background: var(--gold); opacity: 0.8; }
+.gscale .band.any { top: 14px; height: 4px; background: var(--info); opacity: 0.55; }
+.gscale .now { position: absolute; top: 0; bottom: 0; width: 2px; background: var(--fg); opacity: 0.7; }
+.trust { font-size: 12px; }
+.trust b { font-weight: 600; }
+.trust-very { color: var(--down); } .trust-low { color: var(--warn); } .trust-moderate { color: var(--up); }
+
+/* history counts and technical picture */
+.after-list { display: grid; gap: 12px; }
+.after { display: grid; gap: 8px; }
+.after-top { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.after-top b { font-weight: 600; }
+.hbars { display: grid; gap: 6px; }
+.hbar { display: grid; grid-template-columns: 136px 1fr 48px; gap: 8px; align-items: center; font-size: 12.5px; }
+.hbar .track { position: relative; height: 12px; background: var(--grid); border-radius: 99px; overflow: hidden; }
+.hbar .fill { position: absolute; left: 0; top: 0; bottom: 0; background: var(--gold); opacity: 0.75; border-radius: 99px; }
+.hbar .base { position: absolute; top: -2px; bottom: -2px; width: 2px; background: var(--info); }
+.hbar .num { font-family: var(--font-data); text-align: right; }
+#metal-seg { justify-self: start; }
+.tech-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; }
+.tread { display: grid; gap: 3px; }
+.tread .lbl { font-size: 12px; color: var(--muted); }
+.tread .val { font-family: var(--font-display); font-size: 19px; }
+.tread.up .val { color: var(--up); } .tread.down .val { color: var(--down); } .tread.warn .val { color: var(--warn); }
+.glance { grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
+
+/* plain-language text with a technical version on hover / tap */
+.jg, .jg-demo { cursor: help; text-underline-offset: 3px; text-decoration-thickness: 1px; }
+.jg-demo, .pm.show-jg .jg { text-decoration: underline dotted var(--faint); }
+.jg:hover, .jg:focus-visible, .jg.on { text-decoration: underline dotted var(--gold); outline: none; }
+.jgtip { box-sizing: border-box; position: fixed; z-index: 10; max-width: min(420px, calc(100vw - 32px)); background: var(--panel); color: var(--fg);
+  border: 1px solid var(--line); border-left: 3px solid var(--gold); border-radius: var(--radius); padding: 8px 10px;
+  font: 12px/1.45 var(--font-data); box-shadow: 0 6px 18px rgba(0,0,0,0.16); pointer-events: none; }
+.jgtip b { display: block; font: 600 10px var(--font-body); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 3px; }
+
+/* decision brief */
+.brief { display: grid; gap: 14px; }
+.brief-head { font-family: var(--font-display); font-size: 19px; line-height: 1.35; max-width: 70ch; }
+.brief-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 14px; }
+.brief-card { display: grid; gap: 10px; align-content: start; min-width: 0; }
+.rule { display: grid; gap: 6px; padding-bottom: 10px; border-bottom: 1px solid var(--grid); }
+.rule:last-child { border-bottom: 0; padding-bottom: 0; }
+.rule-top { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+.rule-top b { font-weight: 600; }
+.steps { margin: 0; padding-left: 18px; color: var(--muted); font-size: 13px; display: grid; gap: 3px; }
+.steps .known { color: var(--fg); }
+.zone { position: relative; height: 26px; border-radius: 4px; overflow: hidden; display: flex; border: 1px solid var(--line); }
+.zone span { display: block; height: 100%; }
+.zone .z-Down { background: var(--down-band); } .zone .z-Sideways { background: var(--side-band); } .zone .z-Up { background: var(--up-band); }
+.zone .mark { position: absolute; top: -2px; bottom: -2px; width: 2px; background: var(--gold); }
+.zone-wrap { position: relative; padding-top: 18px; padding-bottom: 18px; }
+.zone-lbl { position: absolute; font-size: 11px; color: var(--muted); font-family: var(--font-data); transform: translateX(-50%); white-space: nowrap; }
+.zone-lbl.top { top: 0; color: var(--gold); font-weight: 600; } .zone-lbl.bot { bottom: 0; }
+.fx { display: inline-block; font-size: 11px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; padding: 1px 8px; border-radius: 99px; border: 1px solid currentColor; white-space: nowrap; }
+.fx-headwind { color: var(--down); } .fx-support { color: var(--up); } .fx-mixed, .fx-crowded { color: var(--warn); }
+.fx-neutral { color: var(--side); } .fx-washed { color: var(--info); }
+.fx-lowers { color: var(--down); } .fx-raises { color: var(--up); }
+.blist { margin: 0; padding-left: 18px; display: grid; gap: 6px; font-size: 13px; }
+.blist.muted { color: var(--muted); }
+#press-table { min-width: 520px; }
+
+/* regime cards */
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; }
+.card { display: grid; gap: 12px; }
+.card.selected { border-color: var(--gold); }
+.card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.card .cur { font-size: 12px; font-weight: 600; letter-spacing: 0.08em; color: var(--muted); }
+.card .price { font-family: var(--font-display); font-size: 34px; font-weight: 500; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.card .price small { font-family: var(--font-body); font-size: 13px; color: var(--muted); font-weight: 400; margin-left: 4px; }
+.kv { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px 16px; }
+.kv div { display: grid; gap: 1px; }
+.kv dt { font-size: 12px; color: var(--muted); }
+.kv dd { margin: 0; font-family: var(--font-data); font-variant-numeric: tabular-nums; font-size: 14px; }
+.spark { width: 100%; height: 46px; display: block; }
+
+.pill { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; border-radius: 99px;
+  padding: 2px 10px; white-space: nowrap; border: 1px solid currentColor; }
+.pill::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+.r-Up { color: var(--up); } .r-Sideways { color: var(--side); } .r-Down { color: var(--down); }
+.s-intact { color: var(--side); } .s-approaching { color: var(--warn); } .s-broken { color: var(--warn); }
+.s-confirmed { color: var(--down); } .s-failed { color: var(--info); }
+.in { color: var(--up); } .out { color: var(--down); } .lit { color: var(--warn); }
+.sev { font-size: 11px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); }
+.sev-important { color: var(--fg); font-weight: 600; }
+
+/* chart */
+.chart-tools { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; }
+.check { display: inline-flex; gap: 6px; align-items: center; color: var(--muted); font-size: 13px; cursor: pointer; }
+.chart-wrap { position: relative; min-width: 0; }
+.chart-wrap svg { display: block; width: 100%; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 12px; color: var(--muted); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.sw { width: 18px; height: 0; border-top: 2px solid; display: inline-block; }
+.sw.box { height: 10px; border: 0; border-radius: 2px; }
+.tip { position: absolute; pointer-events: none; background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 8px 10px; font-size: 12px; box-shadow: 0 4px 14px rgba(0,0,0,0.12); min-width: 150px; z-index: 2; }
+.tip b { font-weight: 600; }
+.tip .row { display: flex; justify-content: space-between; gap: 12px; }
+.tip .row span:last-child { font-family: var(--font-data); font-variant-numeric: tabular-nums; }
+.axis text { fill: var(--faint); font-family: var(--font-data); font-size: 11px; }
+.axis line { stroke: var(--grid); }
+
+/* tables */
+.tbl-wrap { overflow-x: auto; min-width: 0; }
+table.t { border-collapse: collapse; width: 100%; font-size: 13px; }
+table.t th { text-align: left; font-weight: 500; font-size: 12px; color: var(--muted); padding: 6px 10px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+table.t td { padding: 8px 10px; border-bottom: 1px solid var(--grid); vertical-align: top; }
+table.t td.n, table.t th.n { text-align: right; font-family: var(--font-data); font-variant-numeric: tabular-nums; white-space: nowrap; }
+table.t tr:last-child td { border-bottom: 0; }
+#lines-table, #trig-table { min-width: 560px; }
+#an-table { min-width: 860px; }
+#study-table, #per-table, #oos-table { min-width: 440px; }
+.line-name { font-weight: 500; }
+.line-note { color: var(--muted); font-size: 12px; max-width: 46ch; }
+.neg { color: var(--down); } .pos { color: var(--up); }
+
+.two { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 14px; }
+
+/* stretch */
+.st-list { display: grid; gap: 14px; }
+.st-row { display: grid; gap: 5px; }
+.st-top { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
+.st-top .v { font-family: var(--font-data); font-variant-numeric: tabular-nums; font-weight: 500; }
+.st-bar { position: relative; height: 10px; border-radius: 99px; background: linear-gradient(90deg, var(--grid), var(--gold-soft)); border: 1px solid var(--line); }
+.st-bar .tick { position: absolute; top: -3px; width: 1px; height: 14px; background: var(--faint); opacity: 0.6; }
+.st-bar .dot { position: absolute; top: 50%; width: 12px; height: 12px; border-radius: 50%; transform: translate(-50%, -50%); border: 2px solid var(--gold); background: var(--gold); }
+.st-bar .dot.hollow { background: var(--panel); border-color: var(--fg); width: 10px; height: 10px; }
+.st-meta { font-size: 12px; color: var(--muted); }
+
+/* analogues */
+.verdict { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.tag { white-space: nowrap; flex: none; font-size: 12px; font-weight: 600; padding: 2px 10px; border-radius: 99px; background: var(--gold-soft); color: var(--fg); }
+.tag.warn { background: transparent; border: 1px solid var(--warn); color: var(--warn); }
+.diff { color: var(--muted); font-size: 12px; }
+.diff li { margin: 0; }
+.diff ul { margin: 0; padding-left: 16px; }
+
+/* backdrop tiles */
+.tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+.tile { display: grid; gap: 4px; align-content: start; }
+.tile .lbl { font-size: 12px; color: var(--muted); }
+.tile .val { font-family: var(--font-display); font-size: 24px; font-weight: 500; font-variant-numeric: tabular-nums; line-height: 1.15; }
+.tile .meta { font-size: 12px; color: var(--muted); }
+.tile .src { font-size: 11px; color: var(--faint); }
+.tile svg { width: 100%; height: 34px; display: block; }
+.st-received, .st-happened { color: var(--up); } .st-due, .st-late { color: var(--warn); }
+.st-overdue { color: var(--down); } .st-enter { color: var(--info); } .st-upcoming { color: var(--side); }
+#rep-table { min-width: 640px; }
+
+/* regime strip */
+.episodes { display: flex; flex-wrap: wrap; gap: 6px; }
+.episodes span { font-size: 12px; font-family: var(--font-data); border: 1px solid var(--line); border-radius: 4px; padding: 2px 8px; color: var(--muted); background: var(--panel); }
+
+.foot { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+.foot ul { margin: 6px 0 0; padding-left: 18px; color: var(--muted); font-size: 13px; }
+.foot li + li { margin-top: 4px; }
+.ok { color: var(--up); }
+
+@media (max-width: 520px) {
+  .pm { padding-inline: 16px; gap: 22px; }
+  .mast h1 { font-size: 25px; }
+  .card .price { font-size: 28px; }
+  .two, .cards, .foot { grid-template-columns: minmax(0, 1fr); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .seg button, .pill { transition: background-color 120ms ease, color 120ms ease; }
+}
+</style>
+
+<div class="pm" id="pm">
+  <header class="mast">
+    <div>
+      <div class="eyebrow jg" data-tech="Research series: monthly average prices (datasets/gold-prices), used as monthly closes">Gold · monthly prices</div>
+      <h1>Precious Metals Dashboard</h1>
+      <p class="sub" id="mast-sub">—</p>
+    </div>
+    <div class="right">
+      <span class="label-chip jg" data-tech="Descriptive, not predictive (section 11 guardrail). No forecasts, no instructions.">Describes, doesn't predict</span>
+      <button type="button" class="linkbtn" id="jg-toggle" aria-pressed="false">Show technical terms</button>
+      <div class="seg" role="group" aria-label="Currency">
+        <button type="button" id="cur-chf" data-cur="CHF" aria-pressed="true">CHF</button>
+        <button type="button" id="cur-usd" data-cur="USD" aria-pressed="false">USD</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="prices" id="prices" aria-label="Latest prices" hidden></div>
+  <div class="prices-foot" id="prices-foot" hidden>
+    <span class="note jg" data-tech="Spot prices from gold-api.com, fetched by your browser when the page opens and when you press Refresh. Not stored; every calculation uses the stored daily closes.">Spot prices are checked when the page opens.</span>
+    <button type="button" class="linkbtn" id="live-refresh">Refresh</button>
+    <button type="button" class="linkbtn" id="tv-toggle" aria-pressed="false" aria-controls="tv-stream">Stream live (TradingView)</button>
+  </div>
+  <div class="panel tv-panel" id="tv-stream" hidden>
+    <div id="tv-host"></div>
+    <p class="note">Streaming prices from TradingView (OANDA quotes), loaded only when you ask. Their figures can differ slightly from the closes stored here, and nothing streamed is used in the page's calculations.</p>
+  </div>
+
+  <nav class="jump" aria-label="Jump to">
+    <a href="#glance-sec">Today</a><a href="#g-ahead">Looking ahead</a><a href="#g-now">Now</a><a href="#g-buyers">Who's buying</a><a href="#g-history">History</a><a href="#g-dates">Dates and data</a>
+  </nav>
+
+  <section class="glance-sec" id="glance-sec" aria-label="At a glance">
+    <h2 id="brief-head" class="glance-head">—</h2>
+    <div class="glance" id="glance"></div>
+    <div class="glance-foot">
+      <p class="note">Tap a box to see the detail. Hover over (or tap) any line for its technical version; "Show technical terms" at the top marks which ones have one. This page describes; it never tells you what to do.</p>
+      <button type="button" class="linkbtn" id="toggle-all">Open all</button>
+    </div>
+    <h3 class="ahead-head" id="g-ahead"><span class="eyebrow">Looking ahead</span>Odds and price ranges from history</h3>
+    <div class="odds panel" id="odds">
+      <div class="eyebrow jg" data-tech="Multinomial logistic regression (L2 = 300, chosen from 8/60/300/1500 on the walk-forward test) on the month-end state vector; classes: 12-month return >= +10%, <= -10%, else sideways. Walk-forward from 2000 (refit every 6 months, trained only on months with known outcomes, standardised on the training window). Shown odds = w x model + (1 - w) x class frequencies, with w chosen by walk-forward Brier score.">Weighed-up odds for the next 12 months</div>
+      <div class="odds-grid" id="odds-bars"></div>
+      <div class="odds-why" id="odds-why"></div>
+      <p class="note" id="odds-track">—</p>
+    </div>
+    <div class="guess panel" id="guess">
+      <div class="guess-head">
+        <div><div class="eyebrow jg" data-tech="Empirical outcome distributions (interquartile range and median of forward returns) after past months matching today's setup, applied to today's price. Not a forecast model.">Price ranges from history: where gold might be in 1, 3 and 5 years</div>
+        <p class="note" id="guess-sub">—</p></div>
+      </div>
+      <div class="guess-grid" id="guess-grid"></div>
+      <p class="note" id="guess-foot">—</p>
+    </div>
+  </section>
+
+  <h2 class="group-head" id="g-now"><span class="eyebrow">Now</span>Your rules and what's moving gold</h2>
+  <details class="sec fold" id="d-rules">
+    <summary><div><div class="eyebrow">Your main switch and warning light, and what would change them</div><h2 id="sum-rules">—</h2></div><span class="chev" aria-hidden="true"></span></summary>
+    <div class="fold-body">
+      <div class="brief-grid">
+        <div class="panel brief-card"><div id="brief-rules"></div></div>
+        <div class="panel brief-card">
+          <div class="eyebrow">Market mood next month, depending on gold's average price</div>
+          <div id="brief-regime"></div>
+        </div>
+      </div>
+    </div>
+  </details>
+
+  <details class="sec fold" id="d-push">
+    <summary><div><div class="eyebrow">What is pushing gold up or down</div><h2 id="sum-push">—</h2></div><span class="chev" aria-hidden="true"></span></summary>
+    <div class="fold-body">
+      <div class="panel brief-card"><div class="tbl-wrap"><table class="t" id="press-table"></table></div></div>
+      <div class="panel brief-card">
+        <div class="eyebrow">Mixed signals</div>
+        <ul class="blist" id="brief-conflicts"></ul>
+      </div>
+      <div class="eyebrow">The wider economy, in numbers</div>
+      <h3 id="bd-head" class="sub-head">—</h3>
+      <div class="tiles" id="bd-tiles"></div>
+      <p class="note jg" data-tech="Percentiles are against each series' own monthly history since August 1971, or since it starts if later. Sample sizes are shown. The real yield is a proxy (10-year Treasury minus trailing CPI inflation) so that one definition covers the whole history.">"Higher than X% of months" compares today with that series' own history since 1971, or since it started. Interest rates after inflation are estimated as the US 10-year interest rate minus inflation, so one method covers the whole history.</p>
+    </div>
+  </details>
+
+  <details class="sec fold" id="d-price">
+    <summary><div><div class="eyebrow">Gold's price and mood</div><h2 id="price-head">—</h2></div><span class="chev" aria-hidden="true"></span></summary>
+    <div class="fold-body">
+      <div class="chart-tools">
+        <div class="seg" role="group" aria-label="Range">
+          <button type="button" id="rng-3" data-range="3">3y</button>
+          <button type="button" id="rng-10" data-range="10">10y</button>
+          <button type="button" id="rng-20" data-range="20">20y</button>
+          <button type="button" id="rng-all" data-range="all">Since 1971</button>
+        </div>
+        <label class="check" title="Logarithmic y-axis: equal vertical distances are equal percentage changes."><input type="checkbox" id="log-scale"> Show % changes evenly</label>
+      </div>
+      <div class="panel">
+        <div class="chart-wrap" id="price-chart"></div>
+        <div class="legend" id="price-legend"></div>
+      </div>
+      <h3 id="regime-head" class="sub-head">—</h3>
+      <div class="cards" id="regime-cards"></div>
+      <p class="note jg" data-tech="Regime (section 8.1): Up when the efficiency ratio is at least 0.30 and the 12-month return at least +10%; Down at -10% or worse; otherwise Sideways. Judged on monthly average closes. The section 8 study labels regimes on the USD price.">"Rising steadily" means gold is at least 10% higher than a year ago and got there fairly smoothly. "Falling steadily" is the same in reverse. Anything else counts as going sideways.</p>
+    </div>
+  </details>
+
+  <details class="sec fold" id="d-lines">
+    <summary><div><div class="eyebrow">Price levels to watch</div><h2 id="lines-head">—</h2></div><span class="chev" aria-hidden="true"></span></summary>
+    <div class="fold-body">
+      <div class="panel tbl-wrap"><table class="t" id="lines-table"></table></div>
+      <p class="note jg" data-tech="Judged on closes with a 1% buffer, never on touches. State machine: intact, approaching, broken, confirmed, failed. Only confirmed and failed are alerts. With monthly data only, a break beyond the buffer is confirmed on the same close; daily data will separate the two.">A level only counts as crossed when a month's price ends clearly beyond it (by more than 1%), not when it briefly touches it. You get an alert only when a crossing holds, or when the price comes straight back.</p>
+      <h3 id="trig-head" class="sub-head">—</h3>
+      <div class="panel tbl-wrap"><table class="t" id="trig-table"></table></div>
+    </div>
+  </details>
+
+  <details class="sec fold" id="d-tech">
+    <summary><div><div class="eyebrow">Technical picture (daily prices)</div><h2 id="sum-tech">—</h2></div><span class="chev" aria-hidden="true"></span></summary>
+    <div class="fold-body">
+      <div class="seg" role="group" aria-label="Metal" id="metal-seg">
+        <button type="button" id="metal-gold" data-metal="gold" aria-pressed="true">Gold</button>
+        <button type="button" id="metal-silver" data-metal="silver" aria-pressed="false">Silver</button>
+      </div>
+      <div id="tech-body"></div>
+      <p class="note">These are the indicators chart traders use, in plain words. Like everything here, they describe; they don't predict. Under "What followed these signals before", each signal that holds today gets the same honesty test as the setups above.</p>
+    </div>
+  </details>
+
+  <h2 class="group-head" id="g-buyers"><span class="eyebrow">Who's buying</span>Buyers around the world and central bank targets</h2>
+  <details class="sec fold" id="d-buyers">
+    <summary><div><div class="eyebrow">Who's buying gold</div><h2 id="sum-buyers">—</h2></div><span class="chev" aria-hidden="true"></span></summary>
+    <div class="fold-body">
+      <div class="buyer-grid" id="buyer-cards"></div>
+      <p class="note jg" data-tech="Kinds: steady = price-insensitive accumulation (official sector); fickle = momentum-following investment flows (ETFs, futures); cushion = price-elastic consumer demand (jewellery, small bars) that rises after falls; hub = refining and transit flows. Trade data: UN Comtrade, HS 7108 (unwrought or semi-manufactured gold, non-monetary and monetary as reported), net weight in tonnes.">Steady buyers push the price up over time. Fickle buyers make moves bigger in both directions. Cushion buyers buy the dips and step back after rises, which steadies the price. Trade figures arrive two to three months late.</p>
+    </div>
+  </details>
+
+  <details class="sec fold" id="d-cb">
+    <summary><div><div class="eyebrow">Central bank buying and stated targets</div><h2 id="sum-cb">—</h2></div><span class="chev" aria-hidden="true"></span></summary>
+    <div class="fold-body">
+      <div class="panel tbl-wrap">
+        <div class="eyebrow jg" data-tech="Gold holdings: IMF International Reserves and Foreign Currency Liquidity (IRFCL), fine troy ounces converted at 32,150.7466 oz per tonne. Reserves excluding gold: IMF via FRED (TRESEG..M052N, US dollars). Gold share: gold at today's price over gold plus reserves excluding gold.">Holdings from official monthly figures</div>
+        <table class="t" id="cb-table"></table>
+      </div>
+      <div class="two">
+        <div class="panel brief-card" id="cb-targets"></div>
+        <div class="panel brief-card" id="cb-scenario"></div>
+      </div>
+      <div class="panel brief-card" id="cb-honesty"></div>
+      <p class="note">Why this can't say how long the price has left: most gold demand has no target; targets stated as a share of reserves are partly met by the price rising, so a higher price means less buying is needed; a lot of central bank buying goes unreported; and gold funds can sell in weeks what central banks buy in a year. This shows how much steady buying may still be to come, not when the price turns.</p>
+    </div>
+  </details>
+
+  <h2 class="group-head" id="g-history"><span class="eyebrow">History</span>Is gold stretched, and what happened in similar times?</h2>
+  <details class="sec fold" id="d-stretch">
+    <summary><div><div class="eyebrow">How far gold is from its usual levels</div><h2 id="stretch-head">—</h2></div><span class="chev" aria-hidden="true"></span></summary>
+    <div class="fold-body">
+      <div class="panel st-list" id="stretch-list"></div>
+      <p class="note jg" data-tech="Filled dot: percentile since 1971 (floating-era windows, so the 10-year average starts in 1981). Hollow dot: percentile within the last 10 years. Sample sizes in brackets.">Filled dot: how today compares with every month since 1971. Hollow dot: how it compares with the last 10 years. Further right means a larger share of past months were lower.</p>
+    </div>
+  </details>
+
+  <details class="sec fold" id="d-analogues">
+    <summary><div><div class="eyebrow">When did it last look like this?</div><h2 id="an-head">—</h2></div><span class="verdict" id="an-verdict"></span><span class="chev" aria-hidden="true"></span></summary>
+    <div class="fold-body">
+      <div class="panel">
+        <div class="chart-wrap" id="an-chart"></div>
+        <p class="note" id="an-summary">—</p>
+      </div>
+      <div class="panel tbl-wrap"><table class="t" id="an-table"></table></div>
+      <div class="two">
+        <div class="panel">
+          <div class="eyebrow jg" data-tech="Out-of-sample check: for every month since 2000, the finder ran on earlier history only.">Has this comparison worked before? Tested on every month since 2000</div>
+          <div class="tbl-wrap"><table class="t" id="oos-table"></table></div>
+          <p class="note jg" style="margin-top:8px" data-tech="Each month uses only earlier history. Months overlap (12-month outcomes), so they are not independent tests. Labelled useful only if the matched median beats the unconditional median in most months and calls direction more often.">Each month was tested using only the history available at the time. The months overlap, so there are fewer independent tests than it looks. The comparison would count as useful only if it beat the simple rule "gold usually rises" in most months.</p>
+        </div>
+        <div class="panel">
+          <div class="eyebrow">What the comparison looks at</div>
+          <p class="note jg" id="an-measures" style="margin-top:6px">—</p>
+          <div class="eyebrow jg" style="margin-top:12px" data-tech="Key moments catalogue (data/key_moments.csv): distance in the same standardised space.">Closest famous moments</div>
+          <div class="tbl-wrap"><table class="t" id="km-table"></table></div>
+        </div>
+      </div>
+    </div>
+  </details>
+
+  <details class="sec fold" id="d-after">
+    <summary><div><div class="eyebrow">What happened after setups like this</div><h2 id="sum-after">—</h2></div><span class="verdict" id="after-verdict"></span><span class="chev" aria-hidden="true"></span></summary>
+    <div class="fold-body">
+      <p class="note">Counts from history, not a forecast. For each way of describing today, this shows how often gold was higher 3, 6 and 12 months later, compared with all months since 1972. "Separate spells" counts each stretch of similar months once, because neighbouring months share most of their future.</p>
+      <div id="after-list" class="after-list"></div>
+      <p class="note jg" data-tech="Honesty test (walk-forward from 2000 for monthly setups, 2010 for daily signals): at each date where the setup held, its share of rises was computed only from outcomes known at the time, and so was the baseline share. 'Useful' requires a Brier score at least 5% lower, a hit rate at least 5 points higher, and at least 15 independent spells. On simulated random prices about 1 in 25 signals still passes, so a single pass is weak evidence.">The honesty test asks: if you had used these counts at the time, using only the history available then, would they have described what came next better than "gold usually rises"? Anything that fails is labelled "for context only".</p>
+    </div>
+  </details>
+
+  <details class="sec fold" id="d-history">
+    <summary><div><div class="eyebrow">Since 1971: market mood and how the rules did</div><h2 id="hist-head">—</h2></div><span class="chev" aria-hidden="true"></span></summary>
+    <div class="fold-body">
+      <div class="panel">
+        <div class="chart-wrap" id="strip"></div>
+        <div class="legend" style="margin-top:8px">
+          <span><i class="sw box" style="background:var(--up)"></i>Rising steadily</span>
+          <span><i class="sw box" style="background:var(--side)"></i>Going sideways</span>
+          <span><i class="sw box" style="background:var(--down)"></i>Falling steadily</span>
+        </div>
+        <div class="eyebrow jg" style="margin-top:14px" data-tech="Sideways episodes (USD regime, at least 12 months, gaps up to 2 months merged).">Long sideways stretches (in dollars, a year or longer)</div>
+        <div class="episodes" id="episodes" style="margin-top:6px"></div>
+      </div>
+      <div class="panel tbl-wrap" id="real-panel">
+        <div class="real-head">
+          <div class="eyebrow jg" data-tech="Signals from USD monthly averages (known at each month's end), applied to real month-end closes (COMEX front-month settlement; francs = USD close x USD/CHF month-end). Cash earns the 3-month rate (US T-bill TB3MS; CHF 3-month interbank, OECD IR3TIB01CHM156N) where held, 0 otherwise. One-way cost per switch by holding type (config/thresholds.yaml). Window starts in cash.">How the rules would really have done, <span id="real-window">—</span></div>
+          <div class="seg" role="group" aria-label="How you hold gold" id="hold-seg"></div>
+        </div>
+        <table class="t" id="real-table"></table>
+        <p class="note" id="real-note">—</p>
+      </div>
+      <div class="two">
+        <div class="panel tbl-wrap">
+          <div class="eyebrow jg" data-tech="Backtest, section 8.3: switching between gold and cash on monthly signals, returns from monthly AVERAGE prices (not tradeable; smoothing hides whipsaw losses, especially for the 10-month rule).">Long history on smoothed monthly averages, <span id="study-window">—</span></div>
+          <table class="t" id="study-table"></table>
+        </div>
+        <div class="panel tbl-wrap">
+          <div class="eyebrow jg" data-tech="Per-regime results (section 8.3): month t+1 returns classified by the regime label at t, annualised geometrically.">By market mood (in dollars)</div>
+          <table class="t" id="per-table"></table>
+        </div>
+      </div>
+      <p class="note jg" id="long-note" data-tech="Signal on a month's close sets the next month's position. 0.2% cost per switch. Cash earns the 3-month rate where the series is held, 0 before. CHF results apply the USD signal. The chop filter was tested and rejected.">The long history goes back to 1972 but uses each month's average price, which nobody can actually trade at. Averaging smooths out the in-and-out losses, so it flatters the warning light (rule 2) most. Each switch costs 0.2%. Time out of gold earns US 3-month interest in dollars; in francs it earns Swiss 3-month interest from mid-1999 (where that series starts) and nothing before. Franc results use the dollar signals. Pausing the main switch in sideways markets was tested and made results worse.</p>
+    </div>
+  </details>
+
+  <h2 class="group-head" id="g-dates"><span class="eyebrow">Dates and data</span>What's coming up and where the numbers come from</h2>
+  <details class="sec fold" id="d-dates">
+    <summary><div><div class="eyebrow">Dates to know and reports</div><h2 id="rep-head">—</h2></div><span class="chev" aria-hidden="true"></span></summary>
+    <div class="fold-body">
+      <div class="panel brief-card"><ul class="blist" id="brief-upcoming"></ul></div>
+      <div class="panel tbl-wrap"><table class="t" id="rep-table"></table></div>
+      <p class="note jg" data-tech="Release calendar (section 9.6). 'Enter' means the figures come from a report whose terms rule out automated download. With no consensus-forecast feed, changes are compared with the prior release and the 12-month trend, not with expectations.">"Type in by hand" means the publisher doesn't allow automatic downloads. There's no feed of what forecasters expected, so new figures are compared with the previous release and the past year instead.</p>
+    </div>
+  </details>
+
+  <details class="sec fold" id="d-data">
+    <summary><div><div class="eyebrow">Data and what's missing</div><h2 id="sum-data">—</h2></div><span class="chev" aria-hidden="true"></span></summary>
+    <div class="fold-body foot">
+      <div class="panel">
+        <div class="eyebrow">What this page can't tell you yet</div>
+        <ul class="blist muted" id="brief-gaps" style="margin-top:6px"></ul>
+        <ul id="pending"></ul>
+      </div>
+      <div class="panel">
+        <div class="eyebrow jg" data-tech="Data health: last success, latest period, staleness per source.">Data freshness</div>
+        <div class="tbl-wrap"><table class="t" id="health"></table></div>
+        <p class="note jg" style="margin-top:8px" data-tech="Prices: monthly averages from datasets/gold-prices and datasets/exchange-rates (research baseline). Macro: FRED API; positioning: CFTC; geopolitical risk: Caldara-Iacoviello.">Prices are monthly averages from public datasets. Economic data comes from the US Federal Reserve's database, positioning from the US futures regulator, and war-risk data from two Fed economists' index.</p>
+      </div>
+    </div>
+  </details>
+
+</div>
+
+<script type="application/json" id="pmdash-data">{"prices":[{"metal":"gold","date":"2026-10-08","source":"COMEX futures, front month (Yahoo Finance)","USD":{"price":4157.0,"chg_1d":0.003936485115718424,"chg_1y":0.021250460631372148},"CHF":{"price":3462.6977649331093,"chg_1d":0.003936485115718424,"chg_1y":0.06136139932014095},"fx":{"rate":0.8329799771308899,"date":"2026-10-07"}},{"metal":"silver","date":"2026-10-08","source":"COMEX futures, front month (Yahoo Finance)","USD":{"price":59.06399917602539,"chg_1d":-0.013940117676781272,"chg_1y":0.2139099252850556},"CHF":{"price":49.19912868290453,"chg_1d":-0.013940117676781272,"chg_1y":0.26158781475860793},"fx":{"rate":0.8329799771308899,"date":"2026-10-07"}}],"buyers":{"headline":"Tracked central banks added 176 tonnes over the last 12 months, the largest US gold fund grew by 16 tonnes and India's imports were about the same as the year before.","headline_tech":"Sources: IMF IRFCL (central banks), SPDR (GLD), CFTC, UN Comtrade (trade).","cb_headline":"4 of 6 tracked emerging-market central banks added gold in the last 3 months","cb_headline_tech":"EM set: CN, IN, PL, TR, CZ, RU; 3-month change > 0.1 t counts as buying","groups":[{"id":"central_banks","plain":"Central banks","kind":"steady","kind_plain":"Steady buyer: keeps buying almost whatever the price","share_note":"About 1,000 tonnes a year since 2022, roughly a fifth of all gold bought; about twice the 2010s pace.","watch":"Official monthly reserve figures; the World Gold Council's June survey of what central banks plan.","early":"Partly in advance: a few banks state targets, and the yearly survey asks about plans.","readings":[{"label":"Tracked emerging-market banks bought","value":"+176 t in 12 months","sub":"4 of 6 added gold in the last 3 months","tech":"Sum of 12-month changes, CN, IN, PL, TR, CZ, RU (IMF IRFCL). Unreported buying not included."}],"dates":[{"date":"2027-06-15","plain":"World Gold Council central bank survey (usually mid-June)","verify":true}]},{"id":"china","plain":"China","kind":"cushion","kind_plain":"Cushion: buys more after falls and less after rises","share_note":"The largest buyer of jewellery, bars and coins; the central bank buys separately.","watch":"The central bank's monthly figure (about the 7th), Hong Kong's gold exports to the mainland, the Shanghai premium.","early":"Chinese New Year buying is seasonal and known in advance; the Shanghai premium moves with or before the price.","readings":[{"label":"Central bank bought","value":"+84 t in 12 months","sub":"holds 2,387 t; to Aug 2026","tech":"IMF IRFCL gold volume, CN: 12-month change +84.3 t; 3-month +55.1 t"},{"label":"Hong Kong shipped to the mainland","value":"664 t in 12 months","sub":"up 70% on the year before; to Jul 2026","tech":"Comtrade HS 7108, HK exports to CN: 12-month total 663.9 t (previous 12 months 390.6 t); latest month 75.5 t (2026-07)"},{"label":"Swiss refiners shipped to China","value":"276 t in 12 months","sub":"to Aug 2026","tech":"Comtrade HS 7108, CH exports to CN: 12-month total 275.5 t (previous 12 months None t); latest month 26.1 t (2026-08)"}],"dates":[{"date":"2027-02-06","plain":"Chinese New Year (buying builds in the weeks before)","verify":true}]},{"id":"india","plain":"India","kind":"cushion","kind_plain":"Cushion: buys more after falls and less after rises","share_note":"The second-largest consumer buyer; imports almost all of its gold.","watch":"Monthly gold imports, the local dealers' premium or discount, import duty changes.","early":"Festival and wedding seasons are known in advance; duty changes come with the budget (1 February).","readings":[{"label":"India imported","value":"728 t in 12 months","sub":"about the same as the year before; to Jul 2026","tech":"Comtrade HS 7108, India imports, world: 12-month total 728.0 t (previous 12 months 709.1 t); latest month 45.4 t (2026-07)"},{"label":"Swiss refiners shipped to India","value":"125 t in 12 months","sub":"down 9% on the year before; to Aug 2026","tech":"Comtrade HS 7108, CH exports to IN: 12-month total 125.0 t (previous 12 months 137.3 t); latest month 3.5 t (2026-08)"},{"label":"Central bank bought","value":"+1 t in 12 months","sub":"holds 881 t; to Aug 2026","tech":"IMF IRFCL gold volume, IN: 12-month change +0.5 t; 3-month +0.0 t"}],"dates":[{"date":"2026-11-06","plain":"Dhanteras, the main gold-buying day before Diwali","verify":true},{"date":"2027-02-01","plain":"India's budget (import duty changes come here)","verify":true},{"date":"2027-05-09","plain":"Akshaya Tritiya, a traditional gold-buying day","verify":true}]},{"id":"usa","plain":"United States","kind":"fickle","kind_plain":"Fickle buyer: buys when gold rises, sells when it falls","share_note":"Mostly investment: gold funds, futures and coins.","watch":"Holdings of the largest gold fund (SPDR Gold Shares, GLD), speculators' futures bets, US Mint coin sales.","early":"Not in advance; fund holdings are published daily, so changes show quickly.","readings":[{"label":"Largest US gold fund (GLD) holds","value":"1,055 t","sub":"+16 t on a year ago, +48 t in 3 months","tech":"SPDR Gold Shares holdings (month-end), 2026-10: 1055.4 t; 3-month change 48.40000000000009, 12-month change 16.210000000000036"},{"label":"Speculators' net bets on gold (futures)","value":"120,318 contracts","sub":"higher than 68% of the last 3 years","tech":"CFTC disaggregated, managed money net long, month-end 2026-09; percentile over 36 months"},{"label":"Swiss refiners shipped to the US","value":"68 t in 12 months","sub":"down 90% on the year before; to Aug 2026","tech":"Comtrade HS 7108, CH exports to US: 12-month total 67.8 t (previous 12 months 648.0 t); latest month 13.7 t (2026-08)"}],"dates":[]},{"id":"europe","plain":"Europe","kind":"fickle","kind_plain":"Fickle buyer: buys when gold rises, sells when it falls","share_note":"Gold funds plus bar and coin buying, strongest in Germany and Switzerland.","watch":"European gold fund holdings and quarterly bar and coin figures (World Gold Council).","early":"Not in advance; quarterly figures come weeks after the quarter.","readings":[{"label":"Swiss refiners shipped to London","value":"550 t in 12 months","sub":"up 98% on the year before; to Aug 2026","tech":"Comtrade HS 7108, CH exports to GB (London vaults hold most European fund and bank gold): 12-month total 550.3 t (previous 12 months 277.9 t); latest month 102.2 t (2026-08)"}],"dates":[]},{"id":"switzerland","plain":"Switzerland (the refining hub)","kind":"hub","kind_plain":"Hub: shows where gold is flowing, not who keeps it","share_note":"Most of the world's gold is refined here, so Swiss exports show where gold is flowing. The Swiss National Bank does not buy.","watch":"Swiss gold exports by destination (customs figures).","early":"About two to three months late in the free data; shows the direction of flows rather than timing.","readings":[{"label":"Swiss gold exports, all destinations","value":"1,493 t in 12 months","sub":"up 11% on the year before; to Aug 2026","tech":"Comtrade HS 7108, CH exports to world: 12-month total 1492.7 t (previous 12 months 1345.0 t); latest month 164.6 t (2026-08)"},{"label":"Where it went (12 months)","value":"UK 37%, China 18%, India 8%","sub":null,"tech":"UK 550 t; China 276 t; India 125 t; Turkey 72 t; US 68 t; Hong Kong 57 t; Saudi Arabia 52 t; UAE 50 t; Singapore 30 t"}],"dates":[]},{"id":"turkey_me","plain":"Turkey and the Middle East","kind":"steady","kind_plain":"Steady buyer: keeps buying almost whatever the price","share_note":"Turkish households and the central bank hedge against a weak lira; Gulf buyers are large in jewellery.","watch":"Turkey's central bank reserves.","early":"Monthly, after the fact.","readings":[{"label":"Turkey's central bank bought","value":"-6 t in 12 months","sub":"holds 791 t; to Aug 2026","tech":"IMF IRFCL gold volume, TR: 12-month change -5.8 t; 3-month +61.5 t"},{"label":"Swiss refiners shipped to Turkey","value":"72 t in 12 months","sub":"down 16% on the year before; to Aug 2026","tech":"Comtrade HS 7108, CH exports to TR: 12-month total 72.5 t (previous 12 months 86.6 t); latest month 0.9 t (2026-08)"},{"label":"Swiss refiners shipped to the UAE","value":"50 t in 12 months","sub":"down 25% on the year before; to Aug 2026","tech":"Comtrade HS 7108, CH exports to AE: 12-month total 50.0 t (previous 12 months 66.9 t); latest month 1.4 t (2026-08)"}],"dates":[]}],"banks":[{"bank":"CN","plain":"China (People's Bank of China)","tonnes":2386.569772535236,"as_of":"2026-08","chg_3m":55.05315388228064,"chg_12m":84.29042204575171,"pace_12m":84.29042204575171,"months_bought_12":12,"non_gold_usd":3482385620113.452,"non_gold_as_of":"2026-06","share_now":0.08390872265748456},{"bank":"IN","plain":"India (Reserve Bank of India)","tonnes":880.5179988883991,"as_of":"2026-08","chg_3m":0.0,"chg_12m":0.5356794964568508,"pace_12m":0.5356794964568508,"months_bought_12":3,"non_gold_usd":588163260984.6844,"non_gold_as_of":"2026-07","share_now":0.16672469861260425},{"bank":"PL","plain":"Poland (National Bank of Poland)","tonnes":647.9787315421161,"as_of":"2026-08","chg_3m":34.12051401630595,"chg_12m":132.65632842255673,"pace_12m":132.65632842255673,"months_bought_12":10,"non_gold_usd":212572753210.156,"non_gold_as_of":"2026-08","share_now":0.28947146774096116,"target":{"source":"National Bank of Poland: President Adam Glapi\u0144ski's stated aims to raise gold to 30% of reserves and later to 700 tonnes","verify":true,"stated":"2025","by":null,"share_need_if_price_up_20":-79.93930653330085,"goals":[{"kind":"tonnes","goal":700.0,"remaining_t":52.021268457883934,"done":false,"progress":0.925683902203023,"years_left_at_pace":0.39215067291910893},{"kind":"share","goal":0.3,"remaining_t":33.668578468462215,"done":false,"years_left_at_pace":0.25380303276008087}]}},{"bank":"TR","plain":"Turkey (Central Bank of the Republic of T\u00fcrkiye)","tonnes":791.3657594502021,"as_of":"2026-08","chg_3m":61.49157357359786,"chg_12m":-5.754143202385194,"pace_12m":-5.754143202385194,"months_bought_12":9,"non_gold_usd":69586443848.6789,"non_gold_as_of":"2026-08","share_now":0.6031636419513188},{"bank":"CZ","plain":"Czech Republic (Czech National Bank)","tonnes":87.43999120692271,"as_of":"2026-09","chg_3m":5.010614590206757,"chg_12m":20.59799755940972,"pace_12m":20.59799755940972,"months_bought_12":12,"target":{"source":"Czech National Bank Governor Ale\u0161 Michl, public statements on raising gold to 100 tonnes by the end of 2028","verify":true,"stated":"2023","by":"2028-12","goals":[{"kind":"tonnes","goal":100.0,"remaining_t":12.560008793077287,"done":false,"progress":0.8743999120692272,"years_left_at_pace":0.609768437774163,"needed_per_year":5.582226130256572,"on_track":true}]}},{"bank":"RU","plain":"Russia (Bank of Russia)","tonnes":2270.5538041844416,"as_of":"2026-08","chg_3m":-21.7724337387549,"chg_12m":-55.986258185369934,"pace_12m":-55.986258185369934,"months_bought_12":1,"non_gold_usd":423209726706.6991,"non_gold_as_of":"2025-11","share_now":0.4176045474892011},{"bank":"JP","plain":"Japan (Bank of Japan, for comparison)","tonnes":845.9834646577073,"as_of":"2026-09","chg_3m":0.0,"chg_12m":0.0,"pace_12m":0.0,"months_bought_12":0,"non_gold_usd":1083420490020.889,"non_gold_as_of":"2026-08","share_now":0.09449853465113683},{"bank":"US","plain":"United States (for comparison)","tonnes":8133.528071786675,"as_of":"2026-07","chg_3m":0.0,"chg_12m":0.0,"pace_12m":null,"months_bought_12":0,"non_gold_usd":243800829074.6694,"non_gold_as_of":"2026-08","share_now":0.8168084824217496},{"bank":"DE","plain":"Germany (Bundesbank, for comparison)","tonnes":3349.1229161378174,"as_of":"2026-08","chg_3m":-0.3888561020226007,"chg_12m":-1.1663378293055757,"pace_12m":-1.1663378293055757,"months_bought_12":0,"non_gold_usd":102868185677.0184,"non_gold_as_of":"2026-07","share_now":0.8131302431477831},{"bank":"CH","plain":"Switzerland (Swiss National Bank, for comparison)","tonnes":1039.944745793244,"as_of":"2026-08","chg_3m":0.0,"chg_12m":0.0,"pace_12m":0.0,"months_bought_12":0}],"scenario":{"banks":["CN","IN","PL","TR","RU"],"held_t":6976.986066600395,"share_now":0.16335213214868052,"pace_12m":155.74202857701016,"mine_supply":3600,"rows":[{"share":0.15,"tonnes_now":2211.5269985310692,"tonnes_down20":3451.2871116382557,"tonnes_up20":1445.177536686685,"years_of_mine_supply":0.6143130551475192,"years_at_pace":14.19993702879971},{"share":0.2,"tonnes_now":4347.070429379842,"tonnes_down20":6250.60997958071,"tonnes_up20":3078.0440625792626,"years_of_mine_supply":1.2075195637166227,"years_at_pace":27.91199311514255},{"share":0.3,"tonnes_now":9819.423436993646,"tonnes_down20":13253.045921983494,"tonnes_up20":7610.2810868670485,"years_of_mine_supply":2.727617621387124,"years_at_pace":63.04928429860672}],"names":"China, India, Poland, Turkey, Russia"},"honesty":{"n":33,"spells":4,"brier_setup":0.20084688686194813,"brier_base":0.43899645891531797,"hit_setup":0.5454545454545454,"hit_base":0.0,"label":"context only","share_up":0.75,"base_share_up":0.6572769953051644,"n_months":60,"n_spells_counted":7,"first":"2016-05","heavy_now":false,"plain":"Not reliably. After periods of heavy buying by these banks, gold was higher a year later 75% of the time, against 66% for all months since 2008, but that rests on only 4 separate stretches and did not pass the walk-forward test. Treat it as background, not a timing signal.","tech":"Condition: 12-month sum of monthly tonnage changes (CN, IN, PL, TR, CZ, RU) above its expanding median (min 36 months). Walk-forward from 2008-01, h = 12: Brier 0.201 vs base 0.439, hit 0.55 vs 0.00, 4 spells, label context only. Heavy buying now: False."},"price_now":4157.0},"history":{"as_of":"2026-09","setups":[{"key":"rules","plain":"Main switch ON, warning light showing","tech":"12-1 momentum signal 1, SMA10 signal 0","rates":[{"name":"rules","horizon":3,"unit":"months","n_periods":66,"n_spells":35,"share_up":0.4696969696969697,"median":-0.0028261626383255245,"p25":-0.03438005356781887,"p75":0.04268179798578192,"base_share_up":0.5332302936630603,"base_median":0.008450704225352101,"base_n":647,"continuation":0.4696969696969697,"extra":null},{"name":"rules","horizon":6,"unit":"months","n_periods":65,"n_spells":26,"share_up":0.4923076923076
+
+... [cut] ...
+
+ and US 3-month interest in the dollar columns."
+      : "Interest on cash isn't loaded yet, so time out of gold earns nothing here.";
+    setText("real-note", "Both rules are decided each month on gold's average dollar price and then traded at the real price on the last day of the month. " +
+      "Each switch costs " + (cost * 100).toFixed(1) + "%, a rough figure for " + (HOLD_PLAIN[S.hold] || S.hold) + ". " + cashTxt +
+      " The main switch is in bold.", "Holding " + S.hold + ": one-way cost " + cost + " per switch; cash series held: USD " + X.cash.USD + ", CHF " + X.cash.CHF);
+  }
+  function fmtVal(r, v) {
+    if (v === null || v === undefined) return "n/a";
+    if (r.unit === "%") return v.toFixed(2) + "%";
+    if (r.unit === "pp") return (v > 0 ? "+" : "") + v.toFixed(2) + " pp";
+    if (r.unit === "$") return "$" + v.toFixed(2);
+    return v.toFixed(v < 10 ? 4 : 2);
+  }
+  function fmtChg(r, v) {
+    if (v === null || v === undefined) return "n/a";
+    var sign = v > 0 ? "+" : v < 0 ? "−" : "";
+    if (r.unit === "%" || r.unit === "pp") return sign + Math.abs(v).toFixed(2) + " pp";
+    if (r.unit === "$") return sign + "$" + Math.abs(v).toFixed(2);
+    return sign + Math.abs(v).toFixed(v < 10 && v > -10 ? 4 : 2);
+  }
+  var BD_PLAIN = { "US inflation (CPI, y/y)": "US inflation", "Real yield proxy (10y minus CPI)": "Interest rates after inflation (estimate)",
+    "US 10-year yield": "US 10-year interest rate", "10-year TIPS real yield": "Interest rates after inflation (official)",
+    "VIX (monthly average)": "Stock market fear gauge", "Brent crude": "Oil price (Brent)", "USD/CHF (francs per dollar)": "Francs per dollar",
+    "Geopolitical risk index": "War and political risk index" };
+  function renderBackdrop() {
+    var host = clear($("bd-tiles"));
+    var rows = D.backdrop || [];
+    rows.forEach(function (r) {
+      var t = el("div", { class: "panel tile" });
+      t.appendChild(jg("div", { class: "lbl" }, BD_PLAIN[r.label] || r.label, r.label + " (" + r.source + ")" + (r.note ? ". " + r.note : "")));
+      t.appendChild(el("div", { class: "val" }, fmtVal(r, r.value).replace(" pp", " points")));
+      var pts = r.spark.filter(function (v) { return v !== null; });
+      if (pts.length > 2) {
+        var lo = Math.min.apply(null, pts), hi = Math.max.apply(null, pts), w = 200, h = 34;
+        var svg = sv("svg", { viewBox: "0 0 " + w + " " + h, preserveAspectRatio: "none", "aria-hidden": "true" });
+        var d = r.spark.map(function (v, i) { return v === null ? "" : (i ? "L" : "M") + (i / (r.spark.length - 1) * w).toFixed(1) + "," + (3 + (hi - v) / ((hi - lo) || 1) * (h - 6)).toFixed(1); }).join("");
+        svg.appendChild(sv("path", { d: d, fill: "none", stroke: "var(--fg)", "stroke-width": 1.4, opacity: 0.7, "vector-effect": "non-scaling-stroke" }));
+        t.appendChild(svg);
+      }
+      var chg = r.chg_12m;
+      t.appendChild(jg("div", { class: "meta" }, monthName(r.month) + " · " + (chg === null ? "no change data" : (chg >= 0 ? "up " : "down ") + fmtChg(r, Math.abs(chg)).replace("+", "").replace(" pp", " points") + " on a year ago"),
+        "12-month change " + fmtChg(r, chg)));
+      if (r.pct !== null) t.appendChild(jg("div", { class: "meta" }, "Higher than " + Math.round(r.pct) + "% of months since " + monthName(r.since),
+        ord(r.pct) + " percentile since " + r.since + " (n=" + r.n + ")"));
+      host.appendChild(t);
+    });
+    var hi = rows.filter(function (r) { return r.pct !== null && r.pct >= 90; }).map(function (r) { return (BD_PLAIN[r.label] || r.label); });
+    var lowx = rows.filter(function (r) { return r.pct !== null && r.pct <= 10; }).map(function (r) { return (BD_PLAIN[r.label] || r.label); });
+    var parts = [];
+    if (hi.length) parts.push(hi.join(" and ") + (hi.length > 1 ? " are" : " is") + " higher than in 90% of past months");
+    if (lowx.length) parts.push(lowx.join(" and ") + (lowx.length > 1 ? " are" : " is") + " lower than in 90% of past months");
+    $("bd-head").textContent = !rows.length ? "No economic data stored yet" : parts.length ? parts.join("; ") : "Nothing unusual compared with history";
+  }
+
+  // ---------- what happened after setups like this ----------
+  function hbar(label, share, base, tech) {
+    var row = jg("div", { class: "hbar" }, null, tech);
+    row.appendChild(el("span", null, label));
+    var tr = el("span", { class: "track" });
+    var f = el("span", { class: "fill" }); f.style.width = (share * 100).toFixed(1) + "%"; tr.appendChild(f);
+    var b = el("i", { class: "base" }); b.style.left = (base * 100).toFixed(1) + "%"; tr.appendChild(b);
+    row.appendChild(tr);
+    row.appendChild(el("span", { class: "num" }, Math.round(share * 100) + "%"));
+    return row;
+  }
+  function renderAfter() {
+    var H = D.history, host = clear($("after-list"));
+    if (!H || !H.setups.length) { host.appendChild(el("p", { class: "note" }, "Not enough history yet.")); return; }
+    var useful = 0;
+    H.setups.forEach(function (s) {
+      var card = el("div", { class: "panel after" });
+      var top = el("div", { class: "after-top" });
+      var nm = el("span"); nm.appendChild(jg("b", null, s.plain, s.tech)); top.appendChild(nm);
+      var lab = s.test.label === "useful" ? "passed the honesty test" : s.test.n ? "for context only" : "too few cases to test";
+      if (s.test.label === "useful") useful++;
+      top.appendChild(jg("span", { class: "tag" + (s.test.label === "useful" ? "" : " warn") }, lab,
+        s.test.n ? "Walk-forward since 2000, n=" + s.test.n + " months (" + s.test.spells + " separate spells). Brier setup " + s.test.brier_setup.toFixed(3) +
+          " vs baseline " + s.test.brier_base.toFixed(3) + "; hit rate " + Math.round(s.test.hit_setup * 100) + "% vs " + Math.round(s.test.hit_base * 100) + "%." : "Fewer than 20 earlier cases at test time."));
+      card.appendChild(top);
+      var y = s.rates[s.rates.length - 1];
+      card.appendChild(jg("p", { class: "note" },
+        "This happened in " + y.n_periods + " months since 1972 (" + y.n_spells + " separate spells). A year later gold was higher in " + Math.round(y.share_up * 100) +
+        "% of them, against " + Math.round(y.base_share_up * 100) + "% for all months. The middle result was " + updown(y.median) + "; half the results fell between " +
+        pct(y.p25, 0) + " and " + pct(y.p75, 0) + "." + (y.continuation !== null ? " The year's trend carried on in " + Math.round(y.continuation * 100) + "% of cases and turned in " + Math.round((1 - y.continuation) * 100) + "%." : ""),
+        "h=12m: n=" + y.n_periods + ", spells=" + y.n_spells + ", P(r>0)=" + y.share_up.toFixed(3) + " vs base " + y.base_share_up.toFixed(3) + " (n=" + y.base_n + "); median " + pct(y.median, 2) +
+        ", IQR " + pct(y.p25, 1) + " to " + pct(y.p75, 1) + (y.continuation !== null ? "; continuation = sign(fwd12) == sign(12-1 momentum): " + y.continuation.toFixed(3) : "")));
+      var bars = el("div", { class: "hbars" });
+      s.rates.forEach(function (r) {
+        bars.appendChild(hbar("Higher after " + r.horizon + " months", r.share_up, r.base_share_up,
+          "P(return over " + r.horizon + " months > 0) = " + r.share_up.toFixed(3) + " (n=" + r.n_periods + ", " + r.n_spells + " spells); blue mark = all months " + r.base_share_up.toFixed(3)));
+      });
+      card.appendChild(bars);
+      host.appendChild(card);
+    });
+    var combo = H.setups.filter(function (s) { return s.key === "combined"; })[0] || H.setups[0];
+    var y = combo.rates[combo.rates.length - 1];
+    $("sum-after").textContent = "Like today, gold was higher a year later in " + Math.round(y.share_up * 100) + "% of cases (all months: " + Math.round(y.base_share_up * 100) + "%)";
+    var vd = clear($("after-verdict"));
+    vd.appendChild(el("span", { class: "tag" + (useful ? "" : " warn") }, useful ? useful + " passed the test" : "For context only"));
+  }
+
+  // ---------- technical picture ----------
+  S.metal = "gold";
+  function techChart(T) {
+    var C = T.chart, host = el("div", { class: "chart-wrap" });
+    var W = Math.max(320, ($("tech-body").clientWidth || 800)), narrow = W < 560, H = narrow ? 220 : 280, m = { l: narrow ? 46 : 58, r: 12, t: 10, b: 24 };
+    var vals = [].concat(C.close, C.upper, C.lower, C.sma200).filter(function (v) { return v !== null; });
+    var lo = Math.min.apply(null, vals) * 0.98, hi = Math.max.apply(null, vals) * 1.02, n = C.close.length, iw = W - m.l - m.r, ih = H - m.t - m.b;
+    function x(i) { return m.l + (i + 0.5) * iw / n; }
+    function y(v) { return m.t + (hi - v) / (hi - lo) * ih; }
+    var svg = sv("svg", { viewBox: "0 0 " + W + " " + H, role: "img", "aria-label": "Daily price for the past year with 50- and 200-day averages and normal range" });
+    var g = sv("g", { class: "axis" });
+    niceTicks(lo, hi, narrow ? 4 : 5).forEach(function (t) {
+      g.appendChild(sv("line", { x1: m.l, x2: m.l + iw, y1: y(t), y2: y(t) }));
+      var tx = sv("text", { x: m.l - 8, y: y(t) + 4, "text-anchor": "end" }); tx.textContent = Math.round(t).toLocaleString("en-US"); g.appendChild(tx);
+    });
+    C.dates.forEach(function (d, i) { if (i && d.slice(5, 7) !== C.dates[i - 1].slice(5, 7) && (+d.slice(5, 7)) % (narrow ? 3 : 2) === 1) {
+      var tx = sv("text", { x: x(i), y: H - 6, "text-anchor": "middle" }); tx.textContent = MONTHS[+d.slice(5, 7) - 1]; g.appendChild(tx); } });
+    svg.appendChild(g);
+    function path(a) { return a.map(function (v, i) { return v === null ? "" : (i && a[i - 1] !== null ? "L" : "M") + x(i).toFixed(1) + "," + y(v).toFixed(1); }).join(""); }
+    var band = C.upper.map(function (v, i) { return v === null ? null : [x(i), y(v)]; }).filter(Boolean);
+    var bandLo = C.lower.map(function (v, i) { return v === null ? null : [x(i), y(v)]; }).filter(Boolean).reverse();
+    if (band.length) svg.appendChild(sv("path", { d: "M" + band.concat(bandLo).map(function (p) { return p[0].toFixed(1) + "," + p[1].toFixed(1); }).join("L") + "Z", fill: "var(--gold-soft)", stroke: "none" }));
+    svg.appendChild(sv("path", { d: path(C.sma200), fill: "none", stroke: "var(--info)", "stroke-width": 1.4 }));
+    svg.appendChild(sv("path", { d: path(C.sma50), fill: "none", stroke: "var(--fg)", "stroke-width": 1.2, "stroke-dasharray": "5 3", opacity: 0.6 }));
+    svg.appendChild(sv("path", { d: path(C.close), fill: "none", stroke: "var(--gold)", "stroke-width": 1.8 }));
+    host.appendChild(svg);
+    var lg = el("div", { class: "legend" });
+    [["sw", "var(--gold)", "Daily closing price"], ["sw dash", "var(--fg)", "50-day average"], ["sw", "var(--info)", "200-day average"], ["sw box", "var(--gold-soft)", "Normal daily range (20 days)"]].forEach(function (L) {
+      var sp = el("span"), i = el("i", { class: L[0] });
+      if (L[0] === "sw box") i.style.background = L[1]; else { i.style.borderTopColor = L[1]; if (L[0] === "sw dash") i.style.borderTopStyle = "dashed"; }
+      sp.appendChild(i); sp.appendChild(document.createTextNode(L[2])); lg.appendChild(sp);
+    });
+    host.appendChild(lg);
+    return host;
+  }
+  function renderTech() {
+    ["metal-gold", "metal-silver"].forEach(function (id) { var b = $(id); b.setAttribute("aria-pressed", String(b.dataset.metal === S.metal)); });
+    var host = clear($("tech-body")), all = D.technical || {}, T = all[S.metal];
+    if (!T) {
+      host.appendChild(el("p", { class: "note" }, "Daily prices for " + S.metal + " aren't loaded yet. They download on the daily GitHub run; this section fills in once they arrive."));
+      $("sum-tech").textContent = all.gold ? "Gold ready; " + S.metal + " not loaded yet" : "Waiting for daily prices";
+      return;
+    }
+    host.appendChild(jg("p", { class: "note" }, "Daily prices to " + T.as_of + ", in dollars, from " + T.first.slice(0, 4) + " (" + T.n_days.toLocaleString("en-US") + " trading days).", "Source: " + T.source));
+    var p = el("div", { class: "panel" }); p.appendChild(techChart(T)); host.appendChild(p);
+    var grid = el("div", { class: "tech-grid" });
+    T.readings.forEach(function (r) {
+      var c = el("div", { class: "panel tread " + r.tone });
+      c.appendChild(el("div", { class: "lbl" }, r.name));
+      c.appendChild(jg("div", { class: "val" }, r.value, r.tech));
+      c.appendChild(el("div", { class: "note" }, r.plain));
+      grid.appendChild(c);
+    });
+    host.appendChild(grid);
+    host.appendChild(el("div", { class: "eyebrow" }, "What followed these signals before"));
+    var lst = el("div", { class: "after-list" });
+    T.active.forEach(function (s) {
+      var card = el("div", { class: "panel after" });
+      var top = el("div", { class: "after-top" });
+      var nm = el("span"); nm.appendChild(jg("b", null, s.plain, s.tech)); top.appendChild(nm);
+      top.appendChild(jg("span", { class: "tag" + (s.test.label === "useful" ? "" : " warn") }, s.test.label === "useful" ? "passed the honesty test" : s.test.n ? "for context only" : "too few cases to test",
+        s.test.n ? "Walk-forward since 2010, n=" + s.test.n + " days (" + s.test.spells + " spells). Brier " + s.test.brier_setup.toFixed(3) + " vs " + s.test.brier_base.toFixed(3) +
+          "; hit rate " + Math.round(s.test.hit_setup * 100) + "% vs " + Math.round(s.test.hit_base * 100) + "%." : "Too few earlier cases"));
+      card.appendChild(top);
+      var bars = el("div", { class: "hbars" });
+      s.rates.forEach(function (r) {
+        var months = r.horizon === 21 ? "1 month" : r.horizon === 63 ? "3 months" : r.horizon + " days";
+        bars.appendChild(hbar("Higher after " + months, r.share_up, r.base_share_up,
+          "P(return over " + r.horizon + " trading days > 0) = " + r.share_up.toFixed(3) + " (n=" + r.n_periods + " days, " + r.n_spells + " spells); median " + pct(r.median, 2) + "; all days " + r.base_share_up.toFixed(3)));
+      });
+      card.appendChild(bars);
+      var r3 = s.rates[s.rates.length - 1];
+      card.appendChild(el("p", { class: "note" }, "Seen on " + r3.n_periods.toLocaleString("en-US") + " days (" + r3.n_spells + " separate spells). Blue mark: share of all days."));
+      lst.appendChild(card);
+    });
+    if (!T.active.length) lst.appendChild(el("p", { class: "note" }, "No signal holds today."));
+    host.appendChild(lst);
+    var rd = {}; T.readings.forEach(function (r) { rd[r.key] = r; });
+    $("sum-tech").textContent = (S.metal === "gold" ? "Gold" : "Silver") + ": " + (rd.ma200 ? "price " + rd.ma200.value + " its 200-day average" : "") + (rd.rsi ? " · momentum gauge " + rd.rsi.value + " of 100" : "");
+  }
+  Array.prototype.forEach.call(document.querySelectorAll("[data-metal]"), function (b) {
+    b.addEventListener("click", function () { S.metal = b.dataset.metal; renderTech(); });
+  });
+
+  // ---------- data and gaps ----------
+  function renderFoot() {
+    var gp = clear($("brief-gaps"));
+    D.brief.gaps.forEach(function (g) { gp.appendChild(jg("li", null, g.text, g.tech)); });
+    var ul = clear($("pending")); ul.className = "blist muted";
+    D.pending.forEach(function (x) { ul.appendChild(typeof x === "string" ? el("li", null, x) : jg("li", null, x.text, x.tech)); });
+    var t = clear($("health"));
+    var hr = el("tr"); [["Source", ""], ["Latest", ""], ["Status", ""]].forEach(function (h) { hr.appendChild(el("th", { class: h[1] }, h[0])); });
+    var th = el("thead"); th.appendChild(hr); t.appendChild(th);
+    var tb = el("tbody");
+    var rows = D.health.length ? D.health : [{ source: "none", plain: "No download recorded", latest: null, status: "unknown" }];
+    var ok = 0;
+    rows.forEach(function (r) {
+      if (r.status === "ok") ok++;
+      var tr = el("tr");
+      tr.appendChild(jg("td", null, r.plain || r.source, r.source + (r.error ? ": " + r.error : "")));
+      tr.appendChild(el("td", { class: "num" }, r.latest ? r.latest.slice(0, 7) : "—"));
+      tr.appendChild(jg("td", { class: r.status === "ok" ? "ok" : "neg" }, HEALTH_PLAIN(r.status), "Health status: " + r.status));
+      tb.appendChild(tr);
+    });
+    t.appendChild(tb);
+    $("sum-data").textContent = ok + " of " + rows.length + " data sources up to date · " + (D.brief.gaps.length + D.pending.length) + " things not covered yet";
+  }
+
+  // ---------- folding ----------
+  var FOLDS = ["d-rules", "d-push", "d-price", "d-lines", "d-tech", "d-buyers", "d-cb", "d-stretch", "d-analogues", "d-after", "d-history", "d-dates", "d-data"];
+  function saveOpen() {
+    try { localStorage.setItem("pmdash-open", JSON.stringify(FOLDS.filter(function (id) { return $(id).open; }))); } catch (e) {}
+    $("toggle-all").textContent = FOLDS.every(function (id) { return $(id).open; }) ? "Close all" : "Open all";
+  }
+  function restoreOpen() {
+    var open = [];
+    try { open = JSON.parse(localStorage.getItem("pmdash-open") || "[]"); } catch (e) {}
+    var hash = (location.hash || "").slice(1);
+    FOLDS.forEach(function (id) { $(id).open = open.indexOf(id) >= 0 || id === hash; });
+    saveOpen();
+  }
+  FOLDS.forEach(function (id) {
+    $(id).addEventListener("toggle", function () {
+      saveOpen();
+      if ($(id).open) { if (id === "d-price") renderPrice(); if (id === "d-analogues") renderAnalogues(); if (id === "d-history") renderHistory(); if (id === "d-tech") renderTech(); }
+    });
+  });
+  $("toggle-all").addEventListener("click", function () {
+    var all = FOLDS.every(function (id) { return $(id).open; });
+    FOLDS.forEach(function (id) { $(id).open = !all; });
+    saveOpen();
+  });
+  Array.prototype.forEach.call(document.querySelectorAll("[data-tech]"), jgWire);
+  // "Show technical terms": underline every line that has a technical version (remembered)
+  function setJg(on) {
+    $("pm").classList.toggle("show-jg", on);
+    $("jg-toggle").setAttribute("aria-pressed", String(on));
+    $("jg-toggle").textContent = on ? "Hide technical terms" : "Show technical terms";
+  }
+  try { setJg(localStorage.getItem("pmdash-jg") === "1"); } catch (e) { setJg(false); }
+  $("jg-toggle").addEventListener("click", function () {
+    var on = !$("pm").classList.contains("show-jg"); setJg(on);
+    try { localStorage.setItem("pmdash-jg", on ? "1" : "0"); } catch (e) {}
+  });
+
+  function renderAll() {
+    // each section draws on its own: one failure must not stop the rest of the page
+    [renderMast, renderPrices, renderOdds, renderGuess, renderGlance, renderRules, renderPush, renderBuyers, renderRegime, renderPrice, renderLines,
+     renderStretch, renderDates, renderAnalogues, renderAfter, renderTech, renderHistory, renderFoot].forEach(function (f) {
+      try { f(); } catch (e) { if (window.console) console.error("Section failed to draw: " + (f.name || "?"), e); }
+    });
+  }
+
+  Array.prototype.forEach.call(document.querySelectorAll("[data-cur]"), function (b) {
+    b.addEventListener("click", function () { S.cur = b.dataset.cur; save(); renderAll(); });
+  });
+  Array.prototype.forEach.call(document.querySelectorAll("[data-range]"), function (b) {
+    b.addEventListener("click", function () { S.range = b.dataset.range; if (S.range === "all" && !$("log-scale").checked) { $("log-scale").checked = true; S.log = true; } save(); renderMast(); renderPrice(); });
+  });
+  $("log-scale").addEventListener("change", function () { S.log = this.checked; renderPrice(); });
+  if (S.range === "all") { S.log = true; $("log-scale").checked = true; }
+  restoreOpen();
+
+  renderAll();
+  $("live-refresh").addEventListener("click", fetchLive);
+  $("tv-toggle").addEventListener("click", function () {
+    var on = $("tv-stream").hidden; setStream(on);
+    try { localStorage.setItem("pmdash-stream", on ? "1" : "0"); } catch (e) {}
+  });
+  try { if (localStorage.getItem("pmdash-stream") === "1") setStream(true); } catch (e) {}
+  startLive();
+  var lastW = $("pm").clientWidth, pending = null;
+  window.addEventListener("resize", function () {
+    if (pending) cancelAnimationFrame(pending);
+    pending = requestAnimationFrame(function () { var w = $("pm").clientWidth; if (w !== lastW) { lastW = w; renderPrice(); renderAnalogues(); renderHistory(); } });
+  });
+})();
+</script>
+
+</body>
+</html>

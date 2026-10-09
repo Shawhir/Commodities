@@ -1,10 +1,8 @@
 name,status,bytes,seconds,error,cors
-goldapi_xau,200,182,2.3,,*
-goldapi_xag,200,182,2.1,,*
-goldapi_xau_chf,200,190,2.1,,*
-swissquote_xau,200,1129,2.5,,
-swissquote_xag,200,1111,2.5,,
-swissquote_usdchf,200,1093,2.5,,
-frankfurter,200,71,2.7,,*
-metals_live,,0,2.1,URLError: <urlopen error [SSL: TLSV1_UNRECOGNIZED_NAME] tlsv1 unrecognized name (_ssl.c:1016)>,
-kraken_paxg,200,304,2.2,,https://shawhir.github.io
+pages_live,200,334009,2.2,,*
+tv_widget_js,200,12846,2.3,,*
+tv_sym_xauchf,403,146,2.4,HTTP Error 403: Forbidden,
+tv_sym_xagchf,403,146,2.2,HTTP Error 403: Forbidden,
+tv_sym_xauusd,403,146,2.1,HTTP Error 403: Forbidden,
+tv_sym_xagusd,403,146,2.1,HTTP Error 403: Forbidden,
+tv_sym_usdchf,403,146,2.2,HTTP Error 403: Forbidden,
