@@ -1,0 +1,7 @@
+URL: https://api.gold-api.com/price/XAU
+STATUS: 200
+BYTES: 182
+ERROR: 
+HEADERS: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Methods': 'GET, POST, OPTIONS', 'Access-Control-Allow-Headers': 'Content-Type, x-api-key', 'Cache-Control': 'public, max-age=22'}
+
+{"currency":"USD","currencySymbol":"$","exchangeRate":1.0,"name":"Gold","price":4193.299805,"symbol":"XAU","updatedAt":"2026-10-09T16:16:51Z","updatedAtReadable":"a few seconds ago"}

@@ -129,7 +129,7 @@ res_exgold_cn,1990-02-01,1990-04-14,19916091241.8852,https://fred.stlouisfed.org
 res_exgold_cn,1990-03-01,1990-05-15,22271790826.547302,https://fred.stlouisfed.org/graph/fredgraph.csv?id=TRESEGCNM052N,2026-10-09
 res_exgold_cn,1990-04-01,1990-06-14,24113887765.8674,https://fred.stlouisfed.org/graph/fredgraph.csv?id=TRESEGCNM052N,2026-10-09
 res_exgold_cn,1990-05-01,1990-07-15,25250387305.0027,https://fred.stlouisfed.org/graph/fredgraph.csv?id=TRESEGCNM052N,2026-10-09
-res_exgold_cn,1990-06-01,1990-08-14,24369284897.267494,https://fred.stlouisfed.org/graph/fredgraph.csv?id=TRESEGCNM052N,2026-10-09
+res_exgold_cn,1990-06-01,1990-08-14,24369284897.26749,https://fred.stlouisfed.org/graph/fredgraph.csv?id=TRESEGCNM052N,2026-10-09
 res_exgold_cn,1990-07-01,1990-09-14,25455631824.7617,https://fred.stlouisfed.org/graph/fredgraph.csv?id=TRESEGCNM052N,2026-10-09
 res_exgold_cn,1990-08-01,1990-10-15,26122938879.880302,https://fred.stlouisfed.org/graph/fredgraph.csv?id=TRESEGCNM052N,2026-10-09
 res_exgold_cn,1990-09-01,1990-11-14,26843571786.6592,https://fred.stlouisfed.org/graph/fredgraph.csv?id=TRESEGCNM052N,2026-10-09
@@ -164,13 +164,13 @@ res_exgold_cn,1993-01-01,1993-03-17,21291195605.6105,https://fred.stlouisfed.org
 res_exgold_cn,1993-02-01,1993-04-14,21434894108.9048,https://fred.stlouisfed.org/graph/fredgraph.csv?id=TRESEGCNM052N,2026-10-09
 res_exgold_cn,1993-03-01,1993-05-15,20965028932.8395,https://fred.stlouisfed.org/graph/fredgraph.csv?id=TRESEGCNM052N,2026-10-09
 res_exgold_cn,1993-04-01,1993-06-14,20815697492.986298,https://fred.stlouisfed.org/graph/fredgraph.csv?id=TRESEGCNM052N,2026-10-09
-res_exgold_cn,1993-05-01,1993-07-15,20654115781.895294,https://fred.stlouisfed.org/graph/fredgraph.csv?id=TRESEGCNM052N,2026-10-09
+res_exgold_cn,1993-05-01,1993-07-15,20654115781.89529,https://fred.stlouisfed.org/graph/fredgraph.csv?id=TRESEGCNM052N,2026-10-09
 res_exgold_cn,1993-06-01,1993-08-14,20059170869.055,https://fred.stlouisfed.org/graph/fredgraph.csv?id=TRESEGCNM052N,2026-10-09
 res_exgold_cn,1993-07-01,1993-09-14,20207862509.057102,https://fred.stlouisfed.org/graph/fredgraph.csv?id=TRESEGCNM052N,2026-10-09
 res_exgold_cn,1993-08-01,1993-10-15,20375754092.8919,https://fred.stlouisfed.org/graph/fredgraph.csv?id=TRESEGCNM052N,2026-10-09
 res_exgold_cn,1993-09-01,1993-11-14,20847115864.962498,https://fred.stlouisfed.org/graph/fredgraph.csv?id=TRESEGCNM052N,2026-10-09
 res_exgold_cn,1993-10-01,1993-12-15,20911079469.7216,https://fred.stlouisfed.org/graph/fredgraph.csv?id=TRESEGCNM052N,2026-10-09
-res_exgold_cn,1993-11-01,1994-01-14,22076241803.141094,https://fred.stlouisfed.org/graph/fredgraph.csv?id=TRESEGCNM052N,2026-10-09
+res_exgold_cn,1993-11-01,1994-01-14,22076241803.14109,https://fred.stlouisfed.org/graph/fredgraph.csv?id=TRESEGCNM052N,2026-10-09
 res_exgold_cn,1993-12-01,1994-02-14,22386849243.5518,https://fred.stlouisfed.org/graph/fredgraph.csv?id=TRESEGCNM052N,2026-10-09
 res_exgold_cn,1994-01-01,1994-03-17,26355002628.8031,https://fred.stlouisfed.org/graph/fredgraph.csv?id=TRESEGCNM052N,2026-10-09
 res_exgold_cn,1994-02-01,1994-04-14,29065114294.509903,https://fred.stlouisfed.org/graph/fredgraph.csv?id=TRESEGCNM052N,2026-10-09
@@ -400,7 +400,7 @@ res_exgold_cn,2012-09-01,2012-11-14,3305307033211.038,https://fred.stlouisfed.or
 res_exgold_cn,2012-10-01,2012-12-15,3307207434359.045,https://fred.stlouisfed.org/graph/fredgraph.csv?id=TRESEGCNM052N,2026-10-09
 res_exgold_cn,2012-11-01,2013-01-14,3317109771593.932,https://fred.stlouisfed.org/graph/fredgraph.csv?id=TRESEGCNM052N,2026-10-09
 res_exgold_cn,2012-12-01,2013-02-14,3331120013773.815,https://fred.stlouisfed.org/graph/fredgraph.csv?id=TRESEGCNM052N,2026-10-09
-res_exgold_cn,2013-01-01,2013-03-17,3430093730753.3438,https://fred.stlouisfed.org/graph/fredgraph.csv?id=TRESEGCNM052N,2026-10-09
+res_exgold_cn,2013-01-01,2013-03-17,3430093730753.344,https://fred.stlouisfed.org/graph/fredgraph.csv?id=TRESEGCNM052N,2026-10-09
 res_exgold_cn,2013-02-01,2013-04-14,3414507258105.856,https://fred.stlouisfed.org/graph/fredgraph.csv?id=TRESEGCNM052N,2026-10-09
 res_exgold_cn,2013-03-01,2013-05-15,3461598812669.409,https://fred.stlouisfed.org/graph/fredgraph.csv?id=TRESEGCNM052N,2026-10-09
 res_exgold_cn,2013-04-01,2013-06-14,3553491229423.668,https://fred.stlouisfed.org/graph/fredgraph.csv?id=TRESEGCNM052N,2026-10-09
@@ -422,7 +422,7 @@ res_exgold_cn,2014-07-01,2014-09-14,3984242573662.35,https://fred.stlouisfed.org
 res_exgold_cn,2014-08-01,2014-10-15,3986410909900.6978,https://fred.stlouisfed.org/graph/fredgraph.csv?id=TRESEGCNM052N,2026-10-09
 res_exgold_cn,2014-09-01,2014-11-14,3904950286982.852,https://fred.stlouisfed.org/graph/fredgraph.csv?id=TRESEGCNM052N,2026-10-09
 res_exgold_cn,2014-10-01,2014-12-15,3869760770718.173,https://fred.stlouisfed.org/graph/fredgraph.csv?id=TRESEGCNM052N,2026-10-09
-res_exgold_cn,2014-11-01,2015-01-14,3864037221567.3223,https://fred.stlouisfed.org/graph/fredgraph.csv?id=TRESEGCNM052N,2026-10-09
+res_exgold_cn,2014-11-01,2015-01-14,3864037221567.322,https://fred.stlouisfed.org/graph/fredgraph.csv?id=TRESEGCNM052N,2026-10-09
 res_exgold_cn,2014-12-01,2015-02-14,3859167962991.088,https://fred.stlouisfed.org/graph/fredgraph.csv?id=TRESEGCNM052N,2026-10-09
 res_exgold_cn,2015-01-01,2015-03-17,3829024270329.457,https://fred.stlouisfed.org/graph/fredgraph.csv?id=TRESEGCNM052N,2026-10-09
 res_exgold_cn,2015-02-01,2015-04-14,3816861988407.055,https://fred.stlouisfed.org/graph/fredgraph.csv?id=TRESEGCNM052N,2026-10-09
@@ -544,7 +544,7 @@ res_exgold_cn,2024-09-01,2024-11-14,3381380836283.216,https://fred.stlouisfed.or
 res_exgold_cn,2024-10-01,2024-12-15,3324874877335.187,https://fred.stlouisfed.org/graph/fredgraph.csv?id=TRESEGCNM052N,2026-10-09
 res_exgold_cn,2024-11-01,2025-01-14,3328994428056.94,https://fred.stlouisfed.org/graph/fredgraph.csv?id=TRESEGCNM052N,2026-10-09
 res_exgold_cn,2024-12-01,2025-02-14,3264803869739.1206,https://fred.stlouisfed.org/graph/fredgraph.csv?id=TRESEGCNM052N,2026-10-09
-res_exgold_cn,2025-01-01,2025-03-17,3271795650229.3438,https://fred.stlouisfed.org/graph/fredgraph.csv?id=TRESEGCNM052N,2026-10-09
+res_exgold_cn,2025-01-01,2025-03-17,3271795650229.344,https://fred.stlouisfed.org/graph/fredgraph.csv?id=TRESEGCNM052N,2026-10-09
 res_exgold_cn,2025-02-01,2025-04-14,3290388622571.144,https://fred.stlouisfed.org/graph/fredgraph.csv?id=TRESEGCNM052N,2026-10-09
 res_exgold_cn,2025-03-01,2025-05-15,3304657890063.751,https://fred.stlouisfed.org/graph/fredgraph.csv?id=TRESEGCNM052N,2026-10-09
 res_exgold_cn,2025-04-01,2025-06-14,3347899010333.592,https://fred.stlouisfed.org/graph/fredgraph.csv?id=TRESEGCNM052N,2026-10-09

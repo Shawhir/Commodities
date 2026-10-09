@@ -1,0 +1,7 @@
+URL: https://api.gold-api.com/price/XAU/CHF
+STATUS: 200
+BYTES: 190
+ERROR: 
+HEADERS: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Methods': 'GET, POST, OPTIONS', 'Access-Control-Allow-Headers': 'Content-Type, x-api-key', 'Cache-Control': 'public, max-age=18'}
+
+{"currency":"CHF","currencySymbol":"Fr","exchangeRate":0.8325,"name":"Gold","price":3490.9220876625,"symbol":"XAU","updatedAt":"2026-10-09T16:16:51Z","updatedAtReadable":"a few seconds ago"}

@@ -1,0 +1,7 @@
+URL: https://forex-data-feed.swissquote.com/public-quotes/bboquotes/instrument/XAU/USD
+STATUS: 200
+BYTES: 1129
+ERROR: 
+HEADERS: {'Content-Type': 'application/json'}
+
+[{"topo":{"platform":"SwissquoteLtd","server":"Live5"},"spreadProfilePrices":[{"spreadProfile":"premium","bidSpread":25.60,"askSpread":25.60,"bid":4192.399,"ask":4193.061},{"spreadProfile":"prime","bidSpread":24.20,"askSpread":24.20,"bid":4192.413,"ask":4193.047},{"spreadProfile":"elite","bidSpread":17.70,"askSpread":17.70,"bid":4192.478,"ask":4192.982}],"ts":1791562626282},{"topo":{"platform":"AT","server":"AT"},"spreadProfilePrices":[{"spreadProfile":"standard","bidSpread":27.00,"askSpread":27.00,"bid":4192.385,"ask":4193.075},{"spreadProfile":"premium","bidSpread":25.65,"askSpread":25.65,"bid":4192.399,"ask":4193.062},{"spreadProfile":"prime","bidSpread":24.25,"askSpread":24.25,"bid":4192.413,"ask":4193.048}],"ts":1791562626282},{"topo":{"platform":"SwissquoteCapitalMarkets","server":"Live7"},"spreadProfilePrices":[{"spreadProfile":"premium","bidSpread":25.40,"askSpread":25.40,"bid":4192.401,"ask":4193.059},{"spreadProfile":"prime","bidSpread":24.40,"askSpread":24.40,"bid":4192.411,"ask":4193.049},{"spreadProfile":"elite","bidSpread":17.70,"askSpread":17.70,"bid":4192.478,"ask":4192.982}],"ts":1791562626282}]

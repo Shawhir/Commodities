@@ -1,0 +1,7 @@
+URL: https://forex-data-feed.swissquote.com/public-quotes/bboquotes/instrument/USD/CHF
+STATUS: 200
+BYTES: 1093
+ERROR: 
+HEADERS: {'Content-Type': 'application/json'}
+
+[{"topo":{"platform":"SwissquoteCapitalMarkets","server":"Live7"},"spreadProfilePrices":[{"spreadProfile":"premium","bidSpread":0.65,"askSpread":0.65,"bid":0.83054,"ask":0.83070},{"spreadProfile":"prime","bidSpread":0.50,"askSpread":0.50,"bid":0.83055,"ask":0.83068},{"spreadProfile":"elite","bidSpread":0.00,"askSpread":0.00,"bid":0.83060,"ask":0.83063}],"ts":1791562631329},{"topo":{"platform":"AT","server":"AT"},"spreadProfilePrices":[{"spreadProfile":"standard","bidSpread":0.95,"askSpread":0.95,"bid":0.83051,"ask":0.83073},{"spreadProfile":"premium","bidSpread":0.85,"askSpread":0.85,"bid":0.83052,"ask":0.83072},{"spreadProfile":"prime","bidSpread":0.75,"askSpread":0.75,"bid":0.83053,"ask":0.83071}],"ts":1791562631329},{"topo":{"platform":"SwissquoteLtd","server":"Live5"},"spreadProfilePrices":[{"spreadProfile":"premium","bidSpread":0.65,"askSpread":0.65,"bid":0.83054,"ask":0.83070},{"spreadProfile":"prime","bidSpread":0.60,"askSpread":0.60,"bid":0.83054,"ask":0.83069},{"spreadProfile":"elite","bidSpread":0.00,"askSpread":0.00,"bid":0.83060,"ask":0.83063}],"ts":1791562631329}]

@@ -1,0 +1,7 @@
+URL: https://api.frankfurter.app/latest?from=USD&to=CHF
+STATUS: 200
+BYTES: 71
+ERROR: 
+HEADERS: {'Content-Type': 'application/json; charset=utf-8', 'access-control-allow-origin': '*', 'access-control-allow-methods': 'GET, OPTIONS', 'access-control-expose-headers': '', 'access-control-max-age': '7200', 'cache-control': 'public, max-age=86400'}
+
+{"amount":1.0,"base":"USD","date":"2026-10-09","rates":{"CHF":0.83107}}

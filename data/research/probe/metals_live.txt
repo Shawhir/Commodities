@@ -1,0 +1,6 @@
+URL: https://api.metals.live/v1/spot
+STATUS: None
+BYTES: 0
+ERROR: URLError: <urlopen error [SSL: TLSV1_UNRECOGNIZED_NAME] tlsv1 unrecognized name (_ssl.c:1016)>
+HEADERS: {}
+

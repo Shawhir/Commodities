@@ -1,0 +1,7 @@
+URL: https://api.kraken.com/0/public/Ticker?pair=PAXGUSD
+STATUS: 200
+BYTES: 304
+ERROR: 
+HEADERS: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': 'https://shawhir.github.io', 'Cache-Control': 'max-age=2, public'}
+
+{"error":[],"result":{"PAXGUSD":{"a":["4187.910000","1","1.000"],"b":["4187.900000","1","1.000"],"c":["4187.910000","0.00100000"],"v":["234.91092330","374.28286131"],"p":["4177.276880","4160.884492"],"t":[2436,3488],"l":["4143.510000","4118.120000"],"h":["4202.390000","4202.390000"],"o":"4145.390000"}}}

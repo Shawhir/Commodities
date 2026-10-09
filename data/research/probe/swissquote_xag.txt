@@ -1,0 +1,7 @@
+URL: https://forex-data-feed.swissquote.com/public-quotes/bboquotes/instrument/XAG/USD
+STATUS: 200
+BYTES: 1111
+ERROR: 
+HEADERS: {'Content-Type': 'application/json'}
+
+[{"topo":{"platform":"SwissquoteCapitalMarkets","server":"Live7"},"spreadProfilePrices":[{"spreadProfile":"premium","bidSpread":17.50,"askSpread":17.50,"bid":60.9115,"ask":60.9515},{"spreadProfile":"prime","bidSpread":17.30,"askSpread":17.30,"bid":60.9117,"ask":60.9513},{"spreadProfile":"elite","bidSpread":13.95,"askSpread":13.95,"bid":60.9151,"ask":60.9480}],"ts":1791562628788},{"topo":{"platform":"AT","server":"AT"},"spreadProfilePrices":[{"spreadProfile":"standard","bidSpread":17.50,"askSpread":17.50,"bid":60.9115,"ask":60.9515},{"spreadProfile":"premium","bidSpread":17.25,"askSpread":17.25,"bid":60.9118,"ask":60.9513},{"spreadProfile":"prime","bidSpread":17.05,"askSpread":17.05,"bid":60.9120,"ask":60.9511}],"ts":1791562628788},{"topo":{"platform":"SwissquoteLtd","server":"Live5"},"spreadProfilePrices":[{"spreadProfile":"premium","bidSpread":17.50,"askSpread":17.50,"bid":60.9115,"ask":60.9515},{"spreadProfile":"prime","bidSpread":17.30,"askSpread":17.30,"bid":60.9117,"ask":60.9513},{"spreadProfile":"elite","bidSpread":13.95,"askSpread":13.95,"bid":60.9151,"ask":60.9480}],"ts":1791562628788}]
