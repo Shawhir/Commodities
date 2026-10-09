@@ -32,7 +32,7 @@ SOURCE_PLAIN = {
     "dollar_broad": "US dollar index", "vix_fred": "Stock market fear gauge", "gold_vol": "Gold price swings gauge",
     "fed_funds_eff": "US overnight interest rate", "fed_target_upper": "Fed's target interest rate",
     "us_cpi_fred": "US inflation", "us_core_cpi": "US inflation without food and energy", "us_payrolls": "US jobs",
-    "us_unemployment": "US unemployment", "usdchf_fred": "Francs per dollar, daily",
+    "us_unemployment": "US unemployment", "usdchf_fred": "Francs per dollar, daily", "usdchf_yahoo_daily": "Francs per dollar, daily (fresher copy)",
     "cftc_cot": "Speculators' positions", "gpr_monthly": "War and political risk, monthly",
     "gpr_daily": "War and political risk, daily", "manual_reports": "Figures typed in by hand",
 }
@@ -139,9 +139,40 @@ def backdrop(macro: dict, fx_daily: pd.Series | None, as_of: pd.Period, since: s
     return rows
 
 
+def price_strip(daily: dict | None, fx_daily: pd.Series | None) -> list[dict]:
+    """Latest daily close of each metal in dollars and francs, with the day's and the year's change.
+    Francs = dollars x francs-per-dollar on the same day (or the latest rate before it, dated)."""
+    out = []
+    fx = fx_daily.dropna().sort_index() if fx_daily is not None else pd.Series(dtype=float)
+    for metal, (df_, src_) in (daily or {}).items():
+        if df_ is None or df_.empty:
+            continue
+        c = df_["close"].dropna()
+        if len(c) < 2:
+            continue
+        d, p = c.index[-1], float(c.iloc[-1])
+        yr = c.loc[:d - pd.DateOffset(years=1)]
+        row = {"metal": metal, "date": str(d.date()), "source": src_,
+               "USD": {"price": p, "chg_1d": p / float(c.iloc[-2]) - 1,
+                       "chg_1y": p / float(yr.iloc[-1]) - 1 if len(yr) else None}}
+        if len(fx):
+            fxc = fx.reindex(c.index, method="ffill")
+            chf = (c * fxc).dropna()
+            f_at = fx.loc[:d]
+            if len(chf) >= 2 and len(f_at):
+                cy = chf.loc[:d - pd.DateOffset(years=1)]
+                q = float(chf.iloc[-1])
+                row["CHF"] = {"price": q, "chg_1d": q / float(chf.iloc[-2]) - 1,
+                              "chg_1y": q / float(cy.iloc[-1]) - 1 if len(cy) else None}
+                row["fx"] = {"rate": float(f_at.iloc[-1]), "date": str(f_at.index[-1].date())}
+        out.append(row)
+    return out
+
+
 def build_payload(gold: pd.Series, fx: pd.Series, health: pd.DataFrame | None = None, macro: dict | None = None,
                   include_oos: bool = True, reports: list[dict] | None = None,
-                  fx_daily: pd.Series | None = None, daily: dict | None = None) -> dict:
+                  fx_daily: pd.Series | None = None, daily: dict | None = None,
+                  fx_fresh: pd.Series | None = None) -> dict:
     th = config.load("thresholds")
     mk = config.load("markets")
     levels_cfg = config.load("levels")
@@ -300,6 +331,7 @@ def build_payload(gold: pd.Series, fx: pd.Series, health: pd.DataFrame | None = 
         if df_ is not None:
             technical[metal] = base_rates.build_technical(df_, src_)
     return _clean({
+        "prices": price_strip(daily, fx_fresh if fx_fresh is not None else fx_daily),
         "history": history, "technical": technical, "guess": guess, "odds": weighed,
         "brief": brief,
         "as_of": str(as_of), "built": str(date.today()), "disclaimer": s["disclaimer"],

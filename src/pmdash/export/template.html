@@ -75,6 +75,17 @@ body { background: var(--bg); color: var(--fg); font-family: var(--font-body); f
 .note { color: var(--muted); font-size: 13px; max-width: 75ch; }
 .panel { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; min-width: 0; }
 
+/* price strip: today's prices in both currencies */
+.prices { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 10px; margin: 14px 0 4px; }
+.prices[hidden] { display: none; }
+.pcard { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 14px; min-width: 0; }
+.pcard .top { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.pcard .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 6px; }
+.pcard .cur { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; color: var(--muted); }
+.pcard .px { font-family: var(--font-data); font-variant-numeric: tabular-nums; font-size: 22px; font-weight: 500; line-height: 1.2; }
+.pcard .chg { font-family: var(--font-data); font-variant-numeric: tabular-nums; font-size: 12px; color: var(--muted); }
+.pcard .chg .pos { color: var(--up); } .pcard .chg .neg { color: var(--down); }
+.pcard .sel .cur { color: var(--gold); }
 /* layout: glance first, details folded */
 .glance-sec { display: grid; gap: 12px; }
 .glance-head { font-family: var(--font-display); font-weight: 500; font-size: 22px; line-height: 1.3; max-width: 62ch; }
@@ -309,6 +320,8 @@ table.t tr:last-child td { border-bottom: 0; }
       </div>
     </div>
   </header>
+
+  <div class="prices" id="prices" aria-label="Latest prices" hidden></div>
 
   <section class="glance-sec" id="glance-sec" aria-label="At a glance">
     <h2 id="brief-head" class="glance-head">—</h2>
@@ -590,6 +603,48 @@ table.t tr:last-child td { border-bottom: 0; }
       "Data to " + D.as_of + " (latest monthly average); built " + D.built + "; all figures computed from stored point-in-time data");
     ["cur-chf", "cur-usd"].forEach(function (id) { var b = $(id); b.setAttribute("aria-pressed", String(b.dataset.cur === S.cur)); });
     ["rng-3", "rng-10", "rng-20", "rng-all"].forEach(function (id) { var b = $(id); b.setAttribute("aria-pressed", String(b.dataset.range === S.range)); });
+  }
+
+  // ---------- price strip ----------
+  function renderPrices() {
+    var P = D.prices || [], host = clear($("prices"));
+    if (!P.length) { host.hidden = true; return; }
+    host.hidden = false;
+    var NAME = { gold: "Gold", silver: "Silver" };
+    function fmt(x, cur, metal) {
+      var dp = metal === "silver" ? 2 : 0;
+      return (cur === "USD" ? "$" : "CHF ") + x.toLocaleString("en-US", { minimumFractionDigits: dp, maximumFractionDigits: dp });
+    }
+    function chg(label, x) {
+      var w = el("span", {}, label + " ");
+      w.appendChild(el("span", { class: cls(x) }, pct(x, 1)));
+      return w;
+    }
+    P.forEach(function (r) {
+      var c = el("div", { class: "pcard" }), top = el("div", { class: "top" });
+      top.appendChild(el("div", { class: "eyebrow" }, (NAME[r.metal] || r.metal) + " · per ounce"));
+      top.appendChild(jg("span", { class: "note" }, "close " + dayName(r.date) + (r.fx && r.fx.date < r.date ? " · franc rate " + dayName(r.fx.date) : ""),
+        r.source + ", settlement " + r.date + (r.fx ? "; francs = dollars x USD/CHF " + r.fx.rate.toFixed(4) + " (" + r.fx.date + ")" : "")));
+      c.appendChild(top);
+      var pair = el("div", { class: "pair" });
+      ["CHF", "USD"].forEach(function (cur) {
+        var v = r[cur]; if (!v) return;
+        var b = el("div", { class: cur === S.cur ? "sel" : "" });
+        b.appendChild(el("div", { class: "cur" }, cur));
+        b.appendChild(el("div", { class: "px" }, fmt(v.price, cur, r.metal)));
+        var ch = el("div", { class: "chg" });
+        ch.appendChild(chg("day", v.chg_1d));
+        if (v.chg_1y !== null && v.chg_1y !== undefined) { ch.appendChild(document.createTextNode(" · ")); ch.appendChild(chg("year", v.chg_1y)); }
+        b.appendChild(ch);
+        pair.appendChild(b);
+      });
+      c.appendChild(pair);
+      host.appendChild(c);
+    });
+  }
+  function dayName(iso) {
+    var d = new Date(iso + "T12:00:00Z");
+    return d.toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short", timeZone: "UTC" });
   }
 
   // ---------- at a glance ----------
@@ -1531,7 +1586,7 @@ table.t tr:last-child td { border-bottom: 0; }
 
   function renderAll() {
     // each section draws on its own: one failure must not stop the rest of the page
-    [renderMast, renderOdds, renderGuess, renderGlance, renderRules, renderPush, renderRegime, renderPrice, renderLines,
+    [renderMast, renderPrices, renderOdds, renderGuess, renderGlance, renderRules, renderPush, renderRegime, renderPrice, renderLines,
      renderStretch, renderDates, renderAnalogues, renderAfter, renderTech, renderHistory, renderFoot].forEach(function (f) {
       try { f(); } catch (e) { if (window.console) console.error("Section failed to draw: " + (f.name || "?"), e); }
     });

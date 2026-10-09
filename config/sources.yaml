@@ -152,6 +152,15 @@ sources:
     stale_after_days: 5
     status: candidate
     note: COMEX silver front-month continuation (Yahoo Finance, unofficial).
+  usdchf_yahoo_daily:
+    fetcher: yahoo_chart
+    ticker: CHF=X
+    prefix: usdchf_yf
+    start: "2003-12-01"
+    schedule: daily
+    stale_after_days: 5
+    status: candidate
+    note: Francs per dollar, daily (Yahoo Finance, unofficial). Fresher than FRED's weekly H.10 release; used for today's franc prices at the top of the page.
   gold_spot_daily:
     fetcher: stooq_daily
     symbol: xauusd

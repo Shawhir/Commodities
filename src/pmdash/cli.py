@@ -280,8 +280,12 @@ def _payload(con, args, include_oos: bool):
                 "plain_why": rspec.get(r.report_id, {}).get("plain_why", "")} for r in rels]
     fx_daily = db.get_series(con, "usdchf_daily", as_of=args.as_of)
     daily = {m: data.load_daily(con, m, args.as_of) for m in ("gold", "silver")}
+    # today's franc prices: Yahoo's daily rate where held (fresher), FRED's weekly-released one otherwise
+    fx_yf = db.get_series(con, "usdchf_yf_close", as_of=args.as_of)
+    fx_fresh = fx_yf.combine_first(fx_daily) if len(fx_yf) else fx_daily
     return build_payload(gold, fx, _health(con), data.load_macro(con, args.as_of), include_oos=include_oos,
-                         reports=reports, fx_daily=fx_daily if len(fx_daily) else None, daily=daily)
+                         reports=reports, fx_daily=fx_daily if len(fx_daily) else None, daily=daily,
+                         fx_fresh=fx_fresh if len(fx_fresh) else None)
 
 
 def cmd_export_html(args):
