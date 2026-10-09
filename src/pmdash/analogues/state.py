@@ -31,6 +31,9 @@ LABELS = {
     "real_yield_proxy_chg_6m": "change in interest rates after inflation over 6 months",
     "yield_10y_chg_6m": "change in the US 10-year interest rate over 6 months",
     "real_yield_10y": "interest rates after inflation (official)",
+    "real_yield": "interest rates after inflation",
+    "ch_real_yield": "Swiss interest rates after inflation",
+    "real_yield_chg_6m": "change in interest rates after inflation over 6 months",
     "oil_chg_12m": "oil price change over 12 months",
     "vix_pct": "stock market fear (0 to 100 scale)",
     "gpr_pct": "war and political risk (0 to 100 scale)",
@@ -44,14 +47,16 @@ TECH_LABELS = {
     "dist_10m_avg": "P / SMA10 - 1", "dist_3y_avg": "P / SMA36 - 1", "efficiency_ratio": "efficiency ratio (12m)",
     "regime": "regime label", "chf_dist_10y_avg": "P_CHF / SMA120_CHF - 1", "usdchf_chg_12m": "USD/CHF 12m change",
     "cpi_yoy": "CPI-U y/y (lag 1m)", "real_yield_proxy": "GS10 - CPI y/y (pp)", "real_yield_proxy_chg_6m": "6m change in real-yield proxy (pp)",
-    "yield_10y_chg_6m": "6m change in GS10 (pp)", "real_yield_10y": "DFII10", "oil_chg_12m": "Brent 12m change",
+    "yield_10y_chg_6m": "6m change in GS10 (pp)", "real_yield_10y": "DFII10", "real_yield": "DFII10 from 2003, GS10 - CPI y/y before (pp)",
+    "real_yield_chg_6m": "6m change in DFII10 (GS10 - CPI before 2003) (pp)",
+    "ch_real_yield": "Swiss 10y (OECD) - Swiss CPI y/y (pp)", "oil_chg_12m": "Brent 12m change",
     "vix_pct": "VIX 120m percentile", "gpr_pct": "GPR 120m percentile", "dollar_chg_6m": "DTWEXBGS 6m change",
     "fed_direction": "Fed direction (6m policy-rate change)", "breakeven_10y": "T10YIE", "cftc_mm_pct": "CFTC MM net 36m percentile",
 }
 FED_PLAIN = {"hiking": "rising", "cutting": "falling", "on hold": "steady"}
 MOOD_PLAIN = {"Up": "rising steadily", "Sideways": "going sideways", "Down": "falling steadily"}
 CATEGORICAL = {"regime", "fed_direction"}
-POINTS = {"real_yield_proxy", "real_yield_proxy_chg_6m", "yield_10y_chg_6m", "real_yield_10y", "breakeven_10y"}  # shown in pp
+POINTS = {"ch_real_yield", "real_yield", "real_yield_chg_6m", "real_yield_proxy", "real_yield_proxy_chg_6m", "yield_10y_chg_6m", "real_yield_10y", "breakeven_10y"}  # shown in pp
 
 
 def trailing_pct(s: pd.Series, window: int = 120, min_periods: int = 36) -> pd.Series:
@@ -93,6 +98,16 @@ def build(gold_usd: pd.Series, usdchf: pd.Series | None = None, macro: dict | No
         df["yield_10y_chg_6m"] = (y - y.shift(6)).reindex(idx)
     if "real_yield_tips" in macro:
         df["real_yield_10y"] = macro["real_yield_tips"].reindex(idx)
+    # Best available real yield: the market's own (10-year TIPS, from 2003) where it exists, the
+    # proxy before that. The proxy can disagree badly with the market (Oct 2026: proxy ~1%, TIPS
+    # ~2.9%, because trailing CPI is high), so it is only a stand-in for the years without TIPS.
+    if "real_yield_proxy" in df:
+        mkt = df["real_yield_10y"] if "real_yield_10y" in df else pd.Series(index=idx, dtype=float)
+        df["real_yield"] = mkt.combine_first(df["real_yield_proxy"])
+        df["real_yield_chg_6m"] = (mkt - mkt.shift(6)).combine_first(df["real_yield_proxy_chg_6m"])
+    if "ch_yield_10y" in macro and "ch_cpi_yoy" in macro:
+        chr_ = macro["ch_yield_10y"] - macro["ch_cpi_yoy"].shift(1)
+        df["ch_real_yield"] = chr_.reindex(idx)
     if "brent" in macro:
         b = macro["brent"]
         df["oil_chg_12m"] = (b / b.shift(12) - 1).reindex(idx)

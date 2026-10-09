@@ -48,12 +48,12 @@ analogues:
     chf: 1.0
   groups:
     price_shape: [fall_from_24m_high, dist_10y_avg, return_3y, dist_10m_avg]
-    rates_money: [real_yield_proxy, real_yield_proxy_chg_6m, fed_direction, dollar_chg_6m]
+    rates_money: [real_yield, real_yield_chg_6m, fed_direction, dollar_chg_6m]
     inflation: [cpi_yoy, oil_chg_12m, breakeven_10y]
     demand_flow: [cb_purchases_12m, etf_holdings_chg_6m, cftc_mm_pct]
     risk: [vix_pct, gpr_pct]
     chf: [chf_dist_10y_avg, usdchf_chg_12m]
   # proxies used where a measure did not exist at the time (never invented values)
   proxies:
-    real_yield_10y: real_yield_proxy   # 10y Treasury minus trailing CPI y/y; TIPS only from 1997
+    real_yield_10y: real_yield_proxy   # 10y Treasury minus trailing CPI y/y; used only before TIPS (2003) in 'real_yield'
   outcome_horizons_months: [3, 6, 12, 24]

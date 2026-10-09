@@ -418,7 +418,7 @@ table.t tr:last-child td { border-bottom: 0; }
       <div class="eyebrow">The wider economy, in numbers</div>
       <h3 id="bd-head" class="sub-head">—</h3>
       <div class="tiles" id="bd-tiles"></div>
-      <p class="note jg" data-tech="Percentiles are against each series' own monthly history since August 1971, or since it starts if later. Sample sizes are shown. The real yield is a proxy (10-year Treasury minus trailing CPI inflation) so that one definition covers the whole history.">"Higher than X% of months" compares today with that series' own history since 1971, or since it started. Interest rates after inflation are estimated as the US 10-year interest rate minus inflation, so one method covers the whole history.</p>
+      <p class="note jg" data-tech="Percentiles are against each series' own monthly history since August 1971, or since it starts if later. Sample sizes are shown. Interest rates after inflation: the 10-year TIPS yield (market, from 2003). Swiss real yield: Swiss 10-year yield minus Swiss CPI inflation (OECD).">"Higher than X% of months" compares today with that series' own history since 1971, or since it started. US interest rates after inflation are the bond market's own figure (inflation-protected bonds, from 2003); the Swiss one is the Swiss 10-year rate minus Swiss inflation.</p>
     </div>
   </details>
 
@@ -1691,10 +1691,10 @@ table.t tr:last-child td { border-bottom: 0; }
     if (r.unit === "$") return sign + "$" + Math.abs(v).toFixed(2);
     return sign + Math.abs(v).toFixed(v < 10 && v > -10 ? 4 : 2);
   }
-  var BD_PLAIN = { "US inflation (CPI, y/y)": "US inflation", "Real yield proxy (10y minus CPI)": "Interest rates after inflation (estimate)",
-    "US 10-year yield": "US 10-year interest rate", "10-year TIPS real yield": "Interest rates after inflation (official)",
+  var BD_PLAIN = { "US inflation (CPI, y/y)": "US inflation", "US 10-year yield": "US 10-year interest rate", "10-year TIPS real yield": "Interest rates after inflation (official)",
     "VIX (monthly average)": "Stock market fear gauge", "Brent crude": "Oil price (Brent)", "USD/CHF (francs per dollar)": "Francs per dollar",
-    "Geopolitical risk index": "War and political risk index" };
+    "Geopolitical risk index": "War and political risk index", "Swiss 10-year bond yield": "Swiss 10-year interest rate",
+    "Swiss real yield (10y minus inflation)": "Swiss interest rates after inflation" };
   function renderBackdrop() {
     var host = clear($("bd-tiles"));
     var rows = D.backdrop || [];

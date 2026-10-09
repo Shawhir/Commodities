@@ -32,7 +32,7 @@ SOURCE_PLAIN = {
     "dollar_broad": "US dollar index", "vix_fred": "Stock market fear gauge", "gold_vol": "Gold price swings gauge",
     "fed_funds_eff": "US overnight interest rate", "fed_target_upper": "Fed's target interest rate",
     "us_cpi_fred": "US inflation", "us_core_cpi": "US inflation without food and energy", "us_payrolls": "US jobs",
-    "us_unemployment": "US unemployment", "usdchf_fred": "Francs per dollar, daily", "usdchf_yahoo_daily": "Francs per dollar, daily (fresher copy)",
+    "us_unemployment": "US unemployment", "usdchf_fred": "Francs per dollar, daily", "ch_10y_yield": "Swiss 10-year bond yield", "ch_cpi_yoy": "Swiss inflation", "usdchf_yahoo_daily": "Francs per dollar, daily (fresher copy)",
     "cftc_cot": "Speculators' positions", "gpr_monthly": "War and political risk, monthly",
     "gpr_daily": "War and political risk, daily", "manual_reports": "Figures typed in by hand",
 }
@@ -119,14 +119,16 @@ def backdrop(macro: dict, fx_daily: pd.Series | None, as_of: pd.Period, since: s
     if "cpi" in macro:
         c = macro["cpi"]
         add("US inflation (CPI, y/y)", (c / c.shift(12) - 1) * 100, "%", "BLS CPI-U via datasets/cpi-us")
-        if "yield_10y" in macro:
-            ry = macro["yield_10y"] - ((c / c.shift(12) - 1) * 100).reindex(macro["yield_10y"].index)
-            add("Real yield proxy (10y minus CPI)", ry, "pp", "10y Treasury minus CPI y/y",
-                "Proxy: TIPS start 1997. Not the market real yield.")
+
     if "yield_10y" in macro:
         add("US 10-year yield", macro["yield_10y"], "%", "FRED GS10 via datasets/bond-yields-us-10y")
     if "real_yield_tips" in macro:
         add("10-year TIPS real yield", macro["real_yield_tips"], "%", "FRED DFII10")
+    if "ch_yield_10y" in macro:
+        add("Swiss 10-year bond yield", macro["ch_yield_10y"], "%", "OECD via FRED (IRLTLT01CHM156N)")
+        if "ch_cpi_yoy" in macro:
+            add("Swiss real yield (10y minus inflation)", macro["ch_yield_10y"] - macro["ch_cpi_yoy"].shift(1), "pp",
+                "Swiss 10-year yield minus Swiss CPI y/y (OECD via FRED)")
     if "vix" in macro:
         add("VIX (monthly average)", macro["vix"], "", "CBOE via datasets/finance-vix")
     if "brent" in macro:

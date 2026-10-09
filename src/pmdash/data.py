@@ -42,6 +42,8 @@ MACRO = {
     "fed_rate": ["fed_funds_eff"],          # spliced with the target upper bound below
     "breakeven": ["breakeven_10y"],
     "cftc_gold_mm": ["cftc_gold_mm_net"],
+    "ch_yield_10y": ["ch_10y_yield"],
+    "ch_cpi_yoy": ["ch_cpi_yoy"],
 }
 
 
