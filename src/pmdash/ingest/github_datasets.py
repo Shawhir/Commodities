@@ -41,7 +41,7 @@ class FxMonthly(Fetcher):
 from .generic import (CftcDisaggregated, CsvSeries, ExcelSeries, FredSeries, ManualFile,  # noqa: E402
                       StooqDaily, YahooChart)
 
-from .buyers_sources import ComtradeMonthly, GldHoldings, ImfGold  # noqa: E402
+from .buyers_sources import ComtradeMonthly, GldHoldings, ImfGold, SnbCube  # noqa: E402
 
 FETCHERS = {
     "github_gold_monthly": GoldMonthly,
@@ -56,4 +56,5 @@ FETCHERS = {
     "imf_gold": ImfGold,
     "comtrade_monthly": ComtradeMonthly,
     "gld_holdings": GldHoldings,
+    "snb_cube": SnbCube,
 }

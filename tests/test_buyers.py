@@ -86,3 +86,12 @@ def test_build_section_with_partial_data(gold):
     low = " " + (out["headline"] + " " + out["honesty"]["plain"]).lower() + " "
     assert not [w for w in FORBIDDEN if f" {w} " in low]
     assert all(d["date"] >= "2026-10-09" for g in out["groups"] for d in g["dates"])
+
+
+def test_snb_cube_parser_reads_swiss_inflation():
+    from pathlib import Path
+    from pmdash.ingest.buyers_sources import SnbCube
+    f = SnbCube("ch_cpi_yoy_snb", {"cube": "plkopr", "dim": "VVP"})
+    df = f.parse((Path(__file__).parent / "fixtures" / "snb_plkopr.csv").read_bytes())
+    last = df.sort_values("ref_date").iloc[-1]
+    assert str(last.ref_date)[:7] == "2026-08" and abs(last.value - 0.80724605) < 1e-9

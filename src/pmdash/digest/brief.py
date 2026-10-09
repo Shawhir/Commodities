@@ -194,6 +194,7 @@ def pressures(state_row: pd.Series, macro: dict, as_of: pd.Period) -> list[dict]
     if chy is not None and chc is not None and len(chy.dropna()) > 7 and len(chc.dropna()) > 1:
         y = chy.dropna()
         r_ = (chy - chc.shift(1)).dropna()
+        r_ = r_[r_.index >= y.index[-1] - 3]          # only a current figure; never an old one
         ch6 = y.iloc[-1] - y.iloc[-7]
         eff = "headwind" if ch6 > 0.25 else "support" if ch6 < -0.25 else "neutral"
         add("Swiss interest rates", f"10-year Swiss bonds pay {y.iloc[-1]:.2f}%, {'up' if ch6 > 0 else 'down'} {abs(ch6):.2f} points in 6 months"
@@ -201,7 +202,7 @@ def pressures(state_row: pd.Series, macro: dict, as_of: pd.Period) -> list[dict]
             "What a franc saver gives up by holding gold instead of Swiss bonds; low Swiss rates make holding gold cheap in francs",
             "chf_snb",
             f"Swiss 10-year government bond yield (OECD IRLTLT01CHM156N via FRED), {y.index[-1]}: {y.iloc[-1]:.2f}%, "
-            f"6-month change {ch6:+.2f} pp; real = yield - Swiss CPI y/y (CPALTT01CHM659N, lagged 1 month). "
+            f"6-month change {ch6:+.2f} pp; real = yield - Swiss CPI y/y (SNB cube plkopr VVP, lagged 1 month). "
             f"Headwind if > +0.25 pp in 6 months, support if < -0.25 pp.")
     d = state_row.get("dollar_chg_6m")
     if d is not None and not pd.isna(d):

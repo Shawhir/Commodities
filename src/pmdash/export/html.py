@@ -32,7 +32,7 @@ SOURCE_PLAIN = {
     "dollar_broad": "US dollar index", "vix_fred": "Stock market fear gauge", "gold_vol": "Gold price swings gauge",
     "fed_funds_eff": "US overnight interest rate", "fed_target_upper": "Fed's target interest rate",
     "us_cpi_fred": "US inflation", "us_core_cpi": "US inflation without food and energy", "us_payrolls": "US jobs",
-    "us_unemployment": "US unemployment", "usdchf_fred": "Francs per dollar, daily", "ch_10y_yield": "Swiss 10-year bond yield", "ch_cpi_yoy": "Swiss inflation", "usdchf_yahoo_daily": "Francs per dollar, daily (fresher copy)",
+    "us_unemployment": "US unemployment", "usdchf_fred": "Francs per dollar, daily", "ch_10y_yield": "Swiss 10-year bond yield", "ch_cpi_yoy_snb": "Swiss inflation", "usdchf_yahoo_daily": "Francs per dollar, daily (fresher copy)",
     "cftc_cot": "Speculators' positions", "gpr_monthly": "War and political risk, monthly",
     "gpr_daily": "War and political risk, daily", "manual_reports": "Figures typed in by hand",
 }
@@ -128,7 +128,7 @@ def backdrop(macro: dict, fx_daily: pd.Series | None, as_of: pd.Period, since: s
         add("Swiss 10-year bond yield", macro["ch_yield_10y"], "%", "OECD via FRED (IRLTLT01CHM156N)")
         if "ch_cpi_yoy" in macro:
             add("Swiss real yield (10y minus inflation)", macro["ch_yield_10y"] - macro["ch_cpi_yoy"].shift(1), "pp",
-                "Swiss 10-year yield minus Swiss CPI y/y (OECD via FRED)")
+                "Swiss 10-year yield (OECD) minus Swiss CPI y/y (SNB)")
     if "vix" in macro:
         add("VIX (monthly average)", macro["vix"], "", "CBOE via datasets/finance-vix")
     if "brent" in macro:

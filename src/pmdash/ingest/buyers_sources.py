@@ -177,3 +177,26 @@ class GldHoldings(Fetcher):
                 if len(body) > 100:
                     return frame(body["date"], body["tonnes"], {"period": "day", "release_lag_days": 1})
         raise SchemaError(f"no Date/Tonnes columns found in sheets {list(sheets)[:5]}")
+
+
+class SnbCube(Fetcher):
+    """One series from a Swiss National Bank data-portal cube (data.snb.ch, free, no key).
+    The CSV has a short header, then Date;D0;Value rows; ``dim`` picks the D0 code
+    (e.g. plkopr / VVP = consumer prices, % change on a year earlier)."""
+
+    def __post_init__(self):
+        self.spec = {**self.spec, "url": f"https://data.snb.ch/api/cube/{self.spec['cube']}/data/csv/en"}
+
+    def parse(self, raw: bytes) -> pd.DataFrame:
+        text = raw.decode("utf-8-sig", "replace")
+        lines = text.splitlines()
+        try:
+            start = next(i for i, l in enumerate(lines) if l.replace('"', "").startswith("Date;"))
+        except StopIteration as e:
+            raise SchemaError(f"SNB cube answer has no Date header: {text[:200]!r}") from e
+        df = pd.read_csv(io.StringIO("\n".join(lines[start:])), sep=";", dtype=str)
+        df = df[df["D0"] == self.spec["dim"]].dropna(subset=["Value"])
+        if df.empty:
+            raise SchemaError(f"no rows for {self.spec['dim']}")
+        return frame(df["Date"] + "-01", df["Value"].astype(float),
+                     {"period": "month", "release_lag_days": self.spec.get("release_lag_days", 25)})
