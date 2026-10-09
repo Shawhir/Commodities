@@ -184,6 +184,7 @@ _Descriptive, not predictive. This tool does not forecast prices or give instruc
 | breakeven_10y | 2026-10 | ok |
 | brent_monthly | 2026-09 | ok |
 | cftc_cot | 2026-09 | ok |
+| chf_3m_rate | 2026-08 | ok |
 | dollar_broad | 2026-10 | ok |
 | fed_funds_eff | 2026-10 | ok |
 | fed_target_upper | 2026-10 | ok |
@@ -202,6 +203,7 @@ _Descriptive, not predictive. This tool does not forecast prices or give instruc
 | us_cpi_fred | 2026-08 | stale (69 days) |
 | us_cpi_mirror | 2026-08 | stale (69 days) |
 | us_payrolls | 2026-09 | ok |
+| us_tbill_3m | 2026-09 | ok |
 | us_unemployment | 2026-09 | ok |
 | usdchf_daily | 2026-10 | ok |
 | usdchf_fred | 2026-10 | ok |
