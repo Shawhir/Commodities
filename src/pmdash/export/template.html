@@ -782,13 +782,21 @@ table.t tr:last-child td { border-bottom: 0; }
     if (!on) return;                       // removing the widget closes its connection
     var box = el("div", { class: "tradingview-widget-container" });
     box.appendChild(el("div", { class: "tradingview-widget-container__widget" }));
-    var sc = document.createElement("script");
-    sc.src = "https://s3.tradingview.com/external-embedding/embed-widget-tickers.js";
+    var sc = document.createElement("script"), narrow = host.clientWidth < 640;
     sc.async = true;
-    sc.textContent = JSON.stringify({
-      symbols: TV_SYMBOLS.map(function (x) { return { proName: x[0], title: x[1] }; }),
-      colorTheme: tvTheme(), isTransparent: true, showSymbolLogo: false, locale: "en"
-    });
+    if (narrow) {          // phones: a list, so all five quotes show (the row only fits one)
+      sc.src = "https://s3.tradingview.com/external-embedding/embed-widget-market-quotes.js";
+      sc.textContent = JSON.stringify({
+        width: "100%", height: 330, locale: "en", colorTheme: tvTheme(), isTransparent: true, showSymbolLogo: false,
+        symbolsGroups: [{ name: "Gold and silver", symbols: TV_SYMBOLS.map(function (x) { return { name: x[0], displayName: x[1] }; }) }]
+      });
+    } else {
+      sc.src = "https://s3.tradingview.com/external-embedding/embed-widget-tickers.js";
+      sc.textContent = JSON.stringify({
+        symbols: TV_SYMBOLS.map(function (x) { return { proName: x[0], title: x[1] }; }),
+        colorTheme: tvTheme(), isTransparent: true, showSymbolLogo: false, locale: "en"
+      });
+    }
     box.appendChild(sc);
     host.appendChild(box);
   }
