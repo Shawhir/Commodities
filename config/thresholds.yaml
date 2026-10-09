@@ -9,9 +9,23 @@ regime:
 
 backtest:
   start: "1972-08"            # first month with a full 12-month lookback after the float
-  cost_per_switch: 0.002
-  cash_return: zero           # TODO phase 4: T-bill (USD) and SARON (CHF)
+  cost_per_switch: 0.002      # section 8 reproduction (long history on monthly averages)
+  cash_return: zero           # section 8 reproduction; the page uses cash rates below
   chop_filter_label_lag_months: 1
+  # Signals: both rules are decided on the DOLLAR price (monthly averages) for every view;
+  # franc results apply the dollar signal to franc prices (Oct 2026 review).
+  signal_currency: USD
+  main_rule: momentum_12_1    # rule 1 is the main switch; rule 2 (ma_10m) is a warning light
+  # Realistic test: signal from monthly averages, traded at real month-end closes
+  # (COMEX front-month daily closes, from 2000), cash earning 3-month rates.
+  realistic_start: "2001-01"
+  cash_series: {USD: us_tbill_3m, CHF: chf_3m_rate}
+  # One-way cost of each switch, by how the gold is held. Rough round numbers for a private
+  # investor in Switzerland: fund = exchange-traded gold fund (spread + commission);
+  # bars = 1 kg bar via a bank (spread about 1% each way); coins = Vreneli / Krugerrand
+  # (premium and spread about 2.5% each way). Change in yearly review.
+  costs: {fund: 0.002, bars: 0.01, coins: 0.025}
+  holding: fund               # which cost the page shows first: fund | bars | coins
 
 stretch:
   percentile_since: "1971-08" # windows use floating-era prices only

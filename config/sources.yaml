@@ -90,6 +90,8 @@ sources:
     note: CHF per USD, daily noon buying rate, from 1971.
 
   # --- official sources: candidates, run on GitHub Actions -----------------------------------
+  us_tbill_3m:        {fetcher: fred, fred_id: TB3MS,           period: month, release_lag_days: 5,  schedule: daily, stale_after_days: 45, status: candidate, note: "3-month US Treasury bill rate, monthly average, % a year, from 1934 (cash earning for time out of gold, USD)"}
+  chf_3m_rate:        {fetcher: fred, fred_id: IR3TIB01CHM156N, period: month, release_lag_days: 40, schedule: daily, stale_after_days: 75, status: candidate, note: "3-month Swiss franc interbank rate (OECD), monthly, % a year (Libor CHF, then SARON-based); negative 2015-2022. Cash earning for time out of gold, CHF"}
   real_yield_10y:     {fetcher: fred, fred_id: DFII10,   period: day,   release_lag_days: 1,  schedule: daily, stale_after_days: 7,  status: candidate, note: "10-year TIPS real yield, from 2003"}
   breakeven_10y:      {fetcher: fred, fred_id: T10YIE,   period: day,   release_lag_days: 1,  schedule: daily, stale_after_days: 7,  status: candidate, note: "10-year breakeven inflation"}
   dollar_broad:       {fetcher: fred, fred_id: DTWEXBGS, period: day,   release_lag_days: 7,  schedule: daily, stale_after_days: 14, status: candidate, note: "Broad trade-weighted dollar (weekly H.10 release)"}
