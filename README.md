@@ -131,8 +131,8 @@ A review of the rules from a Swiss holder's point of view changed five things:
 ## Live prices (no Actions needed)
 
 The price strip at the top fetches live gold and silver spot prices straight from your browser
-(gold-api.com: free, no key, allows browser requests) when the page opens and every minute while
-it is visible. Nothing is stored and no GitHub Actions run is involved. If the feed is down the
+(gold-api.com: free, no key, allows browser requests) once when the page opens, and again only
+when you press Refresh. There is deliberately no timer. Nothing is stored and no GitHub Actions run is involved. If the feed is down the
 page shows the last stored daily close instead. Stored closes remain the record for every
 calculation on the page.
 

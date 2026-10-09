@@ -86,10 +86,11 @@ body { background: var(--bg); color: var(--fg); font-family: var(--font-body); f
 .pcard .chg { font-family: var(--font-data); font-variant-numeric: tabular-nums; font-size: 12px; color: var(--muted); }
 .pcard .chg .pos { color: var(--up); } .pcard .chg .neg { color: var(--down); }
 .pcard .sel .cur { color: var(--gold); }
+.prices-foot { display: flex; justify-content: flex-end; align-items: center; gap: 12px; margin: 4px 0 2px; }
+.prices-foot[hidden] { display: none; }
 .pcard .live { font-size: 12px; color: var(--up); display: flex; align-items: center; gap: 6px; }
-.pcard .live i { width: 7px; height: 7px; border-radius: 50%; background: var(--up); animation: pulse 2s ease-in-out infinite; }
-@keyframes pulse { 50% { opacity: 0.3; } }
-@media (prefers-reduced-motion: reduce) { .pcard .live i { animation: none; } }
+.pcard .live i { width: 7px; height: 7px; border-radius: 50%; background: var(--up); }
+
 .real-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px 16px; margin-bottom: 8px; }
 .t tr.main td { font-weight: 600; }
 #real-table td:first-child { min-width: 9.5em; }
@@ -354,6 +355,10 @@ table.t tr:last-child td { border-bottom: 0; }
   </header>
 
   <div class="prices" id="prices" aria-label="Latest prices" hidden></div>
+  <div class="prices-foot" id="prices-foot" hidden>
+    <span class="note jg" data-tech="Spot prices from gold-api.com, fetched by your browser when the page opens and when you press Refresh. Not stored; every calculation uses the stored daily closes.">Spot prices are checked when the page opens.</span>
+    <button type="button" class="linkbtn" id="live-refresh">Refresh</button>
+  </div>
 
   <nav class="jump" aria-label="Jump to">
     <a href="#glance-sec">Today</a><a href="#g-ahead">Looking ahead</a><a href="#g-now">Now</a><a href="#g-buyers">Who's buying</a><a href="#g-history">History</a><a href="#g-dates">Dates and data</a>
@@ -683,8 +688,8 @@ table.t tr:last-child td { border-bottom: 0; }
   // ---------- price strip ----------
   function renderPrices() {
     var P = D.prices || [], host = clear($("prices"));
-    if (!P.length) { host.hidden = true; return; }
-    host.hidden = false;
+    if (!P.length) { host.hidden = true; $("prices-foot").hidden = true; return; }
+    host.hidden = false; $("prices-foot").hidden = false;
     var NAME = { gold: "Gold", silver: "Silver" };
     function fmt(x, cur, metal) {
       var dp = metal === "silver" ? 2 : 0;
@@ -698,7 +703,7 @@ table.t tr:last-child td { border-bottom: 0; }
     P.forEach(function (r) {
       var c = el("div", { class: "pcard" }), top = el("div", { class: "top" });
       top.appendChild(el("div", { class: "eyebrow" }, (NAME[r.metal] || r.metal) + " · per ounce"));
-      top.appendChild(jg("span", { class: "note" }, LIVE ? "updates every minute" : "close " + dayName(r.date) + (r.fx && r.fx.date < r.date ? " · franc rate " + dayName(r.fx.date) : ""),
+      top.appendChild(jg("span", { class: "note" }, LIVE ? "spot price" : "close " + dayName(r.date) + (r.fx && r.fx.date < r.date ? " · franc rate " + dayName(r.fx.date) : ""),
         r.source + ", settlement " + r.date + (r.fx ? "; francs = dollars x USD/CHF " + r.fx.rate.toFixed(4) + " (" + r.fx.date + ")" : "")));
       c.appendChild(top);
       var pair = el("div", { class: "pair" });
@@ -710,7 +715,7 @@ table.t tr:last-child td { border-bottom: 0; }
         if (lv && lv[cur]) {
           b.appendChild(jg("div", { class: "px" }, fmt(lv[cur], cur, r.metal), "Spot price from gold-api.com, fetched by your browser; francs use its rate " + LIVE.usdchf.toFixed(4) + " per dollar"));
           var lt = el("div", { class: "live" }); lt.appendChild(el("i", { "aria-hidden": "true" }));
-          lt.appendChild(document.createTextNode("live spot, " + LIVE.time));
+          lt.appendChild(document.createTextNode("spot at " + LIVE.time));
           b.appendChild(lt);
           b.appendChild(jg("div", { class: "chg" }, "last close " + fmt(v.price, cur, r.metal) + " (" + dayName(r.date) + ")",
             "Last stored daily close: " + r.source + ". Futures usually trade a little above spot, so the two are not directly comparable."));
@@ -736,7 +741,8 @@ table.t tr:last-child td { border-bottom: 0; }
       .then(function (r) { clearTimeout(t); if (!r.ok) throw new Error(r.status); return r.json(); });
   }
   function fetchLive() {
-    if (!window.fetch || !window.Promise) return;
+    if (!window.fetch || !window.Promise || liveBusy) return;
+    liveBusy = true; setRefresh("Checking…", true);
     Promise.all([getJSON(LIVE_URL + "XAU"), getJSON(LIVE_URL + "XAG"), getJSON(LIVE_URL + "XAU/CHF")]).then(function (a) {
       var au = +a[0].price, ag = +a[1].price, fx = +a[2].exchangeRate;
       if (!(au > 0 && ag > 0 && fx > 0)) return;
@@ -744,13 +750,18 @@ table.t tr:last-child td { border-bottom: 0; }
       LIVE = { gold: { USD: au, CHF: au * fx }, silver: { USD: ag, CHF: ag * fx }, usdchf: fx,
         time: when.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" }) };
       try { renderPrices(); } catch (e) {}
-    }).catch(function () { /* keep the stored closes */ });
+    }).catch(function () { LIVE_FAILED = true; /* keep the stored closes */ })
+      .then(function () { liveBusy = false; setRefresh(LIVE_FAILED && !LIVE ? "Try again" : "Refresh", false); LIVE_FAILED = false; });
   }
-  function startLive() {
-    fetchLive();
-    setInterval(function () { if (document.visibilityState !== "hidden") fetchLive(); }, 60000);
-    document.addEventListener("visibilitychange", function () { if (document.visibilityState === "visible") fetchLive(); });
+  var LIVE_FAILED = false;
+  function setRefresh(text, busy) {
+    var b = $("live-refresh"); if (!b) return;
+    b.textContent = text; b.disabled = busy;
   }
+  // Checked once when the page opens; after that only when the reader presses "Refresh".
+  // Deliberately no timer: the rules work on monthly averages, so ticking prices add nothing.
+  var liveBusy = false;
+  function startLive() { fetchLive(); }
   function dayName(iso) {
     var d = new Date(iso + "T12:00:00Z");
     return d.toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short", timeZone: "UTC" });
@@ -1872,6 +1883,7 @@ table.t tr:last-child td { border-bottom: 0; }
   restoreOpen();
 
   renderAll();
+  $("live-refresh").addEventListener("click", fetchLive);
   startLive();
   var lastW = $("pm").clientWidth, pending = null;
   window.addEventListener("resize", function () {
