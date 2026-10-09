@@ -179,6 +179,7 @@ _Descriptive, not predictive. This tool does not forecast prices or give instruc
 | ch_cpi_yoy | 2025-04 | ok |
 | ch_cpi_yoy_snb | 2026-08 | ok |
 | chf_3m_rate | 2026-08 | ok |
+| copper_monthly | 2026-07 | stale (100 days) |
 | dollar_broad | 2026-10 | ok |
 | fed_funds_eff | 2026-10 | ok |
 | fed_target_upper | 2026-10 | ok |
@@ -207,10 +208,16 @@ _Descriptive, not predictive. This tool does not forecast prices or give instruc
 | trade_hk_to_cn | 2026-07 | ok |
 | trade_in_imports | 2026-07 | ok |
 | us_10y_yield_monthly | 2026-08 | stale (69 days) |
+| us_2y_yield | 2026-10 | ok |
 | us_core_cpi | 2026-08 | stale (69 days) |
 | us_cpi_fred | 2026-08 | stale (69 days) |
 | us_cpi_mirror | 2026-08 | stale (69 days) |
+| us_curve_10y3m | 2026-10 | ok |
+| us_debt_gdp | 2026-01 | stale (281 days) |
+| us_deficit_gdp | 2025-01 | stale (646 days) |
+| us_m2 | 2026-08 | stale (69 days) |
 | us_payrolls | 2026-09 | ok |
+| us_recession | 2026-09 | ok |
 | us_tbill_3m | 2026-09 | ok |
 | us_unemployment | 2026-09 | ok |
 | usdchf_daily | 2026-10 | ok |
