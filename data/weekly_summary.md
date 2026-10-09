@@ -171,11 +171,13 @@ _Descriptive, not predictive. This tool does not forecast prices or give instruc
 |---|---|---|
 | breakeven_10y | 2026-10 | ok |
 | brent_monthly | 2026-09 | ok |
+| cb_gold_imf | 2026-09 | ok |
 | cftc_cot | 2026-09 | ok |
 | chf_3m_rate | 2026-08 | ok |
 | dollar_broad | 2026-10 | ok |
 | fed_funds_eff | 2026-10 | ok |
 | fed_target_upper | 2026-10 | ok |
+| gld_holdings | 2026-10 | ok |
 | gold_fut_daily | 2026-10 | ok |
 | gold_spot_daily | - | never succeeded |
 | gold_usd_monthly | 2026-09 | ok |
@@ -184,8 +186,21 @@ _Descriptive, not predictive. This tool does not forecast prices or give instruc
 | gpr_monthly | 2026-09 | ok |
 | manual_reports | - | ok |
 | real_yield_10y | 2026-10 | ok |
+| res_exgold_ch | - | never succeeded |
+| res_exgold_cn | 2026-06 | stale (130 days) |
+| res_exgold_cz | - | never succeeded |
+| res_exgold_de | 2026-07 | ok |
+| res_exgold_in | 2026-07 | ok |
+| res_exgold_jp | 2026-08 | ok |
+| res_exgold_pl | 2026-08 | ok |
+| res_exgold_ru | 2025-11 | stale (342 days) |
+| res_exgold_tr | 2026-08 | ok |
+| res_exgold_us | 2026-08 | ok |
 | silver_fut_daily | 2026-10 | ok |
 | silver_spot_daily | - | never succeeded |
+| trade_ch_exports | 2026-08 | ok |
+| trade_hk_to_cn | 2026-07 | ok |
+| trade_in_imports | 2026-07 | ok |
 | us_10y_yield_monthly | 2026-08 | stale (69 days) |
 | us_core_cpi | 2026-08 | stale (69 days) |
 | us_cpi_fred | 2026-08 | stale (69 days) |
