@@ -128,6 +128,28 @@ A review of the rules from a Swiss holder's point of view changed five things:
 5. **Costs by holding.** `backtest.costs` in `config/thresholds.yaml` sets a one-way cost per
    switch for a fund, bars and coins; the page has a switch between them.
 
+## Who's buying and central bank targets
+
+Two sections (`src/pmdash/history/buyers.py`, config in `config/buyers.yaml`):
+
+- **Who's buying**: a card per buyer group (central banks, China, India, US, Europe, Switzerland
+  as the refining hub, Turkey and the Middle East), each labelled steady, fickle, cushion or hub,
+  with its latest free figures, what to watch, what can be seen in advance, and dated events.
+- **Central bank buying and stated targets**: holdings and 12-month buying from official monthly
+  figures, gold's share of reserves at today's price, progress against the few stated targets
+  (typed in by hand, marked "check source"), a "what if" table for emerging-market banks moving to
+  a higher gold share (at today's price and +/-20%, since a higher price shrinks the gap), and the
+  walk-forward honesty test of heavy buying against gold's next 12 months.
+
+It deliberately does not estimate "how long the price has left": most demand has no target,
+share targets are partly met by the price itself, much buying is unreported, and fund flows can
+outweigh a year of central bank buying.
+
+Sources (all free, no key beyond FRED's): IMF IRFCL data API (gold in fine troy ounces),
+IMF via FRED (reserves excluding gold), UN Comtrade preview API (HS 7108 trade), SPDR Gold
+Shares archive, CFTC. They were checked from GitHub Actions with `pmdash probe`
+(`config/probe.yaml`); new sources are fetched with full history by the workflow job `sources`.
+
 ## Weighed-up odds, educated guess, history counts and technical picture
 
 - **Weighed-up odds** (top of the page, `src/pmdash/history/odds.py`): one probability each for

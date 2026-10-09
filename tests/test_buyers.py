@@ -64,3 +64,25 @@ def test_comtrade_parser_maps_partners_to_series():
     df = f.parse(("[" + page + "]").encode())
     tot = df[df.series_id == "trade_ch_x_total"]["value"].iloc[0]
     assert abs(tot - 106.717742) < 1e-6 and set(df.series_id) == {"trade_ch_x_total", "trade_ch_x_at"}
+
+
+def test_build_section_with_partial_data(gold):
+    from pmdash import config
+    from pmdash.digest.brief import FORBIDDEN
+    idx = pd.period_range("2005-01", "2026-08", freq="M")
+    ser = {"cb_gold_t_cn": pd.Series(np.linspace(600, 2387, len(idx)), index=idx),
+           "cb_gold_t_pl": pd.Series(np.linspace(100, 520, len(idx)), index=idx),
+           "res_exgold_cn": pd.Series(3.2e12, index=idx),
+           "trade_in_m_total": pd.Series(60.0, index=idx[-30:]),
+           "gld_holdings_m": pd.Series(np.linspace(800, 950, len(idx)), index=idx)}
+    out = B.build(ser, gold, 4150.0, config.load("buyers"), pd.Timestamp("2026-10-09"))
+    assert {g["id"] for g in out["groups"]} >= {"central_banks", "china", "india", "usa", "switzerland"}
+    cn = next(r for r in out["banks"] if r["bank"] == "CN")
+    assert 0 < cn["share_now"] < 1 and cn["pace_12m"] > 0
+    assert any(r.get("missing") for r in out["banks"])                     # banks without data are shown as such
+    pl = next(r for r in out["banks"] if r["bank"] == "PL")
+    assert "target" in pl and pl["target"]["verify"] is True
+    assert out["scenario"]["banks"] == ["CN"]                              # only banks with reserves data
+    low = " " + (out["headline"] + " " + out["honesty"]["plain"]).lower() + " "
+    assert not [w for w in FORBIDDEN if f" {w} " in low]
+    assert all(d["date"] >= "2026-10-09" for g in out["groups"] for d in g["dates"])

@@ -45,7 +45,7 @@
   --warn: #dda44a; --info: #7f9de0; color-scheme: dark;
 }
 
-body { background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 14px; line-height: 1.5; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 15px; line-height: 1.55; }
 .pm { max-width: 1180px; margin: 0 auto; padding-inline: 20px; padding-block: 20px 56px; display: grid; gap: 28px; }
 .pm * { box-sizing: border-box; }
 .pm h1, .pm h2, .pm h3 { text-wrap: balance; margin: 0; }
@@ -89,6 +89,29 @@ body { background: var(--bg); color: var(--fg); font-family: var(--font-body); f
 .real-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px 16px; margin-bottom: 8px; }
 .t tr.main td { font-weight: 600; }
 #real-table td:first-child { min-width: 9.5em; }
+.buyer-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
+.bcard { display: grid; gap: 8px; align-content: start; }
+.bcard h3 { font-family: var(--font-display); font-weight: 500; font-size: 18px; line-height: 1.25; }
+.bcard .kind { font-size: 12px; font-weight: 600; }
+.kind-steady { color: var(--up); } .kind-fickle { color: var(--warn); } .kind-cushion { color: var(--info); } .kind-hub { color: var(--muted); }
+.bcard dl { display: grid; gap: 6px; margin: 0; }
+.bcard dt { font-size: 12px; color: var(--muted); }
+.bcard dd { margin: 0; font-family: var(--font-data); font-variant-numeric: tabular-nums; font-size: 14px; }
+.bcard dd small { font-family: var(--font-body); color: var(--muted); font-size: 12px; }
+.bcard .dates { font-size: 12px; color: var(--muted); display: grid; gap: 2px; }
+.prog { height: 8px; background: var(--grid); border-radius: 99px; overflow: hidden; }
+.prog i { display: block; height: 100%; background: var(--gold); }
+.tag-verify { font-size: 11px; color: var(--warn); border: 1px solid var(--warn); border-radius: 99px; padding: 0 6px; margin-left: 6px; white-space: nowrap; }
+.jump { position: sticky; top: 0; z-index: 5; display: flex; gap: 6px; overflow-x: auto; padding: 8px 0; margin: 6px 0 4px;
+  background: var(--bg); border-bottom: 1px solid var(--line); scrollbar-width: none; }
+.jump::-webkit-scrollbar { display: none; }
+.jump a { flex: none; font-size: 13px; color: var(--muted); text-decoration: none; padding: 4px 10px; border: 1px solid var(--line); border-radius: 99px; background: var(--panel); }
+.jump a:hover, .jump a:focus-visible { color: var(--fg); border-color: var(--gold); outline: none; }
+.group-head, .ahead-head { font-family: var(--font-display); font-weight: 500; font-size: 24px; line-height: 1.2; margin: 34px 0 6px; display: grid; gap: 2px; scroll-margin-top: 56px; }
+.ahead-head { font-size: 21px; margin: 22px 0 0; }
+.group-head .eyebrow, .ahead-head .eyebrow { color: var(--gold); }
+#glance-sec { scroll-margin-top: 56px; }
+.note { font-size: 14px; }
 /* layout: glance first, details folded */
 .glance-sec { display: grid; gap: 12px; }
 .glance-head { font-family: var(--font-display); font-weight: 500; font-size: 22px; line-height: 1.3; max-width: 62ch; }
@@ -167,8 +190,9 @@ details[open] > summary .chev { transform: rotate(-135deg); }
 .glance { grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
 
 /* plain-language text with a technical version on hover / tap */
-.jg, .jg-demo { text-decoration: underline dotted var(--faint); text-underline-offset: 3px; text-decoration-thickness: 1px; cursor: help; }
-.jg:hover, .jg:focus-visible, .jg.on { text-decoration-color: var(--gold); outline: none; }
+.jg, .jg-demo { cursor: help; text-underline-offset: 3px; text-decoration-thickness: 1px; }
+.jg-demo, .pm.show-jg .jg { text-decoration: underline dotted var(--faint); }
+.jg:hover, .jg:focus-visible, .jg.on { text-decoration: underline dotted var(--gold); outline: none; }
 .jgtip { box-sizing: border-box; position: fixed; z-index: 10; max-width: min(420px, calc(100vw - 32px)); background: var(--panel); color: var(--fg);
   border: 1px solid var(--line); border-left: 3px solid var(--gold); border-radius: var(--radius); padding: 8px 10px;
   font: 12px/1.45 var(--font-data); box-shadow: 0 6px 18px rgba(0,0,0,0.16); pointer-events: none; }
@@ -317,6 +341,7 @@ table.t tr:last-child td { border-bottom: 0; }
     </div>
     <div class="right">
       <span class="label-chip jg" data-tech="Descriptive, not predictive (section 11 guardrail). No forecasts, no instructions.">Describes, doesn't predict</span>
+      <button type="button" class="linkbtn" id="jg-toggle" aria-pressed="false">Show technical terms</button>
       <div class="seg" role="group" aria-label="Currency">
         <button type="button" id="cur-chf" data-cur="CHF" aria-pressed="true">CHF</button>
         <button type="button" id="cur-usd" data-cur="USD" aria-pressed="false">USD</button>
@@ -326,8 +351,18 @@ table.t tr:last-child td { border-bottom: 0; }
 
   <div class="prices" id="prices" aria-label="Latest prices" hidden></div>
 
+  <nav class="jump" aria-label="Jump to">
+    <a href="#glance-sec">Today</a><a href="#g-ahead">Looking ahead</a><a href="#g-now">Now</a><a href="#g-buyers">Who's buying</a><a href="#g-history">History</a><a href="#g-dates">Dates and data</a>
+  </nav>
+
   <section class="glance-sec" id="glance-sec" aria-label="At a glance">
     <h2 id="brief-head" class="glance-head">—</h2>
+    <div class="glance" id="glance"></div>
+    <div class="glance-foot">
+      <p class="note">Tap a box to see the detail. Hover over (or tap) any line for its technical version; "Show technical terms" at the top marks which ones have one. This page describes; it never tells you what to do.</p>
+      <button type="button" class="linkbtn" id="toggle-all">Open all</button>
+    </div>
+    <h3 class="ahead-head" id="g-ahead"><span class="eyebrow">Looking ahead</span>Odds and price ranges from history</h3>
     <div class="odds panel" id="odds">
       <div class="eyebrow jg" data-tech="Multinomial logistic regression (L2 = 300, chosen from 8/60/300/1500 on the walk-forward test) on the month-end state vector; classes: 12-month return >= +10%, <= -10%, else sideways. Walk-forward from 2000 (refit every 6 months, trained only on months with known outcomes, standardised on the training window). Shown odds = w x model + (1 - w) x class frequencies, with w chosen by walk-forward Brier score.">Weighed-up odds for the next 12 months</div>
       <div class="odds-grid" id="odds-bars"></div>
@@ -342,13 +377,9 @@ table.t tr:last-child td { border-bottom: 0; }
       <div class="guess-grid" id="guess-grid"></div>
       <p class="note" id="guess-foot">—</p>
     </div>
-    <div class="glance" id="glance"></div>
-    <div class="glance-foot">
-      <p class="note">Tap a box to see the detail. Hover over (or tap) <span class="jg-demo">underlined text</span> for the technical version. This page describes; it never tells you what to do.</p>
-      <button type="button" class="linkbtn" id="toggle-all">Open all</button>
-    </div>
   </section>
 
+  <h2 class="group-head" id="g-now"><span class="eyebrow">Now</span>Your rules and what's moving gold</h2>
   <details class="sec fold" id="d-rules">
     <summary><div><div class="eyebrow">Your main switch and warning light, and what would change them</div><h2 id="sum-rules">—</h2></div><span class="chev" aria-hidden="true"></span></summary>
     <div class="fold-body">
@@ -409,20 +440,49 @@ table.t tr:last-child td { border-bottom: 0; }
     </div>
   </details>
 
+  <details class="sec fold" id="d-tech">
+    <summary><div><div class="eyebrow">Technical picture (daily prices)</div><h2 id="sum-tech">—</h2></div><span class="chev" aria-hidden="true"></span></summary>
+    <div class="fold-body">
+      <div class="seg" role="group" aria-label="Metal" id="metal-seg">
+        <button type="button" id="metal-gold" data-metal="gold" aria-pressed="true">Gold</button>
+        <button type="button" id="metal-silver" data-metal="silver" aria-pressed="false">Silver</button>
+      </div>
+      <div id="tech-body"></div>
+      <p class="note">These are the indicators chart traders use, in plain words. Like everything here, they describe; they don't predict. Under "What followed these signals before", each signal that holds today gets the same honesty test as the setups above.</p>
+    </div>
+  </details>
+
+  <h2 class="group-head" id="g-buyers"><span class="eyebrow">Who's buying</span>Buyers around the world and central bank targets</h2>
+  <details class="sec fold" id="d-buyers">
+    <summary><div><div class="eyebrow">Who's buying gold</div><h2 id="sum-buyers">—</h2></div><span class="chev" aria-hidden="true"></span></summary>
+    <div class="fold-body">
+      <div class="buyer-grid" id="buyer-cards"></div>
+      <p class="note jg" data-tech="Kinds: steady = price-insensitive accumulation (official sector); fickle = momentum-following investment flows (ETFs, futures); cushion = price-elastic consumer demand (jewellery, small bars) that rises after falls; hub = refining and transit flows. Trade data: UN Comtrade, HS 7108 (unwrought or semi-manufactured gold, non-monetary and monetary as reported), net weight in tonnes.">Steady buyers push the price up over time. Fickle buyers make moves bigger in both directions. Cushion buyers buy the dips and step back after rises, which steadies the price. Trade figures arrive two to three months late.</p>
+    </div>
+  </details>
+
+  <details class="sec fold" id="d-cb">
+    <summary><div><div class="eyebrow">Central bank buying and stated targets</div><h2 id="sum-cb">—</h2></div><span class="chev" aria-hidden="true"></span></summary>
+    <div class="fold-body">
+      <div class="panel tbl-wrap">
+        <div class="eyebrow jg" data-tech="Gold holdings: IMF International Reserves and Foreign Currency Liquidity (IRFCL), fine troy ounces converted at 32,150.7466 oz per tonne. Reserves excluding gold: IMF via FRED (TRESEG..M052N, US dollars). Gold share: gold at today's price over gold plus reserves excluding gold.">Holdings from official monthly figures</div>
+        <table class="t" id="cb-table"></table>
+      </div>
+      <div class="two">
+        <div class="panel brief-card" id="cb-targets"></div>
+        <div class="panel brief-card" id="cb-scenario"></div>
+      </div>
+      <div class="panel brief-card" id="cb-honesty"></div>
+      <p class="note">Why this can't say how long the price has left: most gold demand has no target; targets stated as a share of reserves are partly met by the price rising, so a higher price means less buying is needed; a lot of central bank buying goes unreported; and gold funds can sell in weeks what central banks buy in a year. This shows how much steady buying may still be to come, not when the price turns.</p>
+    </div>
+  </details>
+
+  <h2 class="group-head" id="g-history"><span class="eyebrow">History</span>Is gold stretched, and what happened in similar times?</h2>
   <details class="sec fold" id="d-stretch">
     <summary><div><div class="eyebrow">How far gold is from its usual levels</div><h2 id="stretch-head">—</h2></div><span class="chev" aria-hidden="true"></span></summary>
     <div class="fold-body">
       <div class="panel st-list" id="stretch-list"></div>
       <p class="note jg" data-tech="Filled dot: percentile since 1971 (floating-era windows, so the 10-year average starts in 1981). Hollow dot: percentile within the last 10 years. Sample sizes in brackets.">Filled dot: how today compares with every month since 1971. Hollow dot: how it compares with the last 10 years. Further right means a larger share of past months were lower.</p>
-    </div>
-  </details>
-
-  <details class="sec fold" id="d-dates">
-    <summary><div><div class="eyebrow">Dates to know and reports</div><h2 id="rep-head">—</h2></div><span class="chev" aria-hidden="true"></span></summary>
-    <div class="fold-body">
-      <div class="panel brief-card"><ul class="blist" id="brief-upcoming"></ul></div>
-      <div class="panel tbl-wrap"><table class="t" id="rep-table"></table></div>
-      <p class="note jg" data-tech="Release calendar (section 9.6). 'Enter' means the figures come from a report whose terms rule out automated download. With no consensus-forecast feed, changes are compared with the prior release and the 12-month trend, not with expectations.">"Type in by hand" means the publisher doesn't allow automatic downloads. There's no feed of what forecasters expected, so new figures are compared with the previous release and the past year instead.</p>
     </div>
   </details>
 
@@ -456,18 +516,6 @@ table.t tr:last-child td { border-bottom: 0; }
       <p class="note">Counts from history, not a forecast. For each way of describing today, this shows how often gold was higher 3, 6 and 12 months later, compared with all months since 1972. "Separate spells" counts each stretch of similar months once, because neighbouring months share most of their future.</p>
       <div id="after-list" class="after-list"></div>
       <p class="note jg" data-tech="Honesty test (walk-forward from 2000 for monthly setups, 2010 for daily signals): at each date where the setup held, its share of rises was computed only from outcomes known at the time, and so was the baseline share. 'Useful' requires a Brier score at least 5% lower, a hit rate at least 5 points higher, and at least 15 independent spells. On simulated random prices about 1 in 25 signals still passes, so a single pass is weak evidence.">The honesty test asks: if you had used these counts at the time, using only the history available then, would they have described what came next better than "gold usually rises"? Anything that fails is labelled "for context only".</p>
-    </div>
-  </details>
-
-  <details class="sec fold" id="d-tech">
-    <summary><div><div class="eyebrow">Technical picture (daily prices)</div><h2 id="sum-tech">—</h2></div><span class="chev" aria-hidden="true"></span></summary>
-    <div class="fold-body">
-      <div class="seg" role="group" aria-label="Metal" id="metal-seg">
-        <button type="button" id="metal-gold" data-metal="gold" aria-pressed="true">Gold</button>
-        <button type="button" id="metal-silver" data-metal="silver" aria-pressed="false">Silver</button>
-      </div>
-      <div id="tech-body"></div>
-      <p class="note">These are the indicators chart traders use, in plain words. Like everything here, they describe; they don't predict. Under "What followed these signals before", each signal that holds today gets the same honesty test as the setups above.</p>
     </div>
   </details>
 
@@ -506,6 +554,16 @@ table.t tr:last-child td { border-bottom: 0; }
     </div>
   </details>
 
+  <h2 class="group-head" id="g-dates"><span class="eyebrow">Dates and data</span>What's coming up and where the numbers come from</h2>
+  <details class="sec fold" id="d-dates">
+    <summary><div><div class="eyebrow">Dates to know and reports</div><h2 id="rep-head">—</h2></div><span class="chev" aria-hidden="true"></span></summary>
+    <div class="fold-body">
+      <div class="panel brief-card"><ul class="blist" id="brief-upcoming"></ul></div>
+      <div class="panel tbl-wrap"><table class="t" id="rep-table"></table></div>
+      <p class="note jg" data-tech="Release calendar (section 9.6). 'Enter' means the figures come from a report whose terms rule out automated download. With no consensus-forecast feed, changes are compared with the prior release and the 12-month trend, not with expectations.">"Type in by hand" means the publisher doesn't allow automatic downloads. There's no feed of what forecasters expected, so new figures are compared with the previous release and the past year instead.</p>
+    </div>
+  </details>
+
   <details class="sec fold" id="d-data">
     <summary><div><div class="eyebrow">Data and what's missing</div><h2 id="sum-data">—</h2></div><span class="chev" aria-hidden="true"></span></summary>
     <div class="fold-body foot">
@@ -521,6 +579,7 @@ table.t tr:last-child td { border-bottom: 0; }
       </div>
     </div>
   </details>
+
 </div>
 
 <script type="application/json" id="pmdash-data">__PMDASH_DATA__</script>
@@ -659,6 +718,113 @@ table.t tr:last-child td { border-bottom: 0; }
     return d.toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short", timeZone: "UTC" });
   }
 
+  // ---------- who's buying ----------
+  function tonnes(x, d) { if (x === null || x === undefined) return "n/a"; d = d || 0; return x.toLocaleString("en-US", { maximumFractionDigits: d, minimumFractionDigits: d }) + " t"; }
+  function signedT(x) { if (x === null || x === undefined) return "n/a"; return (x > 0 ? "+" : x < 0 ? "−" : "") + Math.abs(x).toLocaleString("en-US", { maximumFractionDigits: 0 }) + " t"; }
+  function renderBuyers() {
+    var Bu = D.buyers;
+    if (!Bu) { $("d-buyers").hidden = true; $("d-cb").hidden = true; return; }
+    setText("sum-buyers", Bu.headline, Bu.headline_tech);
+    var host = clear($("buyer-cards"));
+    Bu.groups.forEach(function (g) {
+      var c = el("article", { class: "panel bcard" });
+      c.appendChild(el("h3", null, g.plain));
+      c.appendChild(jg("div", { class: "kind kind-" + g.kind }, g.kind_plain, "Behaviour class: " + g.kind));
+      c.appendChild(el("p", { class: "note" }, g.share_note));
+      if (g.readings.length) {
+        var dl = el("dl");
+        g.readings.forEach(function (r) {
+          var d = el("div"); d.appendChild(el("dt", null, r.label));
+          var dd = jg("dd", null, r.value, r.tech); if (r.sub) { dd.appendChild(document.createTextNode(" ")); dd.appendChild(el("small", null, r.sub)); }
+          d.appendChild(dd); dl.appendChild(d);
+        });
+        c.appendChild(dl);
+      } else c.appendChild(el("p", { class: "note" }, "No free monthly figures loaded for this group yet."));
+      c.appendChild(jg("p", { class: "note" }, "What to watch: " + g.watch, "Seen in advance? " + g.early));
+      if (g.dates.length) {
+        var ds = el("div", { class: "dates" });
+        g.dates.forEach(function (x) { var row = el("span", null, dayName(x.date) + " " + x.date.slice(0, 4) + ": " + x.plain); if (x.verify) row.appendChild(jg("span", { class: "tag-verify" }, "check date", "Date typed in by hand; verify against the official calendar")); ds.appendChild(row); });
+        c.appendChild(ds);
+      }
+      host.appendChild(c);
+    });
+    renderCB();
+  }
+  function renderCB() {
+    var Bu = D.buyers;
+    setText("sum-cb", Bu.cb_headline, Bu.cb_headline_tech);
+    var t = clear($("cb-table"));
+    var hr = el("tr"); [["Central bank", ""], ["Holds", "n"], ["Bought in 12 months", "n"], ["Months buying", "n"], ["Gold share", "n"], ["Figures to", "n"]]
+      .forEach(function (h) { hr.appendChild(el("th", { class: h[1] }, h[0])); });
+    var th = el("thead"); th.appendChild(hr); t.appendChild(th);
+    var tb = el("tbody");
+    Bu.banks.forEach(function (b) {
+      var tr = el("tr");
+      tr.appendChild(jg("td", { class: "line-name" }, b.plain.split(" (")[0], b.plain));
+      if (b.missing) { var td = el("td", { class: "n", colspan: "5" }, "no figures loaded"); tr.appendChild(td); tb.appendChild(tr); return; }
+      tr.appendChild(jg("td", { class: "n" }, tonnes(b.tonnes), (b.tonnes * 32150.7466 / 1e6).toFixed(2) + " million troy ounces"));
+      tr.appendChild(jg("td", { class: "n " + cls(b.pace_12m) }, signedT(b.pace_12m), "Sum of monthly changes over the latest 12 months; 3-month change " + signedT(b.chg_3m)));
+      tr.appendChild(el("td", { class: "n" }, String(b.months_bought_12)));
+      tr.appendChild(jg("td", { class: "n" }, b.share_now === null || b.share_now === undefined ? "n/a" : Math.round(b.share_now * 100) + "%",
+        b.non_gold_usd ? "Gold at today's price / (gold + reserves excluding gold of $" + (b.non_gold_usd / 1e9).toFixed(0) + "bn at " + b.non_gold_as_of + ")" : "Reserves excluding gold not loaded"));
+      tr.appendChild(el("td", { class: "n" }, monthName(b.as_of)));
+      tb.appendChild(tr);
+    });
+    t.appendChild(tb);
+    // targets
+    var tg = clear($("cb-targets"));
+    tg.appendChild(el("div", { class: "eyebrow" }, "Stated targets"));
+    var withT = Bu.banks.filter(function (b) { return b.target; });
+    if (!withT.length) tg.appendChild(el("p", { class: "note" }, "No bank with a stated target has figures loaded yet."));
+    withT.forEach(function (b) {
+      var T = b.target, box = el("div", { class: "rule" });
+      var top = el("div", { class: "rule-top" }); var nm = el("span"); nm.appendChild(el("b", null, b.plain));
+      if (T.verify) nm.appendChild(jg("span", { class: "tag-verify" }, "check source", T.source)); top.appendChild(nm); box.appendChild(top);
+      T.goals.forEach(function (g) {
+        if (g.kind === "tonnes") {
+          var pr = el("div", { class: "prog", role: "img", "aria-label": Math.round(Math.min(1, g.progress) * 100) + "% of the way" }), f = el("i"); f.style.width = Math.min(100, g.progress * 100) + "%"; pr.appendChild(f); box.appendChild(pr);
+          box.appendChild(jg("p", { class: "note" }, g.done ? "Target of " + tonnes(g.goal) + " reached." :
+            tonnes(b.tonnes) + " of a " + tonnes(g.goal) + " target" + (T.by ? " by " + monthName(T.by) : "") + ": " + tonnes(g.remaining_t) + " to go. " +
+            (g.years_left_at_pace ? "At the last 12 months' pace that takes about " + g.years_left_at_pace.toFixed(1) + " years" : "No buying in the last 12 months") +
+            (g.on_track === undefined ? "." : g.on_track ? ", which is on track." : "; it needs about " + tonnes(g.needed_per_year) + " a year to make the date."),
+            "Remaining " + g.remaining_t.toFixed(1) + " t; pace " + (b.pace_12m || 0).toFixed(1) + " t over 12 months" + (g.needed_per_year ? "; needed " + g.needed_per_year.toFixed(1) + " t/yr" : "")));
+        } else {
+          box.appendChild(jg("p", { class: "note" }, g.done ? "Gold is already above " + Math.round(g.goal * 100) + "% of reserves at today's price." :
+            "To reach " + Math.round(g.goal * 100) + "% of reserves at today's price it needs about " + tonnes(g.remaining_t) + " more" +
+            (g.years_left_at_pace ? " (about " + g.years_left_at_pace.toFixed(1) + " years at its recent pace)" : "") + ". " + (T.share_need_if_price_up_20 > 0.5 ? "If gold were 20% dearer, only about " + tonnes(T.share_need_if_price_up_20) + "." : "If gold were 20% dearer, it would already be there without buying more."),
+            "Share target " + g.goal + ": tonnes needed = s*X/((1-s)P) - G, X = non-gold reserves at the latest report"));
+        }
+      });
+      box.appendChild(el("p", { class: "note" }, "Source: " + T.source + "."));
+      tg.appendChild(box);
+    });
+    // scenario
+    var sc = clear($("cb-scenario")), S2 = Bu.scenario;
+    sc.appendChild(jg("div", { class: "eyebrow" }, "What if: emerging-market central banks hold more gold", "Scenario, not a forecast. Banks: " + S2.banks.join(", ")));
+    if (!S2.rows.length) sc.appendChild(el("p", { class: "note" }, "Total reserve figures aren't loaded yet."));
+    else {
+      sc.appendChild(el("p", { class: "note" }, "Together, " + S2.names + " hold " + tonnes(S2.held_t) + ", about " + Math.round(S2.share_now * 100) + "% of their reserves at today's price. Big Western central banks hold far more of theirs in gold. What it would take to reach:"));
+      var st = el("table", { class: "t" }), h = el("tr");
+      [["Gold share", ""], ["Tonnes needed", "n"], ["Years of mine output", "n"], ["Years at recent pace", "n"]].forEach(function (x) { h.appendChild(el("th", { class: x[1] }, x[0])); });
+      var hh = el("thead"); hh.appendChild(h); st.appendChild(hh);
+      var b2 = el("tbody");
+      S2.rows.forEach(function (r) {
+        var tr = el("tr");
+        tr.appendChild(el("td", null, Math.round(r.share * 100) + "%"));
+        tr.appendChild(jg("td", { class: "n" }, tonnes(r.tonnes_now, 0), "At gold 20% cheaper: " + tonnes(r.tonnes_down20) + "; 20% dearer: " + tonnes(r.tonnes_up20)));
+        tr.appendChild(el("td", { class: "n" }, r.years_of_mine_supply.toFixed(1)));
+        tr.appendChild(el("td", { class: "n" }, r.years_at_pace === null ? "n/a" : r.years_at_pace.toFixed(0)));
+        b2.appendChild(tr);
+      });
+      st.appendChild(b2); var w = el("div", { class: "tbl-wrap" }); w.appendChild(st); sc.appendChild(w);
+      sc.appendChild(el("p", { class: "note" }, "Hover over the tonnes to see how much a 20% price move changes it: the dearer gold gets, the fewer tonnes the same share needs. A scenario, not a forecast."));
+    }
+    // honesty
+    var hn = clear($("cb-honesty")), H = Bu.honesty;
+    hn.appendChild(el("div", { class: "eyebrow" }, "Did heavy central bank buying come before gold rising?"));
+    hn.appendChild(jg("p", { class: "note" }, H.plain, H.tech));
+  }
+
   // ---------- at a glance ----------
   function openSection(id) {
     var d = $(id); if (!d) return;
@@ -712,6 +878,8 @@ table.t tr:last-child td { border-bottom: 0; }
     if (TG) { var rd = {}; TG.readings.forEach(function (q) { rd[q.key] = q; });
       host.appendChild(tile("Technical picture", rd.ma200 ? rd.ma200.value + " 200-day average" : "—",
         (rd.rsi ? "Momentum gauge " + rd.rsi.value : "") + (rd.macd ? " · short-term trend " + rd.macd.value : ""), "d-tech", "Daily: " + (rd.ma200 ? rd.ma200.tech : ""))); }
+    var Bu = D.buyers, cbg = Bu && Bu.groups.filter(function (g) { return g.id === "central_banks"; })[0];
+    if (cbg && cbg.readings.length) host.appendChild(tile("Central banks", cbg.readings[0].value, Bu.cb_headline, "d-cb", cbg.readings[0].tech));
     var nx = B.upcoming.filter(function (u) { return u.report_id !== "cftc_cot"; })[0] || B.upcoming[0];
     if (nx) host.appendChild(tile("Next date", nx.plain_name || nx.name, nx.window_start === nx.window_end ? nx.window_start : nx.window_start + " to " + nx.window_end, "d-dates",
       nx.name + " (" + nx.period + ")"));
@@ -1611,7 +1779,7 @@ table.t tr:last-child td { border-bottom: 0; }
   }
 
   // ---------- folding ----------
-  var FOLDS = ["d-rules", "d-push", "d-price", "d-lines", "d-stretch", "d-dates", "d-analogues", "d-after", "d-tech", "d-history", "d-data"];
+  var FOLDS = ["d-rules", "d-push", "d-price", "d-lines", "d-tech", "d-buyers", "d-cb", "d-stretch", "d-analogues", "d-after", "d-history", "d-dates", "d-data"];
   function saveOpen() {
     try { localStorage.setItem("pmdash-open", JSON.stringify(FOLDS.filter(function (id) { return $(id).open; }))); } catch (e) {}
     $("toggle-all").textContent = FOLDS.every(function (id) { return $(id).open; }) ? "Close all" : "Open all";
@@ -1635,10 +1803,21 @@ table.t tr:last-child td { border-bottom: 0; }
     saveOpen();
   });
   Array.prototype.forEach.call(document.querySelectorAll("[data-tech]"), jgWire);
+  // "Show technical terms": underline every line that has a technical version (remembered)
+  function setJg(on) {
+    $("pm").classList.toggle("show-jg", on);
+    $("jg-toggle").setAttribute("aria-pressed", String(on));
+    $("jg-toggle").textContent = on ? "Hide technical terms" : "Show technical terms";
+  }
+  try { setJg(localStorage.getItem("pmdash-jg") === "1"); } catch (e) { setJg(false); }
+  $("jg-toggle").addEventListener("click", function () {
+    var on = !$("pm").classList.contains("show-jg"); setJg(on);
+    try { localStorage.setItem("pmdash-jg", on ? "1" : "0"); } catch (e) {}
+  });
 
   function renderAll() {
     // each section draws on its own: one failure must not stop the rest of the page
-    [renderMast, renderPrices, renderOdds, renderGuess, renderGlance, renderRules, renderPush, renderRegime, renderPrice, renderLines,
+    [renderMast, renderPrices, renderOdds, renderGuess, renderGlance, renderRules, renderPush, renderBuyers, renderRegime, renderPrice, renderLines,
      renderStretch, renderDates, renderAnalogues, renderAfter, renderTech, renderHistory, renderFoot].forEach(function (f) {
       try { f(); } catch (e) { if (window.console) console.error("Section failed to draw: " + (f.name || "?"), e); }
     });

@@ -285,7 +285,26 @@ def _payload(con, args, include_oos: bool):
     fx_fresh = fx_yf.combine_first(fx_daily) if len(fx_yf) else fx_daily
     return build_payload(gold, fx, _health(con), data.load_macro(con, args.as_of), include_oos=include_oos,
                          reports=reports, fx_daily=fx_daily if len(fx_daily) else None, daily=daily,
-                         fx_fresh=fx_fresh if len(fx_fresh) else None, cash=_cash_rates(con, args.as_of))
+                         fx_fresh=fx_fresh if len(fx_fresh) else None, cash=_cash_rates(con, args.as_of),
+                         buyers_series=_buyers_series(con, args.as_of))
+
+
+def _buyers_series(con, as_of=None) -> dict:
+    """Monthly series for the who's-buying section (Period index); daily and weekly ones reduced
+    to their month-end value."""
+    ids = [r[0] for r in con.execute(
+        "SELECT DISTINCT series_id FROM observations WHERE series_id LIKE 'cb_gold_t_%' "
+        "OR series_id LIKE 'res_exgold_%' OR series_id LIKE 'trade_%'").fetchall()]
+    out = {}
+    for sid in ids:
+        s = db.get_series(con, sid, as_of=as_of)
+        if len(s):
+            out[sid] = s.groupby(s.index.to_period("M")).last()
+    for sid, key in (("gld_holdings", "gld_holdings_m"), ("cftc_gold_mm_net", "cftc_gold_mm_net_m")):
+        s = db.get_series(con, sid, as_of=as_of)
+        if len(s):
+            out[key] = s.groupby(s.index.to_period("M")).last()
+    return out
 
 
 def _cash_rates(con, as_of=None) -> dict:

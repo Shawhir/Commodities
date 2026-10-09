@@ -139,6 +139,19 @@ reports:
     manual: true
     why: Central banks' stated intentions for gold reserves.
 
+  cb_gold_monthly:
+    plain_name: "Central bank gold holdings (monthly)"
+    plain_why: "Shows which central banks added or sold gold last month. China publishes about the 7th; the IMF collects all of them."
+    name: Official gold reserves (IMF IRFCL)
+    publisher: IMF / national central banks
+    kind: data
+    cadence: monthly
+    window_days: [25, 45]
+    poll_days: 20
+    feeds: [cb_gold_t_cn]
+    fetch: [cb_gold_imf]
+    why: Official-sector buying is the steadiest source of gold demand since 2022.
+
   silver_survey:
     plain_name: "World Silver Survey"
     plain_why: "The yearly picture of silver supply and demand."

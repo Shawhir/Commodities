@@ -172,7 +172,8 @@ def price_strip(daily: dict | None, fx_daily: pd.Series | None) -> list[dict]:
 def build_payload(gold: pd.Series, fx: pd.Series, health: pd.DataFrame | None = None, macro: dict | None = None,
                   include_oos: bool = True, reports: list[dict] | None = None,
                   fx_daily: pd.Series | None = None, daily: dict | None = None,
-                  fx_fresh: pd.Series | None = None, cash: dict | None = None) -> dict:
+                  fx_fresh: pd.Series | None = None, cash: dict | None = None,
+                  buyers_series: dict | None = None) -> dict:
     th = config.load("thresholds")
     mk = config.load("markets")
     levels_cfg = config.load("levels")
@@ -339,8 +340,14 @@ def build_payload(gold: pd.Series, fx: pd.Series, health: pd.DataFrame | None = 
     for metal, (df_, src_) in (daily or {}).items():
         if df_ is not None:
             technical[metal] = base_rates.build_technical(df_, src_)
+    prices = price_strip(daily, fx_fresh if fx_fresh is not None else fx_daily)
+    buyers_sec = None
+    if buyers_series:
+        from ..history import buyers as _buyers
+        g_now = next((r["USD"]["price"] for r in prices if r["metal"] == "gold"), float(gold.iloc[-1]))
+        buyers_sec = _buyers.build(buyers_series, gold, g_now, config.load("buyers"))
     return _clean({
-        "prices": price_strip(daily, fx_fresh if fx_fresh is not None else fx_daily),
+        "prices": prices, "buyers": buyers_sec,
         "history": history, "technical": technical, "guess": guess, "odds": weighed,
         "brief": brief,
         "as_of": str(as_of), "built": str(date.today()), "disclaimer": s["disclaimer"],
