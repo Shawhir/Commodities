@@ -33,6 +33,7 @@ What your rules say and what would change them. Not advice.
 |---|---|---|---|
 | US interest rates (the Fed) | raising rates, now 4.00% | down | Gold pays no interest, so higher rates make it less attractive to hold |
 | Interest rates after inflation | 2.92%, up 0.98 points in 6 months | down | This is the return on safe bonds after inflation; when it rises, gold usually struggles |
+| Swiss interest rates | 10-year Swiss bonds pay 0.47%, up 0.22 points in 6 months; after Swiss inflation -0.02% | little effect now | What a franc saver gives up by holding gold instead of Swiss bonds; low Swiss rates make holding gold cheap in francs |
 | US dollar | down 0.6% in 6 months | little effect now | Gold is priced in dollars; a stronger dollar usually means a lower gold price |
 | War and political risk | higher than 85% of the last 10 years | up | People turn to gold as a safe place in times of conflict; the effect often fades when tensions ease |
 | Oil price | up 68% in 12 months | either way | Expensive oil raises inflation, which helps gold, but can make the Fed raise rates, which hurts it |
@@ -152,13 +153,13 @@ _Descriptive, not predictive. This tool does not forecast prices or give instruc
 
 ## Closest past months (groups with data)
 
-6 matches; next-12-month USD outcomes from -7% to +43%, median +21%. Unconditional median since 1971: +5% (n=638). The closest matches point in opposite directions; the measures used do not separate them. Dropped (no data): cb_purchases_12m, etf_holdings_chg_6m.
+6 matches; next-12-month USD outcomes from -26% to +18%, median +8%. Unconditional median since 1971: +5% (n=638). The closest matches point in opposite directions; the measures used do not separate them. Dropped (no data): cb_purchases_12m, etf_holdings_chg_6m.
 
 | Month | Distance | Key moment | Next 12m USD | Next 12m CHF | Main differences |
 |---|---|---|---|---|---|
-| 2006-07 | 2.76 | ['cftc_mm_pct'] | +4.9% | +2.3% | gold vs its 10-month average: +13% then vs -5% now; oil price change over 12 months: +28% then vs +68% now |
-| 2008-08 | 2.98 |  | +13.1% | +11.5% | war and political risk (0 to 100 scale): 41 then vs 85 now; francs per dollar, change over 12 months: -10% then vs +3% now; US interest rates: falling then, rising now |
-| 2012-02 | 3.01 |  | -6.7% | -5.7% | oil price change over 12 months: +15% then vs +68% now; war and political risk (0 to 100 scale): 46 then vs 85 now; US interest rates: steady then, rising now |
+| 2006-07 | 2.75 | ['cftc_mm_pct'] | +4.9% | +2.3% | gold vs its 10-month average: +13% then vs -5% now; oil price change over 12 months: +28% then vs +68% now |
+| 2008-08 | 2.83 |  | +13.1% | +11.5% | war and political risk (0 to 100 scale): 41 then vs 85 now; francs per dollar, change over 12 months: -10% then vs +3% now; US interest rates: falling then, rising now |
+| 1976-03 | 3.07 | ['dollar_chg_6m', 'oil_chg_12m', 'breakeven_10y', 'cftc_mm_pct', 'vix_pct', 'gpr_pct', 'chf_dist_10y_avg'] | +11.3% | +10.6% | distance below its 2-year high: -28% then vs -14% now; change over 3 years: +58% then vs +125% now; US interest rates: falling then, rising now |
 
 ## Not yet available
 
@@ -173,7 +174,9 @@ _Descriptive, not predictive. This tool does not forecast prices or give instruc
 | breakeven_10y | 2026-10 | ok |
 | brent_monthly | 2026-09 | ok |
 | cb_gold_imf | 2026-09 | ok |
-| cftc_cot | 2026-09 | ok |
+| cftc_cot | 2026-10 | ok |
+| ch_10y_yield | 2026-08 | ok |
+| ch_cpi_yoy | 2025-04 | stale (556 days) |
 | chf_3m_rate | 2026-08 | ok |
 | dollar_broad | 2026-10 | ok |
 | fed_funds_eff | 2026-10 | ok |
