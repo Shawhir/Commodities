@@ -1,24 +1,17 @@
 ## This month at a glance (prices to 2026-09)
 
-**In francs, gold has been rising steadily; in dollars it has been going sideways. Your two trend rules disagree. Of the outside influences, 2 usually push gold down and 1 usually pushes it up.**
+**In francs, gold has been rising steadily; in dollars it has been going sideways. Your main switch is ON and the warning light is showing. Of the outside influences, 2 usually push gold down and 1 usually pushes it up.**
 
 What your rules say and what would change them. Not advice.
 
-### Your two trend rules
-- **CHF, Rule 1: the 12-month trend: ON.** ON when gold costs more than it did a year ago (leaving out the latest month). Right now it is 22% higher, so the rule is ON.
+### Your main switch and warning light (decided on the dollar price)
+- **Main switch (rule 1): the 12-month trend: ON.** ON when gold's dollar price is higher than a year ago (leaving out the latest month). Right now it is 20% higher, so the switch is ON. It is decided on the dollar price in both views, because gold trades in dollars: the franc's jumps would otherwise cause extra switching. Your results are still measured in francs.
   - End of October 2026: stays ON whatever happens (already set by September 2026's average price).
-  - End of November 2026: switches OFF if gold's average price in October 2026 is below 3,285.
-  - End of December 2026: switches OFF if gold's average price in November 2026 is below 3,434.
-  - If gold stays around 3,541, this rule switches OFF at the end of January 2027.
-- **CHF, Rule 2: the 10-month average: OFF.** ON when gold's price is above its average of the last 10 months. Now gold is 3,541, below its average of 3,598, so the rule is OFF.
-  - Switches ON if gold's average price in October 2026 is above 3,617.
-- **USD, Rule 1: the 12-month trend: ON.** ON when gold costs more than it did a year ago (leaving out the latest month). Right now it is 20% higher, so the rule is ON.
-  - End of October 2026: stays ON whatever happens (already set by September 2026's average price).
-  - End of November 2026: switches OFF if gold's average price in October 2026 is below 4,087.
-  - End of December 2026: switches OFF if gold's average price in November 2026 is below 4,309.
-  - If gold stays around 4,319, this rule switches OFF at the end of January 2027.
-- **USD, Rule 2: the 10-month average: OFF.** ON when gold's price is above its average of the last 10 months. Now gold is 4,319, below its average of 4,528, so the rule is OFF.
-  - Switches ON if gold's average price in October 2026 is above 4,552.
+  - End of November 2026: switches OFF if gold's average price in October 2026 is below $4,087 (about CHF 3,351 at today's exchange rate).
+  - End of December 2026: switches OFF if gold's average price in November 2026 is below $4,309 (about CHF 3,533 at today's exchange rate).
+  - If gold stays around $4,319, the main switch turns OFF at the end of January 2027.
+- **Warning light (rule 2): the 10-month average: WARNING.** A warning light, not a second switch. It shows when gold's dollar price drops below its average of the last 10 months. Now gold is $4,319, below its average of $4,528, so the light is showing. Tested at real month-end prices, acting on this light alone lost money in choppy markets, so it is shown as a caution only.
+  - Clears if gold's average price in October 2026 is above $4,552 (about CHF 3,732 at today's exchange rate).
 
 ### Market mood
 - **In francs: rising steadily.** Depending on gold's average price in October 2026: falling steadily if below 2,459; going sideways if between 2,459 and 3,752; rising steadily if above 3,752.
@@ -28,8 +21,7 @@ What your rules say and what would change them. Not advice.
 
 | Level | Currency | Status | Gold vs level | What it means |
 |---|---|---|---|---|
-| 10-month average (rule 2 switch point) | CHF | not crossed | -1.6% |  |
-| 10-month average (rule 2 switch point) | USD | not crossed | -4.6% |  |
+| 10-month average (warning light) | USD | not crossed | -4.6% |  |
 | June 2026 low | CHF | not crossed | +9.2% | 2026 low. A confirmed break suggests the post-peak fall has a second leg. |
 | June 2026 low | USD | not crossed | +9.2% | 2026 low. A confirmed break suggests the post-peak fall has a second leg. |
 | January 2026 peak | CHF | not crossed | -21.5% | 2026 intraday peak (approximate). |
@@ -50,10 +42,8 @@ What your rules say and what would change them. Not advice.
 | US inflation | 3.4% a year (figures arrive a month late) | either way | High inflation makes gold attractive as protection, but keeps the Fed raising rates |
 
 ### Mixed signals
-- In CHF, your two trend rules disagree: rule 1 (12-month trend) is ON, rule 2 (10-month average) is OFF.
-- In USD, your two trend rules disagree: rule 1 (12-month trend) is ON, rule 2 (10-month average) is OFF.
+- The main switch is ON, but the warning light is showing: gold is still above a year ago, yet below its 10-month average.
 - The market mood depends on the currency: rising steadily in francs but going sideways in dollars. The franc's moves against the dollar make the difference.
-- In CHF, gold is far above its 10-year average (higher than 97% of the time since 1971), yet below its 10-month average: high over the long run, slipping in the short run.
 - In USD, gold is far above its 10-year average (higher than 91% of the time since 1971), yet below its 10-month average: high over the long run, slipping in the short run.
 - Outside influences pull both ways. Usually pushing gold down: US interest rates (the Fed), Interest rates after inflation. Usually pushing gold up: War and political risk.
 
@@ -76,10 +66,10 @@ What your rules say and what would change them. Not advice.
 
 Counts from history, not a forecast. Each line: how often gold was higher a year later, against all months.
 
-- **Rule 1 ON and rule 2 OFF**: higher a year later in 48% of 65 months (22 separate spells), against 60% for all months. For context only.
+- **Main switch ON, warning light showing**: higher a year later in 48% of 65 months (22 separate spells), against 60% for all months. For context only.
 - **Market mood going sideways**: higher a year later in 52% of 299 months (37 separate spells), against 60% for all months. For context only.
 - **Gold vs its 10-year average in the top 10% of history**: higher a year later in 84% of 86 months (10 separate spells), against 60% for all months. For context only.
-- **Rule 1 ON and rule 2 OFF, mood going sideways**: higher a year later in 40% of 57 months (19 separate spells), against 60% for all months. For context only.
+- **Main switch ON, warning light showing, mood going sideways**: higher a year later in 40% of 57 months (19 separate spells), against 60% for all months. For context only.
 
 ## Technical picture (daily prices)
 
@@ -148,16 +138,14 @@ _Descriptive, not predictive. This tool does not forecast prices or give instruc
 | gold_stretch_10y_p50 | CHF | intact | below | 2019-05-31 | 50.66 | 50 | watch |
 | gold_stretch_10y_p50 | USD | intact | below | 2019-10-31 | 56.64 | 50 | watch |
 | gold_mom_12_1 | USD | intact | below | 2023-08-31 | 0.1054 | 0 | important |
-| gold_mom_12_1 | CHF | intact | below | 2024-03-31 | 0.002198 | 0 | important |
 | gold_stretch_10y_p90 | CHF | intact | below | 2025-10-31 | 99.62 | 90 | watch |
 | gold_stretch_10y_p90 | USD | intact | below | 2025-12-31 | 99.25 | 90 | watch |
-| gold_round_5000 | CHF | intact | above | 2026-03-31 | 3,823 | 3,936 | info |
 | gold_round_5000 | USD | intact | above | 2026-03-31 | 4,856 | 5,000 | info |
-| gold_round_4000 | USD | intact | below | 2026-08-31 | 4,411 | 4,000 | info |
+| gold_round_5000 | CHF | intact | above | 2026-03-31 | 3,823 | 3,936 | info |
 | gold_round_4000 | CHF | intact | below | 2026-08-31 | 3,562 | 3,230 | info |
+| gold_round_4000 | USD | intact | below | 2026-08-31 | 4,411 | 4,000 | info |
 | gold_regime | - | Sideways | - | 2026-09-30 | nan | nan | watch |
 | gold_10m_avg | USD | intact | above | 2026-09-30 | 4,319 | 4,528 | important |
-| gold_10m_avg | CHF | intact | above | 2026-09-30 | 3,541 | 3,598 | important |
 - real_yield_jump: macro line type change_bp on DFII10 not evaluated yet
 - fed_hikes_priced: macro line type level on fed_hikes_priced_12m not evaluated yet
 
