@@ -1,0 +1,6 @@
+URL: https://comtradeapi.un.org/public/v1/preview/C/M/HS?reporterCode=156&period=202606&cmdCode=7108&flowCode=M&partnerCode=0
+STATUS: 200
+BYTES: 58
+ERROR: 
+
+{"elapsedTime":"0.04 secs","count":0,"data":[],"error":""}

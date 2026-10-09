@@ -1,0 +1,6 @@
+URL: https://comtradeapi.un.org/public/v1/preview/C/M/HS?reporterCode=757&period=202604,202605&cmdCode=7108&flowCode=X
+STATUS: 400
+BYTES: 69
+ERROR: HTTP Error 400: Bad Request
+
+{"error":"Maximum number of periods for preview is 1","details":null}

@@ -1,11 +1,11 @@
 name,status,bytes,seconds,error
-imf_irfcl_flow,200,2735994,3.5,
-imf_irfcl_chn_all,200,3286,2.9,
-imf_irfcl_csv,200,3286,2.7,
-dbn_ifs_cn_gold_tail,200,16557,2.7,
-comtrade_ch_multi,400,69,2.7,HTTP Error 400: Bad Request
-comtrade_hk_to_cn,429,83,2.6,HTTP Error 429: Too Many Requests
-gld_xlsx,404,14626,2.8,HTTP Error 404: Not Found
-gld_page,200,1320822,2.4,
-fred_search_gold,200,55029,2.4,
-fred_treseg_cn,200,596,2.2,
+imf_dsd,204,0,2.4,
+imf_k4,200,40356,2.7,
+imf_k5,400,308,2.4,HTTP Error 400: Bad Request
+imf_all_chn,400,435,2.3,HTTP Error 400: Bad Request
+imf_v3_chn,400,435,2.3,HTTP Error 400: Bad Request
+gld_api,200,541333,2.1,
+comtrade_ch_2p,400,69,3.0,HTTP Error 400: Bad Request
+comtrade_ch_latest,429,83,2.6,HTTP Error 429: Too Many Requests
+comtrade_hk_to_cn,200,970,3.7,
+comtrade_cn_imports,200,58,2.8,

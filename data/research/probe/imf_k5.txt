@@ -1,0 +1,6 @@
+URL: https://api.imf.org/external/sdmx/2.1/data/IMF.STA,IRFCL/CHN....M?startPeriod=2026-01&format=csv
+STATUS: 400
+BYTES: 308
+ERROR: HTTP Error 400: Bad Request
+
+{"status":400,"code":40000,"message":"key CHN....M has more than expected 4 dimension(s)","devMessage":null,"timestamp":"2026-10-09T15:32:04.081046Z","correlationId":"144ba015aa1f50119b2745fbd2216c9e","path":"/api/v1/workspaces/default:integration/registry/sdmx/2.1/data/IMF.STA,IRFCL/CHN....M","details":{}}
