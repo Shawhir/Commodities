@@ -8,6 +8,7 @@ cftc_cot,2026-09-08,2026-09-11,2026-09-14,2026-10-08 21:39:54.357959,received,"c
 cftc_cot,2026-09-15,2026-09-18,2026-09-21,2026-10-08 21:39:54.357959,received,"cftc_gold_mm_net 2026-09-15: 133,116.00, change vs prior -1,856.00, vs 12-period average +4,481.17 (no consensus feed: compared with prior and trend only)"
 cftc_cot,2026-09-22,2026-09-25,2026-09-28,2026-10-08 21:39:54.357959,received,"cftc_gold_mm_net 2026-09-22: 127,389.00, change vs prior -5,727.00, vs 12-period average -2,722.58 (no consensus feed: compared with prior and trend only)"
 cftc_cot,2026-09-29,2026-10-02,2026-10-05,2026-10-08 21:39:54.357959,received,"cftc_gold_mm_net 2026-09-29: 120,318.00, change vs prior -7,071.00, vs 12-period average -10,401.75 (no consensus feed: compared with prior and trend only)"
+cftc_cot,2026-10-06,2026-10-09,2026-10-12,,due,
 cn_pmi,2026-08,2026-08-30,2026-09-01,,enter,Enter figures by hand (data/manual/)
 cn_pmi,2026-09,2026-09-29,2026-10-01,,enter,Enter figures by hand (data/manual/)
 fomc,2026-09-16,2026-09-16,2026-09-16,2026-10-08 21:46:05.818621,happened,fed_target_upper: 3.75% to 3.75% (+0 bp)
@@ -18,6 +19,7 @@ imf_cofer,2026-Q2,2026-09-18,2026-10-08,,enter,Enter figures by hand (data/manua
 snb,2026-Q3,2026-09-10,2026-09-24,,enter,Check the publisher's release
 us_cpi,2026-07,2026-08-09,2026-08-16,2026-10-08 20:55:51.969276,received,"us_cpi_mirror 2026-07-01: 333.92, +3.5% y/y (prior +3.9%) (no consensus feed: compared with prior and trend only)"
 us_cpi,2026-08,2026-09-09,2026-09-16,2026-10-08 20:55:51.969276,received,"us_cpi_mirror 2026-08-01: 334.98, +3.7% y/y (prior +3.5%) (no consensus feed: compared with prior and trend only)"
+us_cpi,2026-09,2026-10-09,2026-10-16,,due,
 us_jobs,2026-08,2026-09-04,2026-09-04,2026-10-08 21:46:05.818621,received,"us_payrolls 2026-08-01: 159,015.00, change vs prior +133.00, vs 12-period average +396.67 (no consensus feed: compared with prior and trend only)"
 us_jobs,2026-09,2026-10-02,2026-10-02,2026-10-08 21:46:05.818621,received,"us_payrolls 2026-09-01: 159,044.00, change vs prior +29.00, vs 12-period average +380.42 (no consensus feed: compared with prior and trend only)"
 wgc_gdt,2026-Q2,2026-07-20,2026-08-09,,enter,Enter figures by hand (data/manual/)
