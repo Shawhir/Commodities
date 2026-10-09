@@ -2,10 +2,8 @@
 # `pmdash probe` downloads each and saves status, CORS headers and the first bytes under
 # data/research/probe/. {FRED_API_KEY} is filled from the environment and never written out.
 urls:
-  pages_live: "https://shawhir.github.io/Commodities/"
-  tv_widget_js: "https://s3.tradingview.com/external-embedding/embed-widget-tickers.js"
-  tv_sym_xauchf: "https://symbol-search.tradingview.com/symbol_search/v3/?text=XAUCHF&exchange=OANDA&hl=0&lang=en&domain=production"
-  tv_sym_xagchf: "https://symbol-search.tradingview.com/symbol_search/v3/?text=XAGCHF&exchange=OANDA&hl=0&lang=en&domain=production"
-  tv_sym_xauusd: "https://symbol-search.tradingview.com/symbol_search/v3/?text=XAUUSD&exchange=OANDA&hl=0&lang=en&domain=production"
-  tv_sym_xagusd: "https://symbol-search.tradingview.com/symbol_search/v3/?text=XAGUSD&exchange=OANDA&hl=0&lang=en&domain=production"
-  tv_sym_usdchf: "https://symbol-search.tradingview.com/symbol_search/v3/?text=USDCHF&exchange=OANDA&hl=0&lang=en&domain=production"
+  snb_plkopr: "https://data.snb.ch/api/cube/plkopr/data/csv/en"
+  snb_plkoprinfla: "https://data.snb.ch/api/cube/plkoprinfla/data/csv/en"
+  snb_plkoprex: "https://data.snb.ch/api/cube/plkoprex/data/csv/en"
+  snb_rendoblim: "https://data.snb.ch/api/cube/rendoblim/data/csv/en"
+  fred_ch_cpi_search: "https://api.stlouisfed.org/fred/series/search?search_text=switzerland%20consumer%20price&api_key={FRED_API_KEY}&file_type=json&limit=40&order_by=last_updated"
