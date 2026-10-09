@@ -88,6 +88,10 @@ body { background: var(--bg); color: var(--fg); font-family: var(--font-body); f
 .pcard .sel .cur { color: var(--gold); }
 .prices-foot { display: flex; justify-content: flex-end; align-items: center; gap: 12px; margin: 4px 0 2px; }
 .prices-foot[hidden] { display: none; }
+.prices-foot { flex-wrap: wrap; }
+.tv-panel { padding: 8px 12px; margin-bottom: 6px; }
+.tv-panel[hidden] { display: none; }
+#tv-host { min-height: 72px; }
 .pcard .live { font-size: 12px; color: var(--up); display: flex; align-items: center; gap: 6px; }
 .pcard .live i { width: 7px; height: 7px; border-radius: 50%; background: var(--up); }
 
@@ -358,6 +362,11 @@ table.t tr:last-child td { border-bottom: 0; }
   <div class="prices-foot" id="prices-foot" hidden>
     <span class="note jg" data-tech="Spot prices from gold-api.com, fetched by your browser when the page opens and when you press Refresh. Not stored; every calculation uses the stored daily closes.">Spot prices are checked when the page opens.</span>
     <button type="button" class="linkbtn" id="live-refresh">Refresh</button>
+    <button type="button" class="linkbtn" id="tv-toggle" aria-pressed="false" aria-controls="tv-stream">Stream live (TradingView)</button>
+  </div>
+  <div class="panel tv-panel" id="tv-stream" hidden>
+    <div id="tv-host"></div>
+    <p class="note">Streaming prices from TradingView (OANDA quotes), loaded only when you ask. Their figures can differ slightly from the closes stored here, and nothing streamed is used in the page's calculations.</p>
   </div>
 
   <nav class="jump" aria-label="Jump to">
@@ -754,6 +763,35 @@ table.t tr:last-child td { border-bottom: 0; }
       .then(function () { liveBusy = false; setRefresh(LIVE_FAILED && !LIVE ? "Try again" : "Refresh", false); LIVE_FAILED = false; });
   }
   var LIVE_FAILED = false;
+
+  // ---------- streaming prices (opt-in): TradingView's free ticker widget keeps one connection
+  // open and streams quotes. Loaded only on request; the choice is remembered on this device.
+  var TV_SYMBOLS = [["OANDA:XAUCHF", "Gold in francs"], ["OANDA:XAUUSD", "Gold in dollars"],
+                    ["OANDA:XAGCHF", "Silver in francs"], ["OANDA:XAGUSD", "Silver in dollars"], ["OANDA:USDCHF", "Francs per dollar"]];
+  function tvTheme() {
+    var t = document.documentElement.getAttribute("data-theme");
+    if (t === "dark" || t === "light") return t;
+    return window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  }
+  function setStream(on) {
+    var panel = $("tv-stream"), host = $("tv-host"), b = $("tv-toggle");
+    panel.hidden = !on;
+    b.setAttribute("aria-pressed", String(on));
+    b.textContent = on ? "Stop streaming" : "Stream live (TradingView)";
+    clear(host);
+    if (!on) return;                       // removing the widget closes its connection
+    var box = el("div", { class: "tradingview-widget-container" });
+    box.appendChild(el("div", { class: "tradingview-widget-container__widget" }));
+    var sc = document.createElement("script");
+    sc.src = "https://s3.tradingview.com/external-embedding/embed-widget-tickers.js";
+    sc.async = true;
+    sc.textContent = JSON.stringify({
+      symbols: TV_SYMBOLS.map(function (x) { return { proName: x[0], title: x[1] }; }),
+      colorTheme: tvTheme(), isTransparent: true, showSymbolLogo: false, locale: "en"
+    });
+    box.appendChild(sc);
+    host.appendChild(box);
+  }
   function setRefresh(text, busy) {
     var b = $("live-refresh"); if (!b) return;
     b.textContent = text; b.disabled = busy;
@@ -1884,6 +1922,11 @@ table.t tr:last-child td { border-bottom: 0; }
 
   renderAll();
   $("live-refresh").addEventListener("click", fetchLive);
+  $("tv-toggle").addEventListener("click", function () {
+    var on = $("tv-stream").hidden; setStream(on);
+    try { localStorage.setItem("pmdash-stream", on ? "1" : "0"); } catch (e) {}
+  });
+  try { if (localStorage.getItem("pmdash-stream") === "1") setStream(true); } catch (e) {}
   startLive();
   var lastW = $("pm").clientWidth, pending = null;
   window.addEventListener("resize", function () {

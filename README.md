@@ -132,7 +132,10 @@ A review of the rules from a Swiss holder's point of view changed five things:
 
 The price strip at the top fetches live gold and silver spot prices straight from your browser
 (gold-api.com: free, no key, allows browser requests) once when the page opens, and again only
-when you press Refresh. There is deliberately no timer. Nothing is stored and no GitHub Actions run is involved. If the feed is down the
+when you press Refresh. There is deliberately no timer. For a continuous feed, "Stream live (TradingView)" loads
+TradingView's free ticker widget (OANDA quotes for gold and silver in francs and dollars), which
+keeps one streaming connection open. It loads only when asked; the choice is remembered on that
+device, and "Stop streaming" removes it and closes the connection. Nothing is stored and no GitHub Actions run is involved. If the feed is down the
 page shows the last stored daily close instead. Stored closes remain the record for every
 calculation on the page.
 
