@@ -14,9 +14,9 @@ from pathlib import Path
 HEADERS = {"User-Agent": "Mozilla/5.0 (pmdash data probe)", "Accept": "*/*"}
 
 
-def run(urls: dict[str, str], out_dir: Path, timeout: int = 25, keep: int = 6000) -> list[dict]:
+def run(urls: dict[str, str], out_dir: Path, timeout: int = 40, keep: int = 60000) -> list[dict]:
     out_dir.mkdir(parents=True, exist_ok=True)
-    key = os.environ.get("FRED_API_KEY", "")
+    key = os.environ.get("FRED_API_KEY", "").strip()
     rows = []
     for name, url in urls.items():
         real = url.replace("{FRED_API_KEY}", key)
@@ -34,9 +34,12 @@ def run(urls: dict[str, str], out_dir: Path, timeout: int = 25, keep: int = 6000
         except Exception as e:  # noqa: BLE001
             err = f"{type(e).__name__}: {e}"
         text = body[:keep].decode("utf-8", "replace")
+        if len(body) > keep:
+            text += "\n\n... [cut] ...\n\n" + body[-keep // 3:].decode("utf-8", "replace")
         if key:
             text, err = text.replace(key, "***"), err.replace(key, "***")
         (out_dir / f"{name}.txt").write_text(f"URL: {url}\nSTATUS: {status}\nBYTES: {len(body)}\nERROR: {err}\n\n{text}")
+        time.sleep(2)                     # some hosts (UN Comtrade) rate-limit bursts
         rows.append({"name": name, "status": status, "bytes": len(body), "seconds": round(time.time() - t0, 1),
                      "error": err[:200]})
         print(f"{name}: {status} {len(body)} bytes {err[:120]}", flush=True)
