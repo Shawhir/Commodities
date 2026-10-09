@@ -50,6 +50,7 @@ What your rules say and what would change them. Not advice.
 ### Dates to know
 - 2026-10-16 to 2026-10-19: Speculators' positions report (CFTC). Shows how heavily speculators are betting on gold and silver.
 - 2026-10-20 to 2026-11-09: World Gold Council demand report. Who bought gold last quarter: central banks, funds, jewellers, investors.
+- 2026-10-25 to 2026-11-14: Central bank gold holdings (monthly). Shows which central banks added or sold gold last month. China publishes about the 7th; the IMF collects all of them.
 - 2026-10-28: US central bank (Fed) rate decision. Sets US interest rates, one of the biggest influences on gold.
 - 2026-10-30 to 2026-11-01: China factory survey. A guide to Chinese demand for gold jewellery and for silver in industry.
 - 2026-11-01 to 2026-11-15: War and political risk index update. Monthly update of the index that measures geopolitical tension.

@@ -23,7 +23,7 @@ trade_ch_x_th,2025-06-01,2025-09-13,1.428,https://comtradeapi.un.org/public/v1/p
 trade_ch_x_th,2025-07-01,2025-10-14,2.803,https://comtradeapi.un.org/public/v1/preview/C/M/HS?reporterCode=757&period=<month>&cmdCode=7108&flowCode=X,2026-10-09
 trade_ch_x_th,2025-08-01,2025-11-14,1.373,https://comtradeapi.un.org/public/v1/preview/C/M/HS?reporterCode=757&period=<month>&cmdCode=7108&flowCode=X,2026-10-09
 trade_ch_x_th,2025-09-01,2025-12-14,1.528,https://comtradeapi.un.org/public/v1/preview/C/M/HS?reporterCode=757&period=<month>&cmdCode=7108&flowCode=X,2026-10-09
-trade_ch_x_th,2025-10-01,2026-01-14,13.854066000000001,https://comtradeapi.un.org/public/v1/preview/C/M/HS?reporterCode=757&period=<month>&cmdCode=7108&flowCode=X,2026-10-09
+trade_ch_x_th,2025-10-01,2026-01-14,13.854066,https://comtradeapi.un.org/public/v1/preview/C/M/HS?reporterCode=757&period=<month>&cmdCode=7108&flowCode=X,2026-10-09
 trade_ch_x_th,2025-11-01,2026-02-13,2.062,https://comtradeapi.un.org/public/v1/preview/C/M/HS?reporterCode=757&period=<month>&cmdCode=7108&flowCode=X,2026-10-09
 trade_ch_x_th,2026-01-01,2026-04-16,1.442,https://comtradeapi.un.org/public/v1/preview/C/M/HS?reporterCode=757&period=<month>&cmdCode=7108&flowCode=X,2026-10-09
 trade_ch_x_th,2026-02-01,2026-05-14,7.421,https://comtradeapi.un.org/public/v1/preview/C/M/HS?reporterCode=757&period=<month>&cmdCode=7108&flowCode=X,2026-10-09
