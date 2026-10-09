@@ -1,0 +1,5 @@
+URL: https://api.stlouisfed.org/fred/series/observations?series_id=TRESEGCNM052N&api_key={FRED_API_KEY}&file_type=json&sort_order=desc&limit=3
+STATUS: None
+BYTES: 0
+ERROR: InvalidURL: URL can't contain control characters. '/fred/series/observations?series_id=TRESEGCNM052N&api_key=***&file_type=json&sort_order=desc&limit=3' (found at least ' ')
+

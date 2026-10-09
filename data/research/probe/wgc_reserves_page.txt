@@ -1,0 +1,88 @@
+URL: https://www.gold.org/goldhub/data/gold-reserves-by-country
+STATUS: 200
+BYTES: 68558
+ERROR: 
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr" prefix="content: http://purl.org/rss/1.0/modules/content/  dc: http://purl.org/dc/terms/  foaf: http://xmlns.com/foaf/0.1/  og: http://ogp.me/ns#  rdfs: http://www.w3.org/2000/01/rdf-schema#  schema: http://schema.org/  sioc: http://rdfs.org/sioc/ns#  sioct: http://rdfs.org/sioc/types#  skos: http://www.w3.org/2004/02/skos/core#  xsd: http://www.w3.org/2001/XMLSchema# " >
+  <head>
+    <meta charset="utf-8" />
+<meta name="description" content="Explore the world&#039;s gold reserves by country, compiled from IMF IFS statistics, and read central bank gold reserve reports from the World Gold Council here." />
+<meta name="keywords" content="gold reserves by country, gold reserves by country" />
+<link rel="canonical" href="https://www.gold.org/goldhub/data/gold-reserves-by-country" />
+<meta property="og:site_name" content="World Gold Council" />
+<meta property="og:url" content="https://www.gold.org/goldhub/data/gold-reserves-by-country" />
+<meta property="og:title" content="Gold Reserves by Country | World Gold Council" />
+<meta property="og:description" content="Gold reserves by country data compiled from IMF IFS statistics. Explore reported central bank purchases, sales and total world gold reserves." />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:description" content="Gold reserves by country data compiled from IMF IFS statistics. Explore reported central bank purchases, sales and total world gold reserves." />
+<meta name="twitter:site" content="@goldcouncil" />
+<meta name="twitter:title" content="Gold Reserves by Country | World Gold Council" />
+<meta name="twitter:site:id" content="39871442" />
+<meta name="twitter:creator" content="@goldcouncil" />
+<meta name="twitter:creator:id" content="39871442" />
+<meta name="MobileOptimized" content="width" />
+<meta name="HandheldFriendly" content="true" />
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+<link rel="preconnect" href="https://challenges.cloudflare.com" />
+<script>
+(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','analyticsLayer','GTM-KHC2KGT');
+        
+</script>
+<script>window.wgcFaroConfig={"url":"\/telemetry\/rum","appName":"wgc-website","version":"1.0.11","environment":"production","modules":{"core":"11.3.16","wgc_storybook":"1.0.478","wgc_user":"1.0.22","wgc_pardot":"1.0.29","wgc_charts":"1.0.58","wgc_downloads":"1.0.25","wgc_cookies":"1.0.41","wgc_algolia_fe":"1.0.36","wgc_notifications":"1.0.19","wgc_spotprice_block":"1.0.42","theme_default":"2.0.205","theme_admin":"5.0.12"}};</script>
+<script type="application/ld+json">{
+    "@context": "https://schema.org",
+    "@graph": [
+        {
+            "@type": "WebPage",
+            "@id": "https://www.gold.org/goldhub/data/gold-reserves-by-country",
+            "breadcrumb": {
+                "@type": "BreadcrumbList",
+                "itemListElement": [
+                    {
+                        "@type": "ListItem",
+                        "position": 1,
+                        "name": "Goldhub",
+                        "item": "https://www.gold.org/goldhub"
+                    },
+                    {
+                        "@type": "ListItem",
+                        "position": 2,
+                        "name": "Data",
+                        "item": "https://www.gold.org/goldhub/data"
+                    },
+                    {
+                        "@type": "ListItem",
+                        "position": 3,
+                        "name": "Gold Reserves by Country",
+                        "item": "https://www.gold.org/goldhub/data/gold-reserves-by-country"
+                    }
+                ]
+            },
+            "description": "Gold Reserves by Country"
+        }
+    ]
+}</script>
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=1" />
+<link rel="mask-icon" color="#D8AB4C" href="/safari-pinned-tab.svg?v=1" />
+<meta name="baidu-site-verification" content="codeva-KLppf1jNc0" />
+<meta name="apple-mobile-web-app-title" content="World Gold Council" />
+<meta name="application-name" content="World Gold Council" />
+<meta name="msapplication-TileColor" content="#282828" />
+<meta name="theme-color" content="#282828" />
+<link rel="icon" href="/themes/custom/wgc_v01/favicon.ico" type="image/vnd.microsoft.icon" />
+<link rel="alternate" hreflang="en" href="https://www.gold.org/goldhub/data/gold-reserves-by-country" />
+
+    <title>Central Banks Gold Reserves by Country | World Gold Council</title>
+
+        <script>
+      var analyticsLayer = window.analyticsLayer || [];
+    </script>
+
+    <link rel="stylesheet" media="all" href="/sites/default/files/css/css_lJMfeAQgQ6tcfY9Aoqb9qNveR9tdydEhuRFWLGMdCfQ.css?delta=0&amp;language=en&amp;theme=wgc_v01&amp;include=eJx9kttyxCAIQH9o3bRf1MFLlIaIg9ps_r4m23ZfSJ9kzhFFxLGEyUsvQHf4hMetgEAUKKn-4he591y6Jawp-NsW3YdLIK1OIzTP0KyA-VQF9g2Ipp_1ZLWx7JZ5OTOAgjSFW_AxqLyqWAJ4J321muytcb4UJgr3omiXglssPxQ1c25V5dyCXAqzhtz_sZjxaksU9ApO493qhbiC2kAcv6c1nGBnXXBkBR9_fFVr5oYzOmiotr0gEYghzItiJcSRNja5RX1YDRScVmgT2E_89fY-zZ3IbOhbeg7layYPG4ktkKltH0XEP3yc4nnLxOANOs71Gx2gNYM" />
+<link rel="stylesheet" media="print" href="/sites/default/files/css/css_ugybnSxZhZx8q27V3A11VBcz6zA9WFJb64D78trtIOk.css?delta=1&amp;language=en&amp;theme=wgc_v01&amp;include=eJx9kttyxCAIQH9o3bRf1MFLlIaIg9ps_r4m23ZfSJ9kzhFFxLGEyUsvQHf4hMetgEAUKKn-4he591y6Jawp-NsW3YdLIK1OIzTP0KyA-VQF9g2Ipp_1ZLWx7JZ5OTOAgjSFW_AxqLyqWAJ4J321muytcb4UJgr3omiXglssPxQ1c25V5dyCXAqzhtz_sZjxaksU9ApO493qhbiC2kAcv6c1nGBnXXBkBR9_fFVr5oYzOmiotr0gEYghzItiJcSRNja5RX1YDRScVmgT2E_89fY-zZ3IbOhbeg7layYPG4ktkKltH0XEP3yc4nnLxOANOs71Gx2gNYM" />
+<link rel="stylesheet" media="all" href="/sites/default/files/css/css_mj6mA-Gqd1lvyMi-q

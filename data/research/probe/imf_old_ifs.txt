@@ -1,0 +1,5 @@
+URL: http://dataservices.imf.org/REST/SDMX_JSON.svc/CompactData/IFS/M.CN.RAFAGOLDV_OZT?startPeriod=2024
+STATUS: None
+BYTES: 0
+ERROR: URLError: <urlopen error [Errno -2] Name or service not known>
+

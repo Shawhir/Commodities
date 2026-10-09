@@ -1,0 +1,86 @@
+URL: https://www.ishares.com/us/products/239561/ishares-gold-trust-fund/1467271812596.ajax?fileType=csv&fileName=IAU_holdings&dataType=fund
+STATUS: 200
+BYTES: 1378467
+ERROR: 
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" prefix="og: http://ogp.me/ns#" lang="en-US" xml:lang="en-US">
+<head>
+<link rel="preload" href="/blk-one02-c-assets/include/bundles/minified-5b9fb124fde47901b87423ed48184673.css" as="style" />
+<link rel="preload" href="/blk-one02-c-assets/include/bundles/minified-463c2fcc242a9e5a71cc8388ad3b34d5.css" as="style" />
+<link rel="preload" href="/blk-one02-c-assets/include/bundles/minified-eb1937a2b02b9427f0b7e1231000778c.css" as="style" />
+<link rel="preload" href="/blk-one02-c-assets/include/bundles/minified-fefef83dea0aed96a9147381126acf31.css" as="style" />
+<link rel="preload" href="/blk-one02-c-assets/include/bundles/minified-3a821813d7982b9a9bd815cf373a41b4.css" as="style" />
+<link rel="preload" href="/blk-one02-c-assets/include/bundles/minified-7f2c6bea75be9db6fb590aa1459334f3.css" as="style" />
+<link rel="preload" href="/blk-one02-c-assets/include/bundles/minified-24b0138dccb32df700fd8f4eb45db1cd.css" as="style" />
+<link rel="preload" href="/blk-one02-c-assets/include/bundles/minified-bcc17d66ca66b2742f8c240497925528.css" as="style" />
+<link rel="preload" href="/blk-one02-c-assets/include/bundles/minified-10491a5dd3514c80147fade576542b8a.css" as="style" />
+<link rel="preload" href="/blk-one02-c-assets/include/bundles/minified-51843b5cbab092b9eaa4376e2af1fa2f.css" as="style" />
+<script nonce="cc4n34BHLpbJev2eXhsYEA==">
+//<![CDATA[
+var vice= { config: { viceAccountId: 'blackrock', viceSiteId: 'isharesprod', viceZoneId: '', viceSectionId: '' } }
+//]]>
+</script>
+<script src="//sourcedefense.blackrock.com/cdncch/vice_loader/blackrock/isharesprod"></script>
+<link type="image/x-icon" href="/blk-one02-c-assets/ishares-favicon.ico" rel="shortcut icon"/>
+<script nonce="cc4n34BHLpbJev2eXhsYEA==">
+//<![CDATA[
+var ASSET_PREFIX_PATH='/blk-one02-c-assets/';
+window['adrum-start-time'] = new Date().getTime();
+var BLK = { deferredFunctions: [], ready: function(f) { BLK.deferredFunctions.push(f); } };
+/* Returns the nonce. */
+BLK.getScriptNonce = function () {
+var script = document.querySelector && document.querySelector('script[nonce]');
+if (script) {
+var nonce = script['nonce'] || script.getAttribute('nonce');
+return nonce;
+}
+return '';
+};
+//]]>
+</script>
+<script nonce="cc4n34BHLpbJev2eXhsYEA==">
+//<![CDATA[
+(function(){
+if (typeof BLK === "undefined" || !BLK) {
+window.BLK = {};
+}
+BLK["isAtmos"] = true;
+})();
+//]]>
+</script>
+<link rel="stylesheet" href="/blk-one02-c-assets/include/bundles/minified-5b9fb124fde47901b87423ed48184673.css" />
+<link rel="stylesheet" href="/blk-one02-c-assets/include/bundles/minified-463c2fcc242a9e5a71cc8388ad3b34d5.css" />
+<link rel="stylesheet" href="/blk-one02-c-assets/include/bundles/minified-eb1937a2b02b9427f0b7e1231000778c.css" />
+<link rel="stylesheet" href="/blk-one02-c-assets/include/bundles/minified-fefef83dea0aed96a9147381126acf31.css" />
+<link rel="stylesheet" href="/blk-one02-c-assets/include/bundles/minified-3a821813d7982b9a9bd815cf373a41b4.css" />
+<link rel="stylesheet" href="/blk-one02-c-assets/include/bundles/minified-7f2c6bea75be9db6fb590aa1459334f3.css" />
+<link rel="stylesheet" href="/blk-one02-c-assets/include/bundles/minified-24b0138dccb32df700fd8f4eb45db1cd.css" />
+<link rel="stylesheet" href="/blk-one02-c-assets/include/bundles/minified-bcc17d66ca66b2742f8c240497925528.css" />
+<link rel="stylesheet" href="/blk-one02-c-assets/include/bundles/minified-10491a5dd3514c80147fade576542b8a.css" />
+<link rel="stylesheet" href="/blk-one02-c-assets/include/bundles/minified-51843b5cbab092b9eaa4376e2af1fa2f.css" />
+<script src="/blk-one02-c-assets/include/bundles/minified-f41dab24221a513db28845e5f046c98.js" defer="defer"></script>
+<script src="/blk-one02-c-assets/include/bundles/minified-830c648f3688fee2582f95b1c36da3a3.js" defer="defer"></script>
+<script src="/blk-one02-c-assets/include/bundles/minified-9e44723dac8d4bdfbd4e96bbe796d23a.js" defer="defer"></script>
+<script src="/blk-one02-c-assets/include/bundles/minified-351d436f74261bb433572672ed7e7b7e.js" defer="defer"></script>
+<script src="/blk-one02-c-assets/include/bundles/minified-5bae57d5f9d7fdea5836a5592c57306a.js" defer="defer"></script>
+<script src="/blk-one02-c-assets/include/bundles/minified-274eac49950f53b192a0b681024b8a47.js" defer="defer"></script>
+<script src="/blk-one02-c-assets/include/bundles/minified-56e0adbb1e603d86fa6a8d86a3d4428d.js" defer="defer"></script>
+<script src="/blk-one02-c-assets/include/bundles/minified-24aca435df0a08cb44176ba92fb08bb7.js" defer="defer"></script>
+<script src="/blk-one02-c-assets/include/bundles/minified-5ab2a4acfcc73c399e4093229e117bb0.js" defer="defer"></script>
+<script src="/blk-one02-c-assets/include/bundles/minified-78a5f263ec6aea2d427d686a0911cf23.js" defer="defer"></script>
+<script src="/blk-one02-c-assets/include/bundles/minified-d9cbacd9dc207a6c6a6fb697074c8e2d.js" defer="defer"></script>
+<script src="/blk-one02-c-assets/include/bundles/minified-f469cfae581f8d94210105105bd1de0e.js" defer="defer"></script>
+<!-- BUNDLE: design-system-webcomponents -->
+<script nomodule src="/blk-one02-c-assets/include/design-system/js/components/web-components/design-system.js?version=2026.11.1" defer="defer"></script>
+<script type="module" src="/blk-one02-c-assets/include/design-system/js/components/web-components/design-system.esm.js?version=2026.11.1"></script>
+<script src="/blk-one02-c-assets/include/bundles/minified-570745e7df1a97c81ae98ea5a31e2d3c.js" defer="defer"></script>
+<title>iShares Gold Trust | IAU</title>
+<script nonce="cc4n34BHLpbJev2eXhsYEA==">
+var autoBlockScriptTag = document.createElement('script'), head = document.getElementsByTagName('head')[0];
+autoBlockScriptTag.defer = true;
+autoBlockScriptTag.type = 'text/javascript';
+autoBlockScriptTag.src = 'https://cdn.cookielaw.org/consent/33b411af-181e-4070-8e57-d9cf1908e0bd/OtAutoBlock.js';
+head.appendChild(autoBlockScriptTag);
+</script>
+<script nonce="cc4n34BHLpbJev2eXhsYEA==" src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" defer="defer" ch
