@@ -33,7 +33,7 @@ What your rules say and what would change them. Not advice.
 |---|---|---|---|
 | US interest rates (the Fed) | raising rates, now 4.00% | down | Gold pays no interest, so higher rates make it less attractive to hold |
 | Interest rates after inflation | 2.92%, up 0.98 points in 6 months | down | This is the return on safe bonds after inflation; when it rises, gold usually struggles |
-| Swiss interest rates | 10-year Swiss bonds pay 0.47%, up 0.22 points in 6 months; after Swiss inflation -0.02% | little effect now | What a franc saver gives up by holding gold instead of Swiss bonds; low Swiss rates make holding gold cheap in francs |
+| Swiss interest rates | 10-year Swiss bonds pay 0.47%, up 0.22 points in 6 months; after Swiss inflation +0.12% | little effect now | What a franc saver gives up by holding gold instead of Swiss bonds; low Swiss rates make holding gold cheap in francs |
 | US dollar | down 0.6% in 6 months | little effect now | Gold is priced in dollars; a stronger dollar usually means a lower gold price |
 | War and political risk | higher than 85% of the last 10 years | up | People turn to gold as a safe place in times of conflict; the effect often fades when tensions ease |
 | Oil price | up 68% in 12 months | either way | Expensive oil raises inflation, which helps gold, but can make the Fed raise rates, which hurts it |
@@ -176,7 +176,8 @@ _Descriptive, not predictive. This tool does not forecast prices or give instruc
 | cb_gold_imf | 2026-09 | ok |
 | cftc_cot | 2026-10 | ok |
 | ch_10y_yield | 2026-08 | ok |
-| ch_cpi_yoy | 2025-04 | stale (556 days) |
+| ch_cpi_yoy | 2025-04 | ok |
+| ch_cpi_yoy_snb | 2026-08 | ok |
 | chf_3m_rate | 2026-08 | ok |
 | dollar_broad | 2026-10 | ok |
 | fed_funds_eff | 2026-10 | ok |
