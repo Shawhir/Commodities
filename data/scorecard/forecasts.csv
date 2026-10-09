@@ -1,0 +1,7 @@
+made,kind,months,price,lo,hi,p_rising,p_sideways,p_falling,n_rising,n_sideways,n_falling,state,up,down
+2026-09,expected_move,3,4157,3711.34,4656.17,,,,,,,,,
+2026-09,expected_move,6,4157,3541.04,4880.1,,,,,,,,,
+2026-09,expected_move,12,4157,3313.46,5215.28,,,,,,,,,
+2026-09,odds_12m,12,,,,0.402299,0.433498,0.164204,0.402299,0.433498,0.164204,,0.1,-0.1
+2026-09,range_12m,12,4319,3793.72,4568.22,,,,,,,,,
+2026-09,main_switch,1,,,,,,,,,,In,,

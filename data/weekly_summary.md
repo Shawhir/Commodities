@@ -1,6 +1,6 @@
 ## This month at a glance (prices to 2026-09)
 
-**In francs, gold has been rising steadily; in dollars it has been going sideways. Your main switch is ON and the warning light is showing. Of the outside influences, 2 usually push gold down and 1 usually pushes it up.**
+**In francs, gold has been rising steadily; in dollars it has been going sideways. Your main switch is ON and the warning light is showing. Of the outside influences, 3 usually push gold down and 1 usually pushes it up.**
 
 What your rules say and what would change them. Not advice.
 
@@ -33,6 +33,8 @@ What your rules say and what would change them. Not advice.
 |---|---|---|---|
 | US interest rates (the Fed) | raising rates, now 4.00% | down | Gold pays no interest, so higher rates make it less attractive to hold |
 | Interest rates after inflation | 2.91%, up 0.97 points in 6 months | down | This is the return on safe bonds after inflation; when it rises, gold usually struggles |
+| Where markets expect US rates to go | 2-year US yield 4.79%, up 0.99 points in 6 months | down | The 2-year yield moves with what markets expect the Fed to do next; falling expectations usually help gold |
+| Recession warning (yield curve) | 10-year minus 3-month +1.05 points; below zero in 0 of the last 6 months | little effect now | When long rates sit below short rates, a US recession has often followed within 1-2 years; recessions bring rate cuts (good for gold) but can also force selling at first |
 | Swiss interest rates | 10-year Swiss bonds pay 0.47%, up 0.22 points in 6 months; after Swiss inflation +0.12% | little effect now | What a franc saver gives up by holding gold instead of Swiss bonds; low Swiss rates make holding gold cheap in francs |
 | US dollar | down 0.6% in 6 months | little effect now | Gold is priced in dollars; a stronger dollar usually means a lower gold price |
 | War and political risk | higher than 85% of the last 10 years | up | People turn to gold as a safe place in times of conflict; the effect often fades when tensions ease |
@@ -46,7 +48,7 @@ What your rules say and what would change them. Not advice.
 - The main switch is ON, but the warning light is showing: gold is still above a year ago, yet below its 10-month average.
 - The market mood depends on the currency: rising steadily in francs but going sideways in dollars. The franc's moves against the dollar make the difference.
 - In USD, gold is far above its 10-year average (higher than 91% of the time since 1971), yet below its 10-month average: high over the long run, slipping in the short run.
-- Outside influences pull both ways. Usually pushing gold down: US interest rates (the Fed), Interest rates after inflation. Usually pushing gold up: War and political risk.
+- Outside influences pull both ways. Usually pushing gold down: US interest rates (the Fed), Interest rates after inflation, Where markets expect US rates to go. Usually pushing gold up: War and political risk.
 
 ### Dates to know
 - 2026-10-16 to 2026-10-19: Speculators' positions report (CFTC). Shows how heavily speculators are betting on gold and silver.
@@ -142,12 +144,8 @@ _Descriptive, not predictive. This tool does not forecast prices or give instruc
 | gold_mom_12_1 | USD | intact | below | 2023-08-31 | 0.1054 | 0 | important |
 | gold_stretch_10y_p90 | CHF | intact | below | 2025-10-31 | 99.62 | 90 | watch |
 | gold_stretch_10y_p90 | USD | intact | below | 2025-12-31 | 99.25 | 90 | watch |
-| gold_round_5000 | USD | intact | above | 2026-03-31 | 4,856 | 5,000 | info |
-| gold_round_5000 | CHF | intact | above | 2026-03-31 | 3,823 | 3,936 | info |
-| gold_round_4000 | CHF | intact | below | 2026-08-31 | 3,562 | 3,230 | info |
-| gold_round_4000 | USD | intact | below | 2026-08-31 | 4,411 | 4,000 | info |
-| gold_regime | - | Sideways | - | 2026-09-30 | nan | nan | watch |
 | gold_10m_avg | USD | intact | above | 2026-09-30 | 4,319 | 4,528 | important |
+| gold_regime | - | Sideways | - | 2026-09-30 | nan | nan | watch |
 - real_yield_jump: macro line type change_bp on DFII10 not evaluated yet
 - fed_hikes_priced: macro line type level on fed_hikes_priced_12m not evaluated yet
 
