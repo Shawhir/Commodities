@@ -81,7 +81,7 @@ def test_build_section_with_partial_data(gold):
     assert 0 < cn["share_now"] < 1 and cn["pace_12m"] > 0
     assert any(r.get("missing") for r in out["banks"])                     # banks without data are shown as such
     pl = next(r for r in out["banks"] if r["bank"] == "PL")
-    assert "target" in pl and pl["target"]["goals"][0]["goal"] == 700 and "NBP" not in pl["target"]["source"][:0]
+    assert "target" in pl and pl["target"]["goals"][0]["goal"] == 700
     assert out["scenario"]["banks"] == ["CN"]                              # only banks with reserves data
     low = " " + (out["headline"] + " " + out["honesty"]["plain"]).lower() + " "
     assert not [w for w in FORBIDDEN if f" {w} " in low]
