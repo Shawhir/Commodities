@@ -32,7 +32,7 @@ What your rules say and what would change them. Not advice.
 | What | Now | Usually pushes gold | Why |
 |---|---|---|---|
 | US interest rates (the Fed) | raising rates, now 4.00% | down | Gold pays no interest, so higher rates make it less attractive to hold |
-| Interest rates after inflation | 2.92%, up 0.98 points in 6 months | down | This is the return on safe bonds after inflation; when it rises, gold usually struggles |
+| Interest rates after inflation | 2.91%, up 0.97 points in 6 months | down | This is the return on safe bonds after inflation; when it rises, gold usually struggles |
 | Swiss interest rates | 10-year Swiss bonds pay 0.47%, up 0.22 points in 6 months; after Swiss inflation +0.12% | little effect now | What a franc saver gives up by holding gold instead of Swiss bonds; low Swiss rates make holding gold cheap in francs |
 | US dollar | down 0.6% in 6 months | little effect now | Gold is priced in dollars; a stronger dollar usually means a lower gold price |
 | War and political risk | higher than 85% of the last 10 years | up | People turn to gold as a safe place in times of conflict; the effect often fades when tensions ease |
