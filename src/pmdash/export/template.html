@@ -121,6 +121,22 @@ body { background: var(--bg); color: var(--fg); font-family: var(--font-body); f
 .group-head .eyebrow, .ahead-head .eyebrow { color: var(--gold); }
 #glance-sec { scroll-margin-top: 56px; }
 .note { font-size: 14px; }
+.xm-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin: 10px 0 6px; }
+.xcol { background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius); padding: 10px 12px; display: grid; gap: 4px; align-content: start; }
+.xcol .h { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+.xcol .rng { font-family: var(--font-display); font-size: 20px; line-height: 1.2; }
+.xcol .sub, .xcol .chk { font-size: 13px; color: var(--muted); }
+.xcol .chk { color: var(--up); }
+.scen .t td:first-child { min-width: 12em; }
+@media (max-width: 600px) {
+  #scen-table thead { display: none; }
+  #scen-table tr { display: block; padding: 8px 0; border-bottom: 1px solid var(--line); }
+  #scen-table td { display: flex; justify-content: space-between; gap: 12px; border: 0; padding: 2px 0; text-align: right; }
+  #scen-table td.sc-name { display: block; text-align: left; font-weight: 600; min-width: 0; padding-bottom: 4px; }
+  #scen-table td[data-label]::before { content: attr(data-label); color: var(--muted); font-family: var(--font-body); text-align: left; }
+  #scen-table td:empty { display: none; }
+}
+#odds.demoted .otrack .n { display: none; }
 /* layout: glance first, details folded */
 .glance-sec { display: grid; gap: 12px; }
 .glance-head { font-family: var(--font-display); font-weight: 500; font-size: 22px; line-height: 1.3; max-width: 62ch; }
@@ -376,12 +392,18 @@ table.t tr:last-child td { border-bottom: 0; }
       <p class="note">Tap a box to see the detail. Hover over (or tap) any line for its technical version; "Show technical terms" at the top marks which ones have one. This page describes; it never tells you what to do.</p>
       <button type="button" class="linkbtn" id="toggle-all">Open all</button>
     </div>
-    <h3 class="ahead-head" id="g-ahead"><span class="eyebrow">Looking ahead</span>Odds and price ranges from history</h3>
-    <div class="odds panel" id="odds">
-      <div class="eyebrow jg" data-tech="Multinomial logistic regression (L2 = 300, chosen from 8/60/300/1500 on the walk-forward test) on the month-end state vector; classes: 12-month return >= +10%, <= -10%, else sideways. Walk-forward from 2000 (refit every 6 months, trained only on months with known outcomes, standardised on the training window). Shown odds = w x model + (1 - w) x class frequencies, with w chosen by walk-forward Brier score.">Weighed-up odds for the next 12 months</div>
-      <div class="odds-grid" id="odds-bars"></div>
-      <div class="odds-why" id="odds-why"></div>
-      <p class="note" id="odds-track">—</p>
+    <h3 class="ahead-head" id="g-ahead"><span class="eyebrow">Looking ahead</span>How far gold may move, and what history says</h3>
+    <div class="panel xm" id="xm">
+      <div class="eyebrow jg" data-tech="Options-implied: CBOE Gold ETF Volatility Index (GVZ, 30-day implied volatility, annualised), scaled by the square root of time: sigma_h = GVZ x sqrt(h/12); range = price x exp(+/- sigma_h) (1 band, ~68%) and exp(+/- 2 sigma_h) (2 bands, ~95%). 5 years: gold's realised monthly volatility since 2001. Direction is not forecast.">How far gold may move: the range the options market is pricing</div>
+      <p class="note" id="xm-sub">—</p>
+      <div class="xm-grid" id="xm-grid"></div>
+      <p class="note" id="xm-foot">—</p>
+    </div>
+    <div class="panel scen" id="scen">
+      <div class="eyebrow jg" data-tech="Historical buckets of month-end conditions since 1975; outcome = gold's return over the next 12 months (monthly averages); interquartile range applied to today's futures price. Spells = separate episodes at least 12 months apart.">Scenarios for the next year: what gold did in past times like each one</div>
+      <p class="note" id="scen-sub">—</p>
+      <div class="tbl-wrap"><table class="t" id="scen-table"></table></div>
+      <p class="note" id="scen-foot">—</p>
     </div>
     <div class="guess panel" id="guess">
       <div class="guess-head">
@@ -390,6 +412,12 @@ table.t tr:last-child td { border-bottom: 0; }
       </div>
       <div class="guess-grid" id="guess-grid"></div>
       <p class="note" id="guess-foot">—</p>
+    </div>
+    <div class="odds panel" id="odds">
+      <div class="eyebrow jg" id="odds-title" data-tech="Multinomial logistic regression (L2 = 300, chosen from 8/60/300/1500 on the walk-forward test) on the month-end state vector; classes: 12-month return >= +10%, <= -10%, else sideways. Walk-forward from 2000 (refit every 6 months, trained only on months with known outcomes, standardised on the training window). Shown odds = w x model + (1 - w) x class frequencies, with w chosen by walk-forward Brier score.">Weighed-up odds for the next 12 months</div>
+      <div class="odds-grid" id="odds-bars"></div>
+      <div class="odds-why" id="odds-why"></div>
+      <p class="note" id="odds-track">—</p>
     </div>
   </section>
 
@@ -466,6 +494,11 @@ table.t tr:last-child td { border-bottom: 0; }
     </div>
   </details>
 
+  <details class="sec fold" id="d-silver">
+    <summary><div><div class="eyebrow">Silver</div><h2 id="sum-silver">—</h2></div><span class="chev" aria-hidden="true"></span></summary>
+    <div class="fold-body"><div class="tiles" id="silver-tiles"></div><p class="note" id="silver-note">—</p></div>
+  </details>
+
   <h2 class="group-head" id="g-buyers"><span class="eyebrow">Who's buying</span>Buyers around the world and central bank targets</h2>
   <details class="sec fold" id="d-buyers">
     <summary><div><div class="eyebrow">Who's buying gold</div><h2 id="sum-buyers">—</h2></div><span class="chev" aria-hidden="true"></span></summary>
@@ -491,45 +524,21 @@ table.t tr:last-child td { border-bottom: 0; }
     </div>
   </details>
 
-  <h2 class="group-head" id="g-history"><span class="eyebrow">History</span>Is gold stretched, and what happened in similar times?</h2>
+  <h2 class="group-head" id="g-history"><span class="eyebrow">History and the long view</span>Is gold expensive, and how have the rules done?</h2>
+  <details class="sec fold" id="d-value">
+    <summary><div><div class="eyebrow">The long view: is gold expensive?</div><h2 id="sum-value">—</h2></div><span class="chev" aria-hidden="true"></span></summary>
+    <div class="fold-body">
+      <div class="tiles" id="value-tiles"></div>
+      <div class="panel brief-card"><div class="eyebrow">Gold's price after inflation since 1975, in today's dollars</div><div class="chart-wrap" id="value-chart"></div><p class="note" id="value-note">—</p></div>
+      <div class="panel brief-card"><div class="eyebrow">Supply</div><div id="value-supply"></div></div>
+    </div>
+  </details>
+
   <details class="sec fold" id="d-stretch">
     <summary><div><div class="eyebrow">How far gold is from its usual levels</div><h2 id="stretch-head">—</h2></div><span class="chev" aria-hidden="true"></span></summary>
     <div class="fold-body">
       <div class="panel st-list" id="stretch-list"></div>
       <p class="note jg" data-tech="Filled dot: percentile since 1971 (floating-era windows, so the 10-year average starts in 1981). Hollow dot: percentile within the last 10 years. Sample sizes in brackets.">Filled dot: how today compares with every month since 1971. Hollow dot: how it compares with the last 10 years. Further right means a larger share of past months were lower.</p>
-    </div>
-  </details>
-
-  <details class="sec fold" id="d-analogues">
-    <summary><div><div class="eyebrow">When did it last look like this?</div><h2 id="an-head">—</h2></div><span class="verdict" id="an-verdict"></span><span class="chev" aria-hidden="true"></span></summary>
-    <div class="fold-body">
-      <div class="panel">
-        <div class="chart-wrap" id="an-chart"></div>
-        <p class="note" id="an-summary">—</p>
-      </div>
-      <div class="panel tbl-wrap"><table class="t" id="an-table"></table></div>
-      <div class="two">
-        <div class="panel">
-          <div class="eyebrow jg" data-tech="Out-of-sample check: for every month since 2000, the finder ran on earlier history only.">Has this comparison worked before? Tested on every month since 2000</div>
-          <div class="tbl-wrap"><table class="t" id="oos-table"></table></div>
-          <p class="note jg" style="margin-top:8px" data-tech="Each month uses only earlier history. Months overlap (12-month outcomes), so they are not independent tests. Labelled useful only if the matched median beats the unconditional median in most months and calls direction more often.">Each month was tested using only the history available at the time. The months overlap, so there are fewer independent tests than it looks. The comparison would count as useful only if it beat the simple rule "gold usually rises" in most months.</p>
-        </div>
-        <div class="panel">
-          <div class="eyebrow">What the comparison looks at</div>
-          <p class="note jg" id="an-measures" style="margin-top:6px">—</p>
-          <div class="eyebrow jg" style="margin-top:12px" data-tech="Key moments catalogue (data/key_moments.csv): distance in the same standardised space.">Closest famous moments</div>
-          <div class="tbl-wrap"><table class="t" id="km-table"></table></div>
-        </div>
-      </div>
-    </div>
-  </details>
-
-  <details class="sec fold" id="d-after">
-    <summary><div><div class="eyebrow">What happened after setups like this</div><h2 id="sum-after">—</h2></div><span class="verdict" id="after-verdict"></span><span class="chev" aria-hidden="true"></span></summary>
-    <div class="fold-body">
-      <p class="note">Counts from history, not a forecast. For each way of describing today, this shows how often gold was higher 3, 6 and 12 months later, compared with all months since 1972. "Separate spells" counts each stretch of similar months once, because neighbouring months share most of their future.</p>
-      <div id="after-list" class="after-list"></div>
-      <p class="note jg" data-tech="Honesty test (walk-forward from 2000 for monthly setups, 2010 for daily signals): at each date where the setup held, its share of rises was computed only from outcomes known at the time, and so was the baseline share. 'Useful' requires a Brier score at least 5% lower, a hit rate at least 5 points higher, and at least 15 independent spells. On simulated random prices about 1 in 25 signals still passes, so a single pass is weak evidence.">The honesty test asks: if you had used these counts at the time, using only the history available then, would they have described what came next better than "gold usually rises"? Anything that fails is labelled "for context only".</p>
     </div>
   </details>
 
@@ -576,6 +585,11 @@ table.t tr:last-child td { border-bottom: 0; }
       <div class="panel tbl-wrap"><table class="t" id="rep-table"></table></div>
       <p class="note jg" data-tech="Release calendar (section 9.6). 'Enter' means the figures come from a report whose terms rule out automated download. With no consensus-forecast feed, changes are compared with the prior release and the 12-month trend, not with expectations.">"Type in by hand" means the publisher doesn't allow automatic downloads. There's no feed of what forecasters expected, so new figures are compared with the previous release and the past year instead.</p>
     </div>
+  </details>
+
+  <details class="sec fold" id="d-score">
+    <summary><div><div class="eyebrow">Scorecard: how the page's own numbers turn out</div><h2 id="sum-score">—</h2></div><span class="chev" aria-hidden="true"></span></summary>
+    <div class="fold-body"><div class="panel tbl-wrap"><table class="t" id="score-table"></table></div><p class="note" id="score-note">—</p></div>
   </details>
 
   <details class="sec fold" id="d-data">
@@ -927,10 +941,158 @@ table.t tr:last-child td { border-bottom: 0; }
     hn.appendChild(jg("p", { class: "note" }, H.plain, H.tech));
   }
 
+  // ---------- expected move (options) ----------
+  function renderExpected() {
+    var E = D.expected, host = $("xm");
+    if (!E) { host.hidden = true; return; }
+    host.hidden = false;
+    var cur = S.cur, grid = clear($("xm-grid"));
+    setText("xm-sub", "Options traders currently price gold to swing about " + E.vol_now.toFixed(0) + "% a year, more than on " + Math.round(E.vol_pct) +
+      "% of days since " + E.vol_since.slice(0, 4) + ". This says how big a move to expect, not which way.",
+      "GVZ " + E.vol_now.toFixed(2) + " on " + E.as_of + "; percentile " + E.vol_pct.toFixed(0) + " of month-end values since " + E.vol_since + "; realised since 2001 " + E.realised_long.toFixed(1) + "%, last 3 years " + E.realised_3y.toFixed(1) + "%");
+    var label = { 3: "Next 3 months", 6: "Next 6 months", 12: "Next year", 60: "Next 5 years" };
+    E.rows.forEach(function (r) {
+      var b = cur === "CHF" && r.chf ? r.chf : r.usd, c = el("div", { class: "xcol" });
+      c.appendChild(el("div", { class: "h" }, label[r.months] || (r.months + " months")));
+      c.appendChild(jg("div", { class: "rng" }, money(b.lo1, cur) + " to " + money(b.hi1, cur).replace("CHF ", ""),
+        "1 band: exp(+/-" + r.sigma.toFixed(3) + "); " + (r.source === "options" ? "options-implied" : "gold's realised volatility since 2001, " + r.vol.toFixed(1) + "% a year")));
+      c.appendChild(el("div", { class: "sub" }, "About 2 in 3 chances of ending in this range (±" + Math.round((Math.exp(r.sigma) - 1) * 100) + "%)."));
+      c.appendChild(el("div", { class: "sub" }, "Wider range, about 19 in 20: " + money(b.lo2, cur) + " to " + money(b.hi2, cur).replace("CHF ", "") + "."));
+      if (r.check) c.appendChild(jg("div", { class: "chk" }, "Checked since " + r.check.first.slice(0, 4) + ": gold ended inside this kind of range " + Math.round(r.check.inside1 * 100) + "% of the time (aim 68%).",
+        r.check.n + " starts, about " + r.check.independent + " independent; inside 2 bands " + Math.round(r.check.inside2 * 100) + "% (aim 95%); realised / implied spread " + r.check.realised_vs_implied.toFixed(2)));
+      else c.appendChild(el("div", { class: "chk" }, "No options price this far ahead; based on gold's own swings since 2001, so treat it loosely."));
+      grid.appendChild(c);
+    });
+    setText("xm-foot", "Ranges are centred on today's price because no one can reliably say which way gold goes. " +
+      (cur === "CHF" ? "Franc figures use today's exchange rate; moves in the franc add to the uncertainty. " : "") +
+      "This is the one forward-looking number here with a good record: past ranges held about as often as they should.",
+      "Centre: last futures close $" + Math.round(E.price_usd).toLocaleString("en-US") + (E.usdchf ? "; USD/CHF " + E.usdchf.toFixed(4) : ""));
+  }
+
+  // ---------- scenarios ----------
+  function renderScenarios() {
+    var SC = D.scenarios, host = $("scen");
+    if (!SC || !SC.rows.length) { host.hidden = true; return; }
+    host.hidden = false;
+    var cur = S.cur, rate = cur === "CHF" && D.expected && D.expected.usdchf ? D.expected.usdchf : 1;
+    var nowList = SC.rows.filter(function (r) { return r.now; }).map(function (r) { return r.plain.toLowerCase(); });
+    setText("scen-sub", nowList.length ? "Today looks most like: " + nowList.join(" and ") + " (ticked below)." : "None of these scenarios describes today.",
+      "Conditions at the latest month-end; recession is read from the yield curve (inverted in 3 or more of the last 6 months)");
+    var t = clear($("scen-table")), hr = el("tr");
+    [["Scenario", ""], ["Now?", ""], ["Gold higher a year later", "n"], ["Typical change", "n"], ["Usual range from today", "n"], ["Separate times", "n"]].forEach(function (h) { hr.appendChild(el("th", { class: h[1] }, h[0])); });
+    var th = el("thead"); th.appendChild(hr); t.appendChild(th);
+    var tb = el("tbody"), p0 = D.expected ? D.expected.price_usd : null;
+    SC.rows.concat([{ key: "all", plain: "Any time (for comparison)", now: null, share_up: SC.base.share_up, median: SC.base.median, p25: SC.base.p25, p75: SC.base.p75, n_spells: null, tech: "All months since " + SC.since }])
+      .forEach(function (r) {
+        var tr = el("tr", r.now ? { class: "main" } : null);
+        tr.appendChild(jg("td", { class: "sc-name" }, r.plain, r.tech));
+        tr.appendChild(el("td", { "data-label": "Now?" }, r.now === null ? "" : r.now ? "✓ yes" : "no"));
+        tr.appendChild(el("td", { class: "n", "data-label": "Gold higher a year later" }, Math.round(r.share_up * 100) + "%"));
+        tr.appendChild(el("td", { class: "n " + cls(r.median), "data-label": "Typical change" }, pct(r.median, 0)));
+        tr.appendChild(el("td", { class: "n", "data-label": "Usual range from today" }, p0 ? money(p0 * rate * (1 + r.p25), cur) + " to " + money(p0 * rate * (1 + r.p75), cur).replace("CHF ", "") : pct(r.p25, 0) + " to " + pct(r.p75, 0)));
+        tr.appendChild(el("td", { class: "n", "data-label": "Separate times" }, r.n_spells === null ? "" : String(r.n_spells)));
+        tb.appendChild(tr);
+      });
+    t.appendChild(tb);
+    var cv = SC.curve;
+    setText("scen-foot", "Each row is what gold did over the following year in past months that fit the description. Few separate times means a shaky guide. " +
+      (cv ? "Recession warning: the yield curve is at " + (cv.now > 0 ? "+" : "") + cv.now.toFixed(2) + " points and was below zero in " + cv.months_inverted_of_6 + " of the last 6 months. " : "") +
+      "Scenarios can overlap, and none of this says which one comes next.", "Outcome: 12-month change in the monthly average price; range = 25th to 75th percentile, applied to the last futures close");
+  }
+
+  // ---------- the long view ----------
+  function renderValue() {
+    var V = D.valuation; if (!V || !V.real) { $("d-value").hidden = true; return; }
+    var R = V.real, host = clear($("value-tiles"));
+    var p80 = R.peaks["1980"], p11 = R.peaks["2011"];
+    $("sum-value").textContent = "After inflation, gold is dearer than in " + Math.round(R.pct) + "% of months since " + R.since.slice(0, 4) + (p80 ? ", " + Math.round((R.now / p80.value - 1) * 100) + "% above the 1980 peak" : "");
+    function vt(lbl, val, meta, tech) { var t = el("div", { class: "panel tile" }); t.appendChild(jg("div", { class: "lbl" }, lbl, tech)); t.appendChild(el("div", { class: "val" }, val)); if (meta) t.appendChild(el("div", { class: "meta" }, meta)); host.appendChild(t); }
+    vt("Gold after inflation", "$" + Math.round(R.now).toLocaleString("en-US"), "in today's dollars; 1980 peak $" + (p80 ? Math.round(p80.value).toLocaleString("en-US") : "?") + ", 2011 peak $" + (p11 ? Math.round(p11.value).toLocaleString("en-US") : "?"),
+      "Monthly average gold price x (latest CPI / CPI then), CPI-U");
+    var A5 = R.after_top_decile["60"];
+    if (A5) vt("After past expensive times", (A5.median >= 0 ? "+" : "") + Math.round(A5.median * 100) + "% in 5 years", "typical change after inflation, against " + (A5.base_median >= 0 ? "+" : "") + Math.round(A5.base_median * 100) + "% at any time; only " + A5.n_spells + " separate episodes",
+      "Months in the top 10% of the real price (expanding, known at the time), median 60-month real return; " + A5.n_months + " months");
+    if (V.m2) vt("Gold against the money supply", "Higher than " + Math.round(V.m2.pct) + "% of months", "about " + Math.round(V.m2.vs_2011 * 100) + "% of its 2011 peak, " + Math.round(V.m2.vs_1980 * 100) + "% of its 1980 peak",
+      "Gold / US M2 (FRED M2SL), percentile since " + V.m2.since + "; M2 $" + Math.round(V.m2.m2_bn / 1000) + " trillion, " + pct(V.m2.m2_chg_12m, 1) + " in 12 months");
+    if (V.debt) vt("US federal debt", Math.round(V.debt.now) + "% of GDP", V.debt.five_years_ago ? "five years earlier: " + Math.round(V.debt.five_years_ago) + "%" : null, "FRED GFDEGDQ188S, " + V.debt.as_of);
+    if (V.deficit) vt("US budget deficit", Math.abs(V.deficit.now).toFixed(1) + "% of GDP", "fiscal " + V.deficit.year + "; 10-year average " + Math.abs(V.deficit.avg_10y).toFixed(1) + "%", "FRED FYFSGDA188S (negative = deficit)");
+    var ch = clear($("value-chart")), W = Math.max(280, ch.clientWidth || 600), Hh = 150, xs = R.spark, n = xs.length;
+    if (n > 2) {
+      var lo = Math.min.apply(null, xs), hi = Math.max.apply(null, xs);
+      var svg = sv("svg", { viewBox: "0 0 " + W + " " + Hh, style: "width:100%;height:" + Hh + "px;display:block", role: "img", "aria-label": "Gold after inflation since " + R.since.slice(0, 4) });
+      var d = xs.map(function (v, i) { return (i ? "L" : "M") + (i / (n - 1) * W).toFixed(1) + "," + (6 + (hi - v) / (hi - lo) * (Hh - 24)).toFixed(1); }).join("");
+      svg.appendChild(sv("path", { d: d, fill: "none", stroke: "var(--gold)", "stroke-width": 1.6, "vector-effect": "non-scaling-stroke" }));
+      var y0 = +R.spark_start.slice(0, 4);
+      [1980, 2000, 2011, 2020].forEach(function (yr) { var i = (yr - y0) * 4; if (i < 0 || i >= n) return; var x = i / (n - 1) * W;
+        svg.appendChild(sv("line", { x1: x, x2: x, y1: Hh - 16, y2: Hh - 12, stroke: "var(--faint)" }));
+        var tx = sv("text", { x: x, y: Hh - 2, "text-anchor": "middle", "font-size": 11, fill: "var(--muted)" }); tx.textContent = yr; svg.appendChild(tx); });
+      ch.appendChild(svg);
+    }
+    setText("value-note", "Both earlier record prices after inflation, in 1980 and 2011, were followed by long weak stretches (gold lost most of its real value over the 1980s and 1990s, and fell about 45% from 2011 to 2015). " +
+      "That is only two episodes, so it can't be tested, and gold has kept setting records for reasons the past may not cover, such as central bank buying. It is a reason for caution over five years or more, not a timing signal.",
+      "Real price walk-forward test (2000-): right direction (expensive -> weaker) but out-of-sample R2 below zero at 3, 5 and 10 years.");
+    var su = clear($("value-supply")), SP = V.supply || {};
+    function lastOf(a) { return a && a.length ? a[a.length - 1] : null; }
+    var mp = lastOf(SP.mine_production_t), rc = lastOf(SP.recycling_t), ac = lastOf(SP.aisc_usd_oz);
+    var ul = el("ul", { class: "blist" });
+    if (mp) ul.appendChild(el("li", null, "Mine output about " + mp.value.toLocaleString("en-US") + " tonnes in " + mp.year + ", barely changed in a decade."));
+    if (rc) ul.appendChild(el("li", null, "Recycled gold about " + rc.value.toLocaleString("en-US") + " tonnes in " + rc.year + "; it rises when prices are high."));
+    if (ac) ul.appendChild(el("li", null, "Miners' all-in cost about $" + ac.value.toLocaleString("en-US") + " an ounce (" + ac.year + "), far below today's price: a very distant floor, not a near one."));
+    su.appendChild(ul);
+    if ([mp, rc, ac].some(function (x) { return x && x.verify; })) su.appendChild(el("p", { class: "note" }, "Typed in by hand from World Gold Council reports; marked to check against the publication."));
+  }
+
+  // ---------- silver ----------
+  function renderSilver() {
+    var Sv = D.silver; if (!Sv) { $("d-silver").hidden = true; return; }
+    $("sum-silver").textContent = "Silver's main switch " + (Sv.switch === "In" ? "ON" : "OFF") + ", warning light " + (Sv.light === "Out" ? "showing" : "clear") + "; an ounce of gold buys " + Math.round(Sv.ratio) + " ounces of silver";
+    var host = clear($("silver-tiles"));
+    function vt(lbl, val, meta, tech) { var t = el("div", { class: "panel tile" }); t.appendChild(jg("div", { class: "lbl" }, lbl, tech)); t.appendChild(el("div", { class: "val" }, val)); if (meta) t.appendChild(el("div", { class: "meta" }, meta)); host.appendChild(t); }
+    vt("Silver's main switch", Sv.switch === "In" ? "ON" : "OFF", "silver is " + pct(Math.abs(Sv.mom), 0).replace("+", "") + (Sv.mom >= 0 ? " above" : " below") + " a year ago", "12-1 momentum on silver monthly averages (COMEX futures): " + pct(Sv.mom, 1));
+    vt("Silver's warning light", Sv.light === "Out" ? "showing" : "clear", "silver is " + pct(Math.abs(Sv.vs_ma), 0).replace("+", "") + (Sv.vs_ma >= 0 ? " above" : " below") + " its 10-month average", "P / SMA10 - 1 = " + pct(Sv.vs_ma, 1));
+    vt("Gold-to-silver ratio", Math.round(Sv.ratio) + " ounces", "higher than " + Math.round(Sv.ratio_pct) + "% of months since " + Sv.ratio_since.slice(0, 4) + " (middle: " + Math.round(Sv.ratio_median) + ")", "Gold / silver futures month-end; high = silver cheap relative to gold");
+    vt("How much silver swings", Math.round(Sv.vol) + "% a year", "roughly twice gold's swings", "Realised monthly volatility, annualised, since 2000");
+    if (Sv.copper) vt("Copper (industrial demand)", pct(Sv.copper.chg_12m, 0) + " in 12 months", "$" + Math.round(Sv.copper.price).toLocaleString("en-US") + " a tonne, " + monthName(Sv.copper.month), "IMF copper price via FRED PCOPPUSDM");
+    if (Sv.balance) vt("Silver market balance", (Sv.balance.moz < 0 ? "deficit " : "surplus ") + Math.abs(Math.round(Sv.balance.moz)) + " million oz", "World Silver Survey " + Sv.balance.year, "Silver Institute, typed in from the report");
+    setText("silver-note", "About half of silver goes into industry (solar panels, electronics), so it follows factory demand as well as gold, and swings about twice as much. The same two rules are shown for silver, decided on silver's own dollar price; they were tested on gold, not on silver." +
+      (Sv.balance ? "" : " The Silver Institute's yearly market balance can be typed into data/manual/report_figures.csv when the World Silver Survey comes out (April)."),
+      "Silver monthly averages from COMEX front-month daily closes since 2000; rules as for gold");
+  }
+
+  // ---------- scorecard ----------
+  function renderScore() {
+    var SC = D.scorecard; if (!SC) { $("d-score").hidden = true; return; }
+    var K = SC.kinds || {}, names = { expected_move: "How far gold may move (2-in-3 range)", range_12m: "Price range from history, 1 year (middle half)", odds_12m: "Odds for the next 12 months", main_switch: "Main switch" };
+    var scored = 0; Object.keys(K).forEach(function (k) { scored += K[k].scored || 0; });
+    $("sum-score").textContent = SC.recorded ? SC.recorded + " forecasts recorded since " + monthName(SC.first) + "; " + scored + " scored so far" : "Recording starts with the next daily update";
+    var t = clear($("score-table")), hr = el("tr");
+    [["What", ""], ["Recorded", "n"], ["Scored", "n"], ["Result", ""], ["First result due", "n"]].forEach(function (h) { hr.appendChild(el("th", { class: h[1] }, h[0])); });
+    var th = el("thead"); th.appendChild(hr); t.appendChild(th);
+    var tb = el("tbody");
+    Object.keys(names).forEach(function (k) {
+      var r = K[k], tr = el("tr");
+      tr.appendChild(el("td", null, names[k]));
+      tr.appendChild(el("td", { class: "n" }, r ? String(r.recorded) : "0"));
+      tr.appendChild(el("td", { class: "n" }, r ? String(r.scored) : "0"));
+      var res = "waiting";
+      if (r && r.scored) {
+        if (k === "expected_move" || k === "range_12m") res = "held " + Math.round(r.hit_rate * 100) + "% of the time (aim " + Math.round(r.target * 100) + "%)";
+        else if (k === "odds_12m") res = r.brier_model <= r.brier_normal ? "as good as or better than normal odds" : "worse than normal odds";
+        else if (k === "main_switch") res = "next month while ON " + (r.avg_next_month_on === null ? "n/a" : pct(r.avg_next_month_on, 1)) + ", while OFF " + (r.avg_next_month_off === null ? "n/a" : pct(r.avg_next_month_off, 1));
+      }
+      tr.appendChild(el("td", null, res));
+      tr.appendChild(el("td", { class: "n" }, r ? monthName(r.first_due) : "—"));
+      tb.appendChild(tr);
+    });
+    t.appendChild(tb);
+    setText("score-note", "Once a month the page writes down its forward-looking numbers and never changes them. When each one's time is up it is scored here against what gold actually did. Tests on past data can flatter; this record can't.",
+      "Log: data/scorecard/forecasts.csv (append-only, written by the daily run with --record)");
+  }
+
   // ---------- at a glance ----------
   function openSection(id) {
     var d = $(id); if (!d) return;
-    d.open = true; saveOpen(); d.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
+    if (d.tagName === "DETAILS") { d.open = true; saveOpen(); } d.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
   }
   function tile(k, v, dtxt, target, tech) {
     var b = el("button", { type: "button", class: "gtile" });
@@ -971,11 +1133,14 @@ table.t tr:last-child td { border-bottom: 0; }
       .sort(function (p, q) { return Math.abs(p.distance) - Math.abs(q.distance); })[0];
     if (near) host.appendChild(tile("Nearest price level", near.label, "Gold is " + pct(Math.abs(near.distance)).replace("+", "") + (near.distance >= 0 ? " above" : " below") + " it (" + money(near.line_value, cur) + ")", "d-lines",
       near.id + ": distance " + pct(near.distance, 2)));
-    var Hs = D.history && D.history.setups, combo = Hs && (Hs.filter(function (q) { return q.key === "combined"; })[0] || Hs[0]);
-    if (combo) { var y12 = combo.rates[combo.rates.length - 1];
-      host.appendChild(tile("After setups like this", Math.round(y12.share_up * 100) + "% higher a year later",
-        "All months: " + Math.round(y12.base_share_up * 100) + "%. " + y12.n_spells + " separate spells; for context only.", "d-after",
-        combo.tech + ": P(r12>0) " + y12.share_up.toFixed(2) + " vs base " + y12.base_share_up.toFixed(2))); }
+    var X3 = D.expected && D.expected.rows.filter(function (r) { return r.months === 3; })[0];
+    if (X3) { var b3 = cur === "CHF" && X3.chf ? X3.chf : X3.usd;
+      host.appendChild(tile("Next 3 months", "±" + Math.round((Math.exp(X3.sigma) - 1) * 100) + "% likely",
+        "About 2 in 3 chances of staying between " + money(b3.lo1, cur) + " and " + money(b3.hi1, cur).replace("CHF ", ""), "g-ahead",
+        "Options-implied 1-band range (GVZ " + D.expected.vol_now.toFixed(1) + "%)")); }
+    var VR = D.valuation && D.valuation.real;
+    if (VR) host.appendChild(tile("Long view", "Dearer than " + Math.round(VR.pct) + "% of months", "Gold after inflation, since " + VR.since.slice(0, 4) + "; above the 1980 and 2011 peaks", "d-value",
+      "Gold / US CPI, percentile since " + VR.since));
     var TG = D.technical && D.technical.gold;
     if (TG) { var rd = {}; TG.readings.forEach(function (q) { rd[q.key] = q; });
       host.appendChild(tile("Technical picture", rd.ma200 ? rd.ma200.value + " 200-day average" : "—",
@@ -993,6 +1158,15 @@ table.t tr:last-child td { border-bottom: 0; }
     var O = D.odds && D.odds.currencies[S.cur];
     if (!O) { $("odds").hidden = true; return; }
     $("odds").hidden = false;
+    // Demoted after the October 2026 audit: when the model scored no better than gold's normal
+    // odds, show the normal odds plainly and say the model adds nothing, instead of a mix.
+    var tk = O.track || {}, noEdge = !(typeof tk.skill === "number" && tk.skill > 0);
+    if (noEdge) {
+      O = Object.assign({}, O, { odds: O.normal_odds, model_odds: O.normal_odds, blend_weight: 0 });
+      $("odds").classList.add("demoted");
+    } else $("odds").classList.remove("demoted");
+    setText("odds-title", noEdge ? "Gold's normal odds for the next 12 months" : "Weighed-up odds for the next 12 months",
+      "Class frequencies of 12-month outcomes since 1975 (USD monthly averages)" + (noEdge ? "; model skill " + (typeof tk.skill === "number" ? (tk.skill * 100).toFixed(1) + "%" : "n/a") + ", so not used" : ""));
     var bars = clear($("odds-bars"));
     var up = Math.round((D.odds.up || 0.1) * 100), dn = Math.round(Math.abs(D.odds.down || -0.1) * 100);
     var names = { rising: ["Keeps rising", "up " + up + "% or more"], sideways: ["Goes sideways", "between down " + dn + "% and up " + up + "%"], falling: ["Falls", "down " + dn + "% or more"] };
@@ -1003,10 +1177,16 @@ table.t tr:last-child td { border-bottom: 0; }
         "Blended " + O.odds[k].toFixed(3) + " = " + O.blend_weight.toFixed(1) + " x model " + O.model_odds[k].toFixed(3) + " + " + (1 - O.blend_weight).toFixed(1) + " x normal " + O.normal_odds[k].toFixed(3)));
       var tr = el("div", { class: "otrack" }), f = el("i", { class: "f" }); f.style.width = (O.odds[k] * 100) + "%"; tr.appendChild(f);
       var nn = el("i", { class: "n" }); nn.style.left = (O.normal_odds[k] * 100) + "%"; tr.appendChild(nn); c.appendChild(tr);
-      c.appendChild(el("div", { class: "sub" }, "Over the next 12 months: " + names[k][1] + " in " + cname(S.cur) + ". Normally " + Math.round(O.normal_odds[k] * 100) + "% (the dark mark)."));
+      c.appendChild(el("div", { class: "sub" }, "Over the next 12 months: " + names[k][1] + " in " + cname(S.cur) + "." + (noEdge ? "" : " Normally " + Math.round(O.normal_odds[k] * 100) + "% (the dark mark).")));
       bars.appendChild(c);
     });
     var why = clear($("odds-why"));
+    if (noEdge) {
+      setText("odds-track", "How often gold rose more than " + up + "%, moved less than that, or fell more than " + dn + "% over a year, in every year since 1975. A model weighing " + O.features.length +
+        " measures (trend, interest rates after inflation, the Fed, the dollar, inflation, oil, war risk, fear, speculators, the franc and more) was tested on every month since 2000 using only what was known at the time. It did no better than these plain odds, so it isn't used.",
+        "Walk-forward " + (tk.n || 0) + " months: Brier model " + (tk.brier_model || 0).toFixed(3) + " vs normal " + (tk.brier_base || 0).toFixed(3) + "; skill " + ((tk.skill || 0) * 100).toFixed(1) + "%.");
+      return;
+    }
     var ups = O.drivers.filter(function (d) { return d.push > 0.02; }).slice(0, 3), downs = O.drivers.filter(function (d) { return d.push < -0.02; }).slice(0, 3);
     function lvl(d) {
       if (d.key === "fed_dir") return d.raw === null || d.raw === undefined ? "the Fed's direction (unknown)" :
@@ -1073,7 +1253,9 @@ table.t tr:last-child td { border-bottom: 0; }
       col.appendChild(t);
       grid.appendChild(col);
     });
+    var tst = G.test12 && G.test12.label;
     $("guess-foot").textContent = "Gold bar: times like today. Blue bar: all times. Black line: today's price. These are ranges from the past, not a prediction. " +
+      (tst ? "Whether \u201clike today\u201d helps was checked on every year since 2000: " + (tst === "useful" ? "it did, a little. " : "it didn't, so treat the gold bar as context and the blue bar as the fairer guide. ") : "") +
       "So far nothing on this page has been better at calling gold's direction than the simple rule that gold tends to rise over time." +
       (S.cur === "CHF" ? " Which past times count as \u201clike today\u201d is judged on the dollar price; the results are shown in francs." : "");
   }
@@ -1472,109 +1654,6 @@ table.t tr:last-child td { border-bottom: 0; }
   }
 
   // ---------- analogues ----------
-  function renderAnalogues() {
-    var A = D.analogues, key = "fwd_12m_" + S.cur.toLowerCase(), base = S.cur === "USD" ? A.baseline : A.baseline_chf;
-    var host = clear($("an-chart"));
-    var outs = A.matches.map(function (mm) { return { m: mm.month, v: mm.outcomes[key], d: mm.distance }; }).filter(function (o) { return o.v !== null && o.v !== undefined; });
-    var vs = outs.map(function (o) { return o.v; }).concat([0, base.median]);
-    var lo = Math.min.apply(null, vs), hi = Math.max.apply(null, vs), pad = (hi - lo) * 0.08; lo -= pad; hi += pad;
-    var W = Math.max(320, host.clientWidth || 800), narrow = W < 560, H = 150, m = { l: 16, r: 16, t: 34, b: 28 };
-    var iw = W - m.l - m.r;
-    function x(v) { return m.l + (v - lo) / (hi - lo) * iw; }
-    var svg = sv("svg", { viewBox: "0 0 " + W + " " + H, role: "img", "aria-label": "What gold did in the 12 months after each similar month" });
-    var g = sv("g", { class: "axis" });
-    niceTicks(lo, hi, narrow ? 4 : 7).forEach(function (t) {
-      g.appendChild(sv("line", { x1: x(t), x2: x(t), y1: m.t - 6, y2: H - m.b }));
-      var tx = sv("text", { x: x(t), y: H - 8, "text-anchor": "middle" }); tx.textContent = pct(t, 0); g.appendChild(tx);
-    });
-    svg.appendChild(g);
-    var mid = (m.t + H - m.b) / 2;
-    if (outs.length) {
-      var mn = Math.min.apply(null, outs.map(function (o) { return o.v; })), mx = Math.max.apply(null, outs.map(function (o) { return o.v; }));
-      svg.appendChild(sv("rect", { x: x(mn), y: mid - 14, width: Math.max(1, x(mx) - x(mn)), height: 28, fill: "var(--gold-soft)", rx: 4 }));
-    }
-    svg.appendChild(sv("line", { x1: x(0), x2: x(0), y1: m.t - 10, y2: H - m.b, stroke: "var(--fg)", "stroke-width": 1, opacity: 0.5 }));
-    svg.appendChild(sv("line", { x1: x(base.median), x2: x(base.median), y1: mid - 20, y2: mid + 20, stroke: "var(--info)", "stroke-width": 2, "stroke-dasharray": "3 2" }));
-    var bt = sv("text", { x: x(base.median), y: m.t - 14, "text-anchor": "middle", fill: "var(--info)", "font-size": 11, "font-family": "var(--font-body)" });
-    bt.textContent = "A typical year: " + pct(base.median, 0); svg.appendChild(bt);
-    outs.sort(function (a, b) { return a.v - b.v; });
-    outs.forEach(function (o, i) {
-      var c = sv("circle", { cx: x(o.v), cy: mid, r: 6, fill: o.v >= 0 ? "var(--up)" : "var(--down)", stroke: "var(--panel)", "stroke-width": 1.5 });
-      var ti = sv("title", {}); ti.textContent = monthName(o.m) + ": " + updown(o.v) + " in the next 12 months"; c.appendChild(ti);
-      svg.appendChild(c);
-      var lab = sv("text", { x: x(o.v), y: i % 2 ? mid + 24 : mid - 14, "text-anchor": "middle", fill: "var(--muted)", "font-size": 10.5, "font-family": "var(--font-data)" });
-      lab.textContent = o.m.slice(0, 4); svg.appendChild(lab);
-    });
-    host.appendChild(svg);
-
-    var vals = outs.map(function (o) { return o.v; });
-    var sorted = vals.slice().sort(function (a, b) { return a - b; }), med = sorted.length % 2 ? sorted[(sorted.length - 1) / 2] : (sorted[sorted.length / 2 - 1] + sorted[sorted.length / 2]) / 2;
-    var dis = vals.length && Math.min.apply(null, vals) < 0 && Math.max.apply(null, vals) > 0;
-    $("an-head").textContent = "The " + vals.length + " most similar past months " + (dis ? "disagree about what came next" : "agree on the direction of what came next");
-    setText("an-summary", "In the 12 months after each similar month, gold in " + cname(S.cur) + " went from " + updown(Math.min.apply(null, vals)) + " to " + updown(Math.max.apply(null, vals)) +
-      " (middle result: " + updown(med) + "). In a typical year since 1971 it went " + updown(base.median) + ", and it rose in " + Math.round(base.share_positive * 100) + "% of years." +
-      (dis ? " Because the similar months point both ways, they don't settle the question." : ""),
-      "Next-12-month outcomes of the " + vals.length + " closest matches (" + S.cur + "): min " + pct(Math.min.apply(null, vals), 1) + ", median " + pct(med, 1) + ", max " + pct(Math.max.apply(null, vals), 1) +
-      ". Unconditional median since 1971 " + pct(base.median, 1) + " (n=" + base.n + "), share positive " + Math.round(base.share_positive * 100) + "%.");
-
-    var vd = clear($("an-verdict"));
-    if (A.oos && A.oos.length) {
-      var label = A.oos[A.oos.length - 1].label;
-      vd.appendChild(el("span", { class: "tag" + (label === "context only" ? " warn" : ""), title: "Out-of-sample label: " + label }, label === "context only" ? "For context only" : "Useful"));
-    }
-
-    var t = clear($("an-table"));
-    var hr = el("tr");
-    [["Similar month", ""], ["How close", "n"], ["After 3 months", "n"], ["6 months", "n"], ["12 months", "n"], ["24 months", "n"], ["Worst / best point in the next year", "n"], ["Mood a year later", ""], ["What was different", ""]].forEach(function (h) { hr.appendChild(el("th", { class: h[1] }, h[0])); });
-    var th = el("thead"); th.appendChild(hr); t.appendChild(th);
-    var tb = el("tbody"), sfx = "_" + S.cur.toLowerCase();
-    A.matches.forEach(function (mm) {
-      var o = mm.outcomes, tr = el("tr");
-      var c0 = el("td"); c0.appendChild(el("div", { class: "line-name" }, monthName(mm.month)));
-      if (mm.key_moment) c0.appendChild(el("div", { class: "line-note" }, mm.key_moment));
-      tr.appendChild(c0);
-      var gd = Object.keys(mm.group_distance || {}).filter(function (g) { return mm.group_distance[g] !== null; })
-        .map(function (g) { return g + " " + mm.group_distance[g].toFixed(2); }).join(", ");
-      tr.appendChild(jg("td", { class: "n" }, mm.distance.toFixed(1), "Weighted Euclidean distance over standardised measures = " + mm.distance.toFixed(3) + (gd ? " (by group: " + gd + ")" : "") + ". Lower is closer."));
-      ["fwd_3m", "fwd_6m", "fwd_12m", "fwd_24m"].forEach(function (k2) { var v = o[k2 + sfx]; tr.appendChild(el("td", { class: "n " + cls(v) }, pct(v, 0))); });
-      tr.appendChild(el("td", { class: "n" }, pct(o["max_dd_12m" + sfx], 0) + " / " + pct(o["max_rise_12m" + sfx], 0)));
-      var rc = el("td"); if (o.regime_after_12m) rc.appendChild(el("span", { class: "pill r-" + o.regime_after_12m }, MOOD[o.regime_after_12m])); tr.appendChild(rc);
-      var dc = el("td", { class: "diff" }), ul = el("ul");
-      mm.differences.forEach(function (d, i) { ul.appendChild(jg("li", null, d, (mm.differences_tech || [])[i])); }); dc.appendChild(ul); tr.appendChild(dc);
-      tb.appendChild(tr);
-    });
-    t.appendChild(tb);
-
-    var ot = clear($("oos-table"));
-    if (A.oos) {
-      var h2 = el("tr");
-      [["Compared on", ""], ["Real result inside the matches' range", "n"], ["Beat \u201cgold usually rises\u201d", "n"], ["Got up or down right", "n"], ["Verdict", ""]].forEach(function (h) { h2.appendChild(el("th", { class: h[1] }, h[0])); });
-      var th2 = el("thead"); th2.appendChild(h2); ot.appendChild(th2);
-      var tb2 = el("tbody");
-      var GP = { "Price shape only": "Price pattern only" };
-      A.oos.forEach(function (r) {
-        var tr = el("tr");
-        var nm = GP[r.groups] || r.groups.replace("Price + ", "Price + ").replace("rates money", "interest rates").replace("demand flow", "positioning").replace("chf", "franc").replace("Macro only", "Economy only");
-        tr.appendChild(jg("td", null, nm + " (" + r.months + " months)", r.groups + ", n=" + r.months));
-        tr.appendChild(jg("td", { class: "n" }, Math.round(r.in_range * 100) + "%", "Actual 12m outcome within [min, max] of matched outcomes"));
-        tr.appendChild(jg("td", { class: "n" }, Math.round(r.median_beats_baseline * 100) + "% of months", "Matched median closer to actual than the unconditional median"));
-        tr.appendChild(jg("td", { class: "n" }, Math.round(r.direction_right * 100) + "% vs " + Math.round(r.baseline_direction_right * 100) + "%", "Sign of matched median vs sign of unconditional median, compared with the actual outcome"));
-        tr.appendChild(jg("td", null, r.label === "context only" ? "for context only" : "useful", "Label: " + r.label));
-        tb2.appendChild(tr);
-      });
-      ot.appendChild(tb2);
-    }
-    setText("an-measures", "It compares today with past months on: " + A.used.join(", ") + ". Not available yet, so left out rather than guessed: " + (A.dropped_plain || A.dropped).join(", ") + ". Results are in " + cname(S.cur) + ".",
-      "State vector measures: " + (A.used_tech || []).join(", ") + ". Dropped (no data): " + A.dropped.join(", ") + ". Standardised as z-scores over the candidate pool.");
-    var kt = clear($("km-table"));
-    var h3 = el("tr"); [["Moment", ""], ["Month", ""], ["How close", "n"]].forEach(function (h) { h3.appendChild(el("th", { class: h[1] }, h[0])); });
-    var th3 = el("thead"); th3.appendChild(h3); kt.appendChild(th3);
-    var tb3 = el("tbody");
-    A.key_moments.forEach(function (r) { var tr = el("tr"); tr.appendChild(el("td", null, r.moment)); tr.appendChild(el("td", { class: "num" }, monthName(r.month))); tr.appendChild(el("td", { class: "n" }, r.distance.toFixed(1))); tb3.appendChild(tr); });
-    kt.appendChild(tb3);
-  }
-
-  // ---------- regime history ----------
   function renderHistory() {
     var host = clear($("strip"));
     var ser = D.series, regs = ser.regime_USD, n = regs.length;
@@ -1736,44 +1815,6 @@ table.t tr:last-child td { border-bottom: 0; }
     row.appendChild(el("span", { class: "num" }, Math.round(share * 100) + "%"));
     return row;
   }
-  function renderAfter() {
-    var H = D.history, host = clear($("after-list"));
-    if (!H || !H.setups.length) { host.appendChild(el("p", { class: "note" }, "Not enough history yet.")); return; }
-    var useful = 0;
-    H.setups.forEach(function (s) {
-      var card = el("div", { class: "panel after" });
-      var top = el("div", { class: "after-top" });
-      var nm = el("span"); nm.appendChild(jg("b", null, s.plain, s.tech)); top.appendChild(nm);
-      var lab = s.test.label === "useful" ? "passed the honesty test" : s.test.n ? "for context only" : "too few cases to test";
-      if (s.test.label === "useful") useful++;
-      top.appendChild(jg("span", { class: "tag" + (s.test.label === "useful" ? "" : " warn") }, lab,
-        s.test.n ? "Walk-forward since 2000, n=" + s.test.n + " months (" + s.test.spells + " separate spells). Brier setup " + s.test.brier_setup.toFixed(3) +
-          " vs baseline " + s.test.brier_base.toFixed(3) + "; hit rate " + Math.round(s.test.hit_setup * 100) + "% vs " + Math.round(s.test.hit_base * 100) + "%." : "Fewer than 20 earlier cases at test time."));
-      card.appendChild(top);
-      var y = s.rates[s.rates.length - 1];
-      card.appendChild(jg("p", { class: "note" },
-        "This happened in " + y.n_periods + " months since 1972 (" + y.n_spells + " separate spells). A year later gold was higher in " + Math.round(y.share_up * 100) +
-        "% of them, against " + Math.round(y.base_share_up * 100) + "% for all months. The middle result was " + updown(y.median) + "; half the results fell between " +
-        pct(y.p25, 0) + " and " + pct(y.p75, 0) + "." + (y.continuation !== null ? " The year's trend carried on in " + Math.round(y.continuation * 100) + "% of cases and turned in " + Math.round((1 - y.continuation) * 100) + "%." : ""),
-        "h=12m: n=" + y.n_periods + ", spells=" + y.n_spells + ", P(r>0)=" + y.share_up.toFixed(3) + " vs base " + y.base_share_up.toFixed(3) + " (n=" + y.base_n + "); median " + pct(y.median, 2) +
-        ", IQR " + pct(y.p25, 1) + " to " + pct(y.p75, 1) + (y.continuation !== null ? "; continuation = sign(fwd12) == sign(12-1 momentum): " + y.continuation.toFixed(3) : "")));
-      var bars = el("div", { class: "hbars" });
-      s.rates.forEach(function (r) {
-        bars.appendChild(hbar("Higher after " + r.horizon + " months", r.share_up, r.base_share_up,
-          "P(return over " + r.horizon + " months > 0) = " + r.share_up.toFixed(3) + " (n=" + r.n_periods + ", " + r.n_spells + " spells); blue mark = all months " + r.base_share_up.toFixed(3)));
-      });
-      card.appendChild(bars);
-      host.appendChild(card);
-    });
-    var combo = H.setups.filter(function (s) { return s.key === "combined"; })[0] || H.setups[0];
-    var y = combo.rates[combo.rates.length - 1];
-    $("sum-after").textContent = "Like today, gold was higher a year later in " + Math.round(y.share_up * 100) + "% of cases (all months: " + Math.round(y.base_share_up * 100) + "%)";
-    var vd = clear($("after-verdict"));
-    vd.appendChild(el("span", { class: "tag" + (useful ? "" : " warn") }, useful ? useful + " passed the test" : "For context only"));
-  }
-
-  // ---------- technical picture ----------
-  S.metal = "gold";
   function techChart(T) {
     var C = T.chart, host = el("div", { class: "chart-wrap" });
     var W = Math.max(320, ($("tech-body").clientWidth || 800)), narrow = W < 560, H = narrow ? 220 : 280, m = { l: narrow ? 46 : 58, r: 12, t: 10, b: 24 };
@@ -1881,7 +1922,7 @@ table.t tr:last-child td { border-bottom: 0; }
   }
 
   // ---------- folding ----------
-  var FOLDS = ["d-rules", "d-push", "d-price", "d-lines", "d-tech", "d-buyers", "d-cb", "d-stretch", "d-analogues", "d-after", "d-history", "d-dates", "d-data"];
+  var FOLDS = ["d-rules", "d-push", "d-price", "d-lines", "d-tech", "d-silver", "d-buyers", "d-cb", "d-value", "d-stretch", "d-history", "d-dates", "d-score", "d-data"];
   function saveOpen() {
     try { localStorage.setItem("pmdash-open", JSON.stringify(FOLDS.filter(function (id) { return $(id).open; }))); } catch (e) {}
     $("toggle-all").textContent = FOLDS.every(function (id) { return $(id).open; }) ? "Close all" : "Open all";
@@ -1896,7 +1937,7 @@ table.t tr:last-child td { border-bottom: 0; }
   FOLDS.forEach(function (id) {
     $(id).addEventListener("toggle", function () {
       saveOpen();
-      if ($(id).open) { if (id === "d-price") renderPrice(); if (id === "d-analogues") renderAnalogues(); if (id === "d-history") renderHistory(); if (id === "d-tech") renderTech(); }
+      if ($(id).open) { if (id === "d-price") renderPrice(); if (id === "d-history") renderHistory(); if (id === "d-tech") renderTech(); }
     });
   });
   $("toggle-all").addEventListener("click", function () {
@@ -1919,8 +1960,8 @@ table.t tr:last-child td { border-bottom: 0; }
 
   function renderAll() {
     // each section draws on its own: one failure must not stop the rest of the page
-    [renderMast, renderPrices, renderOdds, renderGuess, renderGlance, renderRules, renderPush, renderBuyers, renderRegime, renderPrice, renderLines,
-     renderStretch, renderDates, renderAnalogues, renderAfter, renderTech, renderHistory, renderFoot].forEach(function (f) {
+    [renderMast, renderPrices, renderExpected, renderScenarios, renderOdds, renderGuess, renderGlance, renderRules, renderPush, renderBuyers, renderRegime, renderPrice, renderLines,
+     renderStretch, renderDates, renderTech, renderValue, renderSilver, renderScore, renderHistory, renderFoot].forEach(function (f) {
       try { f(); } catch (e) { if (window.console) console.error("Section failed to draw: " + (f.name || "?"), e); }
     });
   }
@@ -1949,7 +1990,7 @@ table.t tr:last-child td { border-bottom: 0; }
   var lastW = $("pm").clientWidth, pending = null;
   window.addEventListener("resize", function () {
     if (pending) cancelAnimationFrame(pending);
-    pending = requestAnimationFrame(function () { var w = $("pm").clientWidth; if (w !== lastW) { lastW = w; renderPrice(); renderAnalogues(); renderHistory(); } });
+    pending = requestAnimationFrame(function () { var w = $("pm").clientWidth; if (w !== lastW) { lastW = w; renderPrice(); renderHistory(); } });
   });
 })();
 </script>

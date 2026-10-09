@@ -1,0 +1,15 @@
+# Gold supply and mining costs: annual figures typed in from the World Gold Council's Gold Demand
+# Trends (full-year editions) and Metals Focus / WGC cost estimates. Round numbers, marked
+# `verify: true` until checked against the publication; update each February when the
+# full-year report comes out.
+mine_production_t:
+  - {year: 2023, value: 3640, verify: true}
+  - {year: 2024, value: 3660, verify: true}
+recycling_t:
+  - {year: 2023, value: 1240, verify: true}
+  - {year: 2024, value: 1370, verify: true}
+aisc_usd_oz:            # industry all-in sustaining cost, average
+  - {year: 2024, value: 1450, verify: true}
+note: >
+  Mine output has hardly grown for a decade; recycling rises when prices are high. Miners' all-in
+  costs are far below today's price, so they mark a very distant long-run floor, not a near one.

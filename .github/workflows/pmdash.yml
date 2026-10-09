@@ -120,7 +120,7 @@ jobs:
       - name: Dashboard and summary
         if: steps.job.outputs.job != 'release'
         run: |
-          pmdash export-html --out data/dashboard.html
+          pmdash export-html --out data/dashboard.html --record
           pmdash summary --out data/weekly_summary.md
 
       - name: Save store
@@ -132,7 +132,7 @@ jobs:
         run: |
           git config user.name "pmdash bot"
           git config user.email "pmdash-bot@users.noreply.github.com"
-          for f in data/store data/dashboard.html data/weekly_summary.md data/research/probe; do [ -e "$f" ] && git add "$f"; done
+          for f in data/store data/dashboard.html data/weekly_summary.md data/research/probe data/scorecard; do [ -e "$f" ] && git add "$f"; done
           if git diff --cached --quiet; then echo "No data changes"; exit 0; fi
           git commit -m "data: ${{ steps.job.outputs.job }} run $(date -u +%F)"
           for i in 1 2 3; do git pull --rebase --autostash && git push && break; sleep 5; done

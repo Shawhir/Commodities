@@ -24,18 +24,6 @@ gold:
     severity: watch
     active_from: 2026-02-01
     note: "2026 intraday peak (approximate)."
-  - id: gold_round_4000
-    label: "Round number $4,000"
-    type: manual_price
-    value_usd: 4000
-    direction: below
-    severity: info
-  - id: gold_round_5000
-    label: "Round number $5,000"
-    type: manual_price
-    value_usd: 5000
-    direction: above
-    severity: info
   - id: gold_10m_avg
     label: "10-month average (warning light)"
     currencies: [USD]           # both rules are decided on the dollar price (Oct 2026 review)

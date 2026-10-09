@@ -32,7 +32,9 @@ SOURCE_PLAIN = {
     "dollar_broad": "US dollar index", "vix_fred": "Stock market fear gauge", "gold_vol": "Gold price swings gauge",
     "fed_funds_eff": "US overnight interest rate", "fed_target_upper": "Fed's target interest rate",
     "us_cpi_fred": "US inflation", "us_core_cpi": "US inflation without food and energy", "us_payrolls": "US jobs",
-    "us_unemployment": "US unemployment", "usdchf_fred": "Francs per dollar, daily", "ch_10y_yield": "Swiss 10-year bond yield", "ch_cpi_yoy_snb": "Swiss inflation", "usdchf_yahoo_daily": "Francs per dollar, daily (fresher copy)",
+    "us_unemployment": "US unemployment", "usdchf_fred": "Francs per dollar, daily", "ch_10y_yield": "Swiss 10-year bond yield", "ch_cpi_yoy_snb": "Swiss inflation", "us_2y_yield": "US 2-year interest rate", "us_curve_10y3m": "US yield curve",
+    "us_recession": "US recession dates", "us_m2": "US money supply", "us_debt_gdp": "US debt to GDP", "us_deficit_gdp": "US budget deficit",
+    "copper_monthly": "Copper price", "gold_vol": "Gold options volatility", "usdchf_yahoo_daily": "Francs per dollar, daily (fresher copy)",
     "cftc_cot": "Speculators' positions", "gpr_monthly": "War and political risk, monthly",
     "gpr_daily": "War and political risk, daily", "manual_reports": "Figures typed in by hand",
 }
@@ -124,6 +126,10 @@ def backdrop(macro: dict, fx_daily: pd.Series | None, as_of: pd.Period, since: s
         add("US 10-year yield", macro["yield_10y"], "%", "FRED GS10 via datasets/bond-yields-us-10y")
     if "real_yield_tips" in macro:
         add("10-year TIPS real yield", macro["real_yield_tips"], "%", "FRED DFII10")
+    if "yield_2y" in macro:
+        add("US 2-year yield", macro["yield_2y"], "%", "FRED DGS2", "Tracks where markets expect the Fed to take rates.")
+    if "curve_10y3m" in macro:
+        add("Yield curve (10y minus 3m)", macro["curve_10y3m"], "pp", "FRED T10Y3M", "Below zero has preceded most US recessions.")
     if "ch_yield_10y" in macro:
         add("Swiss 10-year bond yield", macro["ch_yield_10y"], "%", "OECD via FRED (IRLTLT01CHM156N)")
         if "ch_cpi_yoy" in macro:
@@ -175,7 +181,8 @@ def build_payload(gold: pd.Series, fx: pd.Series, health: pd.DataFrame | None = 
                   include_oos: bool = True, reports: list[dict] | None = None,
                   fx_daily: pd.Series | None = None, daily: dict | None = None,
                   fx_fresh: pd.Series | None = None, cash: dict | None = None,
-                  buyers_series: dict | None = None) -> dict:
+                  buyers_series: dict | None = None, outlook_series: dict | None = None,
+                  scorecard_path=None, record: bool = False) -> dict:
     th = config.load("thresholds")
     mk = config.load("markets")
     levels_cfg = config.load("levels")
@@ -348,8 +355,33 @@ def build_payload(gold: pd.Series, fx: pd.Series, health: pd.DataFrame | None = 
         from ..history import buyers as _buyers
         g_now = next((r["USD"]["price"] for r in prices if r["metal"] == "gold"), float(gold.iloc[-1]))
         buyers_sec = _buyers.build(buyers_series, gold, g_now, config.load("buyers"))
+    # outlook additions (Oct 2026 audit): expected move, valuation, scenarios, silver
+    from ..history import outlook as _ol
+    O = outlook_series or {}
+    g_fut = (daily or {}).get("gold", (None, None))[0]
+    s_fut = (daily or {}).get("silver", (None, None))[0]
+    fx_last = None
+    _fxs = fx_fresh if fx_fresh is not None else fx_daily
+    if _fxs is not None and len(_fxs.dropna()):
+        fx_last = float(_fxs.dropna().iloc[-1])
+    g_px = next((r["USD"]["price"] for r in prices if r["metal"] == "gold"), float(gold.iloc[-1]))
+    expected = _ol.expected_move(O.get("gvz"), None if g_fut is None else g_fut["close"], g_px, fx_last, as_of)
+    valuation = _ol.valuation(gold, (macro or {}).get("cpi"), O.get("m2"), O.get("debt_gdp"), O.get("deficit_gdp"),
+                              config.load("supply") if (config.CONFIG_DIR / "supply.yaml").exists() else None)
+    scen = _ol.scenarios(st, gold, O.get("recession"), (macro or {}).get("curve_10y3m"), g_px)
+    silver = _ol.silver(None if g_fut is None else g_fut["close"], None if s_fut is None else s_fut["close"],
+                        O.get("copper"), O.get("silver_balance"), as_of)
+    payload_core = {"expected": expected, "odds": weighed, "guess": guess, "brief": brief}
+    score = None
+    if scorecard_path is not None:
+        from ..history import scorecard as _sc
+        if record:
+            _sc.record(scorecard_path, str(as_of), payload_core)
+        fut_m = None if g_fut is None else g_fut["close"].groupby(g_fut.index.to_period("M")).last()
+        score = _sc.score(_sc.load(scorecard_path), gold, fut_m)
     return _clean({
-        "prices": prices, "buyers": buyers_sec,
+        "prices": prices, "buyers": buyers_sec, "expected": expected, "valuation": valuation,
+        "scenarios": scen, "silver": silver, "scorecard": score,
         "history": history, "technical": technical, "guess": guess, "odds": weighed,
         "brief": brief,
         "as_of": str(as_of), "built": str(date.today()), "disclaimer": s["disclaimer"],

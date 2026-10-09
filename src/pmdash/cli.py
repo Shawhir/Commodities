@@ -286,7 +286,19 @@ def _payload(con, args, include_oos: bool):
     return build_payload(gold, fx, _health(con), data.load_macro(con, args.as_of), include_oos=include_oos,
                          reports=reports, fx_daily=fx_daily if len(fx_daily) else None, daily=daily,
                          fx_fresh=fx_fresh if len(fx_fresh) else None, cash=_cash_rates(con, args.as_of),
-                         buyers_series=_buyers_series(con, args.as_of))
+                         buyers_series=_buyers_series(con, args.as_of), outlook_series=_outlook_series(con, args.as_of),
+                         scorecard_path=config.DATA_DIR / "scorecard" / "forecasts.csv",
+                         record=bool(getattr(args, "record", False)))
+
+
+def _outlook_series(con, as_of=None) -> dict:
+    out = {}
+    for key, sid in (("gvz", "gold_vol"), ("m2", "us_m2"), ("debt_gdp", "us_debt_gdp"), ("deficit_gdp", "us_deficit_gdp"),
+                     ("recession", "us_recession"), ("copper", "copper_monthly"), ("silver_balance", "si_silver_deficit_moz")):
+        s = db.get_series(con, sid, as_of=as_of)
+        if len(s):
+            out[key] = s
+    return out
 
 
 def _buyers_series(con, as_of=None) -> dict:
@@ -393,6 +405,7 @@ def main(argv=None) -> int:
     p.add_argument("--out", default=str(config.DATA_DIR / "dashboard.html"))
     p.add_argument("--fragment", action="store_true", help="omit the <html> wrapper (for hosts that add their own)")
     p.add_argument("--no-oos", action="store_true", help="skip the out-of-sample test (faster)")
+    p.add_argument("--record", action="store_true", help="append this month's forecasts to data/scorecard/forecasts.csv (once a month)")
     add("health", cmd_health, "data health")
     p = add("probe", cmd_probe, "try candidate source URLs (config/probe.yaml) and save what comes back")
     p.add_argument("--only", help="comma-separated names")

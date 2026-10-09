@@ -190,6 +190,25 @@ def pressures(state_row: pd.Series, macro: dict, as_of: pd.Period) -> list[dict]
             "This is the return on safe bonds after inflation; when it rises, gold usually struggles", "fed_real_rates",
             f"10-year TIPS real yield (FRED DFII10), monthly mean {t.iloc[-1]:.2f}%, 6-month change {chg:+.2f} pp; "
             f"headwind if > +0.25 pp, support if < -0.25 pp.")
+    y2 = macro.get("yield_2y")
+    if y2 is not None and len(y2.dropna()) > 7:
+        t2 = y2.dropna()
+        c6 = t2.iloc[-1] - t2.iloc[-7]
+        eff = "headwind" if c6 > 0.25 else "support" if c6 < -0.25 else "neutral"
+        add("Where markets expect US rates to go", f"2-year US yield {t2.iloc[-1]:.2f}%, {'up' if c6 > 0 else 'down'} {abs(c6):.2f} points in 6 months", eff,
+            "The 2-year yield moves with what markets expect the Fed to do next; falling expectations usually help gold",
+            "fed_real_rates",
+            f"2-year Treasury yield (FRED DGS2), monthly mean {t2.iloc[-1]:.2f}%, 6-month change {c6:+.2f} pp; "
+            f"headwind if > +0.25 pp, support if < -0.25 pp.")
+    cv = macro.get("curve_10y3m")
+    if cv is not None and len(cv.dropna()) > 6:
+        k = cv.dropna()
+        inv = int((k.iloc[-6:] < 0).sum())
+        add("Recession warning (yield curve)", f"10-year minus 3-month {k.iloc[-1]:+.2f} points; below zero in {inv} of the last 6 months",
+            "mixed" if inv >= 3 else "neutral",
+            "When long rates sit below short rates, a US recession has often followed within 1-2 years; recessions bring rate cuts "
+            "(good for gold) but can also force selling at first", "fed_real_rates",
+            f"FRED T10Y3M monthly mean {k.iloc[-1]:+.2f} pp; inverted months in last 6 = {inv}; mixed if >= 3.")
     chy, chc = macro.get("ch_yield_10y"), macro.get("ch_cpi_yoy")
     if chy is not None and chc is not None and len(chy.dropna()) > 7 and len(chc.dropna()) > 1:
         y = chy.dropna()

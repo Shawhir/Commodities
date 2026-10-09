@@ -141,6 +141,29 @@ data/research/screenshots/live_page.png to confirm the widget renders. Nothing i
 page shows the last stored daily close instead. Stored closes remain the record for every
 calculation on the page.
 
+## Outlook additions (October 2026 audit)
+
+`docs/audit-2026-10.md` tested every measure on the page for forecasting value. Changes that
+followed:
+
+- **How far gold may move** (`history/outlook.expected_move`): the range the options market
+  prices (CBOE GVZ) for 3, 6 and 12 months, with a running check of how often past ranges held
+  (about as often as they should since 2008); 5 years from gold's own volatility.
+- **Scenarios for the next year**: what gold did in past periods of rate cuts with a weaker
+  dollar, sticky inflation, recession, fast-rising real yields and Fed hikes, and which describe
+  today (recession read from the yield curve).
+- **The long view**: gold after inflation (record high), gold against M2, US debt and deficit,
+  supply facts (`config/supply.yaml`, typed in, marked to check).
+- **Silver**: gold/silver ratio, silver's own main switch and warning light, copper.
+- **Rates outlook**: US 2-year yield and the 10y-3m yield curve as pressures and tiles.
+- **Scorecard** (`history/scorecard.py`): once a month the daily run (`export-html --record`)
+  appends the page's forward-looking numbers to `data/scorecard/forecasts.csv`; each is scored
+  when its horizon passes.
+- **Demoted / cut**: the weighed-up odds show gold's normal odds when the model has no tested
+  edge (it currently has none); "after setups like this" merged into the price ranges; the
+  analogue section removed from the page (the CLI command remains); round-number price levels
+  removed.
+
 ## Who's buying and central bank targets
 
 Two sections (`src/pmdash/history/buyers.py`, config in `config/buyers.yaml`):
