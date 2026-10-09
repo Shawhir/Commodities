@@ -1,15 +1,23 @@
-# Gold supply and mining costs: annual figures typed in from the World Gold Council's Gold Demand
-# Trends (full-year editions) and Metals Focus / WGC cost estimates. Round numbers, marked
-# `verify: true` until checked against the publication; update each February when the
-# full-year report comes out.
+# Gold supply and mining costs: annual figures from the World Gold Council's Gold Demand Trends
+# (full-year editions) and Metals Focus cost data. Checked 9 October 2026; update each
+# February when the next full-year report comes out. `verify: true` = not yet confirmed
+# against a primary source.
 mine_production_t:
-  - {year: 2023, value: 3640, verify: true}
-  - {year: 2024, value: 3660, verify: true}
+  - {year: 2023, value: 3644}
+  - {year: 2024, value: 3650}        # as revised in the full-year 2025 report (first published as 3,661)
+  - {year: 2025, value: 3672}
 recycling_t:
-  - {year: 2023, value: 1240, verify: true}
-  - {year: 2024, value: 1370, verify: true}
-aisc_usd_oz:            # industry all-in sustaining cost, average
-  - {year: 2024, value: 1450, verify: true}
+  - {year: 2023, value: 1234}
+  - {year: 2024, value: 1370}
+  - {year: 2025, value: 1404}
+aisc_usd_oz:            # industry average all-in sustaining cost
+  - {year: 2024, value: 1456, note: "Q3 2024, Metals Focus via World Gold Council"}
+  - {year: 2025, value: 1552, verify: true, note: "full-year 2025 attributed to Metals Focus by a secondary source"}
+sources:
+  - "World Gold Council, Gold Demand Trends Full Year 2025 (supply): gold.org/goldhub/research/gold-demand-trends/gold-demand-trends-full-year-2025/supply"
+  - "World Gold Council, Gold Demand Trends Full Year 2024 (supply)"
+  - "Metals Focus, Gold mine production costs Q3 2024 (published by the World Gold Council)"
 note: >
-  Mine output has hardly grown for a decade; recycling rises when prices are high. Miners' all-in
-  costs are far below today's price, so they mark a very distant long-run floor, not a near one.
+  Mine output has grown less than 1% a year over the past decade; recycling rose only 3% in 2025
+  despite a 67% rise in the dollar gold price. Miners' all-in costs are far below today's price, so
+  they mark a very distant long-run floor, not a near one.

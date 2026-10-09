@@ -1035,11 +1035,12 @@ table.t tr:last-child td { border-bottom: 0; }
     function lastOf(a) { return a && a.length ? a[a.length - 1] : null; }
     var mp = lastOf(SP.mine_production_t), rc = lastOf(SP.recycling_t), ac = lastOf(SP.aisc_usd_oz);
     var ul = el("ul", { class: "blist" });
-    if (mp) ul.appendChild(el("li", null, "Mine output about " + mp.value.toLocaleString("en-US") + " tonnes in " + mp.year + ", barely changed in a decade."));
-    if (rc) ul.appendChild(el("li", null, "Recycled gold about " + rc.value.toLocaleString("en-US") + " tonnes in " + rc.year + "; it rises when prices are high."));
-    if (ac) ul.appendChild(el("li", null, "Miners' all-in cost about $" + ac.value.toLocaleString("en-US") + " an ounce (" + ac.year + "), far below today's price: a very distant floor, not a near one."));
+    if (mp) ul.appendChild(el("li", null, "Mine output about " + mp.value.toLocaleString("en-US") + " tonnes in " + mp.year + ", growing less than 1% a year over the past decade."));
+    if (rc) ul.appendChild(el("li", null, "Recycled gold about " + rc.value.toLocaleString("en-US") + " tonnes in " + rc.year + "; it rises when prices are high, though only a little lately."));
+    if (ac) { var li = el("li", null, "Miners' all-in cost about $" + ac.value.toLocaleString("en-US") + " an ounce (" + ac.year + "), far below today's price: a very distant floor, not a near one.");
+      if (ac.verify) li.appendChild(jg("span", { class: "tag-verify" }, "not yet confirmed", ac.note || "Secondary source")); ul.appendChild(li); }
     su.appendChild(ul);
-    if ([mp, rc, ac].some(function (x) { return x && x.verify; })) su.appendChild(el("p", { class: "note" }, "Typed in by hand from World Gold Council reports; marked to check against the publication."));
+    if (SP.sources && SP.sources.length) su.appendChild(jg("p", { class: "note" }, "From the World Gold Council's yearly Gold Demand Trends and Metals Focus cost data; checked October 2026.", SP.sources.join(" | ")));
   }
 
   // ---------- silver ----------

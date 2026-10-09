@@ -11,7 +11,7 @@ groups:
   central_banks:
     plain: "Central banks"
     kind: steady
-    share_note: "About 1,000 tonnes a year since 2022, roughly a fifth of all gold bought; about twice the 2010s pace."
+    share_note: "Over 1,000 tonnes a year in 2022-2024 and 863 tonnes in 2025 (World Gold Council), roughly twice the 2010s pace."
     watch: "Official monthly reserve figures; the World Gold Council's June survey of what central banks plan."
     early: "Partly in advance: a few banks state targets, and the yearly survey asks about plans."
   china:
@@ -71,15 +71,12 @@ targets:
     tonnes: 100
     by: "2028-12"
     stated: "2023"
-    source: "Czech National Bank Governor Aleš Michl, public statements on raising gold to 100 tonnes by the end of 2028"
-    verify: true
+    source: "Czech National Bank, 'The CNB's gold' (cnb.cz): aims to raise gold in its reserves to 100 tonnes by 2028; 82.4 tonnes at end-June 2026"
   - bank: PL
     tonnes: 700
     by: null
-    share_of_reserves: 0.30
-    stated: "2025"
-    source: "National Bank of Poland: President Adam Glapiński's stated aims to raise gold to 30% of reserves and later to 700 tonnes"
-    verify: true
+    stated: "2026-01-20"
+    source: "National Bank of Poland decision of 20 January 2026 (PAP): raise gold reserves to 700 tonnes, no timetable; it replaced the 2025 aim of 30% of reserves, which the price rise had nearly met"
 
 # The "what if" gap: emerging-market central banks' gold share of reserves vs a chosen share.
 scenario:
