@@ -66,6 +66,10 @@ What your rules say and what would change them. Not advice.
 - Prices here are monthly averages, not daily closing prices, so the switch levels are close but not exact.
 - Gold buying by central banks and by funds isn't included yet; those figures have to be typed in from World Gold Council reports.
 
+## Weekly-close lines
+
+- **Weekly close below $4,000**: holding. Week ending 2026-10-09 closed at $4,216 (+5.4% from $4,000). Lowest weekly close since 2025-11-07: $4,010 (2025-11-07). Weekly closes beyond the line since then: 0. Next stop named if it breaks: $3,500-3,700.
+
 ## What happened after setups like this
 
 Counts from history, not a forecast. Each line: how often gold was higher a year later, against all months.
