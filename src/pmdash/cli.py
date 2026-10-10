@@ -130,6 +130,10 @@ def cmd_levels(args):
     th = config.load("thresholds")
     trans, notes = evaluate_market("gold", {"USD": gold, "CHF": (gold * fx).dropna()}, config.load("levels"),
                                    th, usdchf=fx, since=args.since)
+    from .levels.weekly import evaluate_all as weekly_lines
+    g_daily, _ = data.load_daily(con, "gold", args.as_of)
+    trans += weekly_lines(config.load("levels"), None if g_daily is None else g_daily["close"],
+                          today=args.as_of)[0]
     now = datetime.now(timezone.utc).replace(tzinfo=None)
     for t in trans:
         con.execute(
@@ -168,13 +172,14 @@ def _write_new_alerts(df: pd.DataFrame, start: str | None, out: Path) -> None:
     out.write_text("")
     if not len(new):
         return
+    labels = {i["id"]: i.get("label", i["id"]) for g in config.load("levels").values() if isinstance(g, list) for i in g}
     lines = ["## Key line alerts", "", "Descriptive, not predictive. Alerts fire only on confirmed or failed breaks, judged on closes.", "",
              "| Close | Line | Currency | Change | Close value | Line value | Severity |", "|---|---|---|---|---|---|---|"]
     for r in new.itertuples():
         cur = r.currency if isinstance(r.currency, str) else "-"
         close = "-" if pd.isna(r.close) else f"{r.close:,.4g}"
         line = "-" if pd.isna(r.line_value) else f"{r.line_value:,.4g}"
-        lines.append(f"| {pd.Timestamp(r.date).date()} | {r.line_id} | {cur} | {r.prev_state} to {r.state} "
+        lines.append(f"| {pd.Timestamp(r.date).date()} | {labels.get(r.line_id, r.line_id)} | {cur} | {r.prev_state} to {r.state} "
                      f"| {close} | {line} | {r.severity} |")
     out.write_text("\n".join(lines) + "\n")
     ledger.parent.mkdir(parents=True, exist_ok=True)
@@ -255,7 +260,8 @@ def cmd_summary(args):
     from .digest.brief import to_markdown as brief_md
     from .history.base_rates import to_markdown as history_md
     pl = _payload(con, args, include_oos=False)
-    md = brief_md(pl["brief"]) + "\n" + history_md(pl.get("history"), pl.get("technical")) + "\n" + \
+    from .levels.weekly import to_markdown as weekly_md
+    md = brief_md(pl["brief"]) + "\n" + weekly_md(pl.get("weekly_lines") or []) + "\n" + history_md(pl.get("history"), pl.get("technical")) + "\n" + \
         to_markdown(build(gold, fx, _health(con), data.load_macro(con, args.as_of)))
     if args.out:
         Path(args.out).write_text(md)

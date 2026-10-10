@@ -371,6 +371,11 @@ def build_payload(gold: pd.Series, fx: pd.Series, health: pd.DataFrame | None = 
     scen = _ol.scenarios(st, gold, O.get("recession"), (macro or {}).get("curve_10y3m"), g_px)
     silver = _ol.silver(None if g_fut is None else g_fut["close"], None if s_fut is None else s_fut["close"],
                         O.get("copper"), O.get("silver_balance"), as_of)
+    # weekly-close lines (e.g. a weekly close below $4,000), judged on daily futures closes
+    from ..levels.weekly import evaluate_all as _weekly
+    weekly_lines = _weekly(levels_cfg, None if g_fut is None else g_fut["close"])[1]
+    for w in weekly_lines:
+        w["usdchf"] = fx_last
     payload_core = {"expected": expected, "odds": weighed, "guess": guess, "brief": brief}
     score = None
     if scorecard_path is not None:
@@ -380,7 +385,7 @@ def build_payload(gold: pd.Series, fx: pd.Series, health: pd.DataFrame | None = 
         fut_m = None if g_fut is None else g_fut["close"].groupby(g_fut.index.to_period("M")).last()
         score = _sc.score(_sc.load(scorecard_path), gold, fut_m)
     return _clean({
-        "prices": prices, "buyers": buyers_sec, "expected": expected, "valuation": valuation,
+        "prices": prices, "weekly_lines": weekly_lines, "buyers": buyers_sec, "expected": expected, "valuation": valuation,
         "scenarios": scen, "silver": silver, "scorecard": score,
         "history": history, "technical": technical, "guess": guess, "odds": weighed,
         "brief": brief,

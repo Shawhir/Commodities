@@ -16,6 +16,20 @@ gold:
     severity: important
     active_from: 2026-07-01   # the low was only known after it happened
     note: "2026 low. A confirmed break suggests the post-peak fall has a second leg."
+  - id: gold_4000_weekly
+    label: "Weekly close below $4,000"
+    type: weekly_close          # judged on each Friday's futures close, not on monthly averages
+    value_usd: 4000
+    direction: below
+    buffer_pct: 0.0             # the line as traders state it: any weekly close under 4,000
+    fail_window_weeks: 2
+    severity: important
+    active_from: 2026-10-05     # added 10 Oct 2026; alerts only from then on
+    since: 2025-11-01           # the page counts weekly closes from here (gold first crossed 4,000 in Oct 2025)
+    next_lo_usd: 3500
+    next_hi_usd: 3700
+    note: "Martin Armstrong (MINING.com, Oct 2026) and StoneX (2 Oct 2026) both say a weekly close under it opens a fall to about $3,500-3,700."
+    source: "MINING.com interview with Martin Armstrong, Oct 2026; StoneX, 'Gold breaks down on descending triangle, sets up $4k test', 2 Oct 2026"
   - id: gold_jan26_peak
     label: "January 2026 peak"
     type: manual_price

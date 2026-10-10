@@ -100,6 +100,8 @@ def evaluate_market(market: str, prices: dict[str, pd.Series], levels_cfg: dict,
                                buffer_abs=item.get("buffer_abs", 0.0), fail_window=fw)
                     transitions += run_line(s2, closes, float(thr), monthly=monthly)
                 continue
+            elif kind == "weekly_close":   # judged on daily closes in levels/weekly.py
+                break
             elif kind == "regime_change":
                 if cur == "USD":   # the regime label is defined on the USD price (section 8)
                     reg = label_from_config(prices[cur].dropna(), thresholds)["regime"][since:]

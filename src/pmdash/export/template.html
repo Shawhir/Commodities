@@ -95,6 +95,20 @@ body { background: var(--bg); color: var(--fg); font-family: var(--font-body); f
 .pcard .live { font-size: 12px; color: var(--up); display: flex; align-items: center; gap: 6px; }
 .pcard .live i { width: 7px; height: 7px; border-radius: 50%; background: var(--up); }
 
+.wkline { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; align-items: start; background: var(--panel); border: 1px solid var(--line);
+  border-left: 4px solid var(--warn); border-radius: var(--radius); padding: 10px 14px; margin: 8px 0 4px; }
+.wkline[hidden] { display: none; }
+.wkline.hit { border-left-color: var(--down); background: var(--down-band); }
+.wkline .chip { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 8px; border-radius: 999px;
+  border: 1px solid var(--warn); color: var(--warn); white-space: nowrap; }
+.wkline.hit .chip { border-color: var(--down); color: var(--down); }
+.wkline .t1 { font-weight: 600; }
+.wkline .t2, .wkline .t3 { grid-column: 2; font-size: 13px; color: var(--muted); }
+.wkline .t3 { color: var(--down); }
+.wkline .t3:empty { display: none; }
+.wkline .fig { font-variant-numeric: tabular-nums; }
+.wkline .chip { justify-self: start; }
+@media (max-width: 520px) { .wkline { grid-template-columns: 1fr; } .wkline .t2, .wkline .t3 { grid-column: 1; } }
 .real-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px 16px; margin-bottom: 8px; }
 .t tr.main td { font-weight: 600; }
 #real-table td:first-child { min-width: 9.5em; }
@@ -380,6 +394,8 @@ table.t tr:last-child td { border-bottom: 0; }
     <button type="button" class="linkbtn" id="live-refresh">Refresh</button>
     <button type="button" class="linkbtn" id="tv-toggle" aria-pressed="false">Stream live (TradingView)</button>
   </div>
+
+  <div id="wklines" aria-label="Weekly-close alerts"></div>
 
   <nav class="jump" aria-label="Jump to">
     <a href="#glance-sec">Today</a><a href="#g-ahead">Looking ahead</a><a href="#g-now">Now</a><a href="#g-buyers">Who's buying</a><a href="#g-history">History</a><a href="#g-dates">Dates and data</a>
@@ -760,6 +776,46 @@ table.t tr:last-child td { border-bottom: 0; }
       host.appendChild(c);
     });
   }
+  // ---------- weekly-close alerts (levels.yaml type weekly_close) ----------
+  // Judged on each completed week's last futures close, stored by the daily run. A live price
+  // beyond the line is flagged, but only a weekly close counts.
+  function dayYear(iso) { return dayName(iso) + (iso.slice(0, 4) !== D.built.slice(0, 4) ? " " + iso.slice(0, 4) : ""); }
+  function renderWeekly() {
+    var host = $("wklines"); if (!host) return;
+    clear(host);
+    (D.weekly_lines || []).forEach(function (w) {
+      if (w.state === "no data") return;
+      var fx = w.usdchf, chf = S.cur === "CHF" && fx;
+      function m(x) { return chf ? "about CHF " + Math.round(x * fx).toLocaleString("en-US") : money(x, "USD"); }
+      var below = w.direction !== "above";
+      var box = el("div", { class: "wkline" + (w.triggered ? " hit" : ""), role: w.triggered ? "alert" : "status" });
+      box.appendChild(el("span", { class: "chip" }, w.triggered ? "Triggered" : "Holding"));
+      var t1 = el("div", { class: "t1" });
+      t1.appendChild(document.createTextNode("Alert: " + w.label + ". "));
+      t1.appendChild(jg("span", { class: "fig" }, "Last week closed at " + money(w.close, "USD") +
+        " (" + dayName(w.week_ending) + "), " + Math.abs(w.distance * 100).toFixed(1) + "% " + (w.distance >= 0 ? "above" : "below") + " the line.",
+        "Weekly close = last COMEX front-month futures settlement of the week (Yahoo Finance); line $" + w.line.toLocaleString("en-US") +
+        ", no buffer; " + w.weeks_checked + " weekly closes checked since " + w.since + "."));
+      box.appendChild(t1);
+      var t2 = "The line is in dollars" + (chf ? " (" + m(w.line) + " at today's franc rate)" : "") + ". ";
+      if (w.lowest !== null && w.lowest !== undefined)
+        t2 += "Lowest weekly close since " + monthName(w.since.slice(0, 7)) + ": " + money(w.lowest, "USD") + " (" + dayYear(w.lowest_week) + "); " +
+          (w.closes_beyond ? w.closes_beyond + " weekly close" + (w.closes_beyond > 1 ? "s" : "") + " " + (below ? "below" : "above") + " it, the last on " + dayYear(w.last_beyond) + ". "
+                           : "none " + (below ? "below" : "above") + " it. ");
+      if (w.next_lo) t2 += (w.triggered ? "Next stop named for this break: " : "If it breaks, the next stop named is ") + money(w.next_lo, "USD") + "–" + money(w.next_hi, "USD").replace("$", "") +
+        (chf ? " (" + m(w.next_lo) + "–" + Math.round(w.next_hi * fx).toLocaleString("en-US") + ")" : "") + ", a trader's view, not a forecast from this page.";
+      box.appendChild(jg("div", { class: "t2" }, t2, w.source || w.note));
+      var warn = "";
+      var live = LIVE && LIVE.gold && LIVE.gold.USD;
+      if (!w.triggered) {
+        if (live && (below ? live < w.line : live > w.line)) warn = "Spot is " + money(live, "USD") + " right now, " + (below ? "below" : "above") + " the line. It only counts if the week closes there.";
+        else if (w.last_daily_date > w.week_ending && (below ? w.last_daily < w.line : w.last_daily > w.line))
+          warn = "The last daily close (" + money(w.last_daily, "USD") + ", " + dayName(w.last_daily_date) + ") is " + (below ? "below" : "above") + " the line. Watch Friday's close.";
+      }
+      box.appendChild(el("div", { class: "t3" }, warn));
+      host.appendChild(box);
+    });
+  }
   // ---------- live spot prices: fetched by the reader's browser, never stored ----------
   // gold-api.com: free, no key, allows browser requests (checked from GitHub Actions, Oct 2026).
   // Stored closes stay the record; this only shows where spot is right now while the page is open.
@@ -779,7 +835,7 @@ table.t tr:last-child td { border-bottom: 0; }
       var when = new Date(a[0].updatedAt || Date.now());
       LIVE = { gold: { USD: au, CHF: au * fx }, silver: { USD: ag, CHF: ag * fx }, usdchf: fx,
         time: when.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" }) };
-      try { renderPrices(); } catch (e) {}
+      try { renderPrices(); renderWeekly(); } catch (e) {}
     }).catch(function () { LIVE_FAILED = true; /* keep the stored closes */ })
       .then(function () { liveBusy = false; setRefresh(LIVE_FAILED && !LIVE ? "Try again" : "Refresh", false); LIVE_FAILED = false; });
   }
@@ -1961,7 +2017,7 @@ table.t tr:last-child td { border-bottom: 0; }
 
   function renderAll() {
     // each section draws on its own: one failure must not stop the rest of the page
-    [renderMast, renderPrices, renderExpected, renderScenarios, renderOdds, renderGuess, renderGlance, renderRules, renderPush, renderBuyers, renderRegime, renderPrice, renderLines,
+    [renderMast, renderPrices, renderWeekly, renderExpected, renderScenarios, renderOdds, renderGuess, renderGlance, renderRules, renderPush, renderBuyers, renderRegime, renderPrice, renderLines,
      renderStretch, renderDates, renderTech, renderValue, renderSilver, renderScore, renderHistory, renderFoot].forEach(function (f) {
       try { f(); } catch (e) { if (window.console) console.error("Section failed to draw: " + (f.name || "?"), e); }
     });
