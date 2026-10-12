@@ -198,7 +198,7 @@ _Descriptive, not predictive. This tool does not forecast prices or give instruc
 | res_exgold_cn | 2026-06 | stale (133 days) |
 | res_exgold_cz | - | never succeeded |
 | res_exgold_de | 2026-07 | ok |
-| res_exgold_in | 2026-07 | ok |
+| res_exgold_in | 2026-08 | ok |
 | res_exgold_jp | 2026-08 | ok |
 | res_exgold_pl | 2026-08 | ok |
 | res_exgold_ru | 2025-11 | stale (345 days) |
