@@ -22,7 +22,7 @@ imf_cofer,2026-Q2,2026-09-18,2026-10-08,,enter,Enter figures by hand (data/manua
 snb,2026-Q3,2026-09-10,2026-09-24,,enter,Check the publisher's release
 us_cpi,2026-07,2026-08-09,2026-08-16,2026-10-08 20:55:51.969276,received,"us_cpi_mirror 2026-07-01: 333.92, +3.5% y/y (prior +3.9%) (no consensus feed: compared with prior and trend only)"
 us_cpi,2026-08,2026-09-09,2026-09-16,2026-10-08 20:55:51.969276,received,"us_cpi_mirror 2026-08-01: 334.98, +3.7% y/y (prior +3.5%) (no consensus feed: compared with prior and trend only)"
-us_cpi,2026-09,2026-10-09,2026-10-16,,due,
+us_cpi,2026-09,2026-10-09,2026-10-16,2026-10-14 17:37:42.586673,received,"us_cpi_mirror 2026-08-01: 334.98, +3.7% y/y (prior +3.5%) (no consensus feed: compared with prior and trend only)"
 us_jobs,2026-08,2026-09-04,2026-09-04,2026-10-08 21:46:05.818621,received,"us_payrolls 2026-08-01: 159,015.00, change vs prior +133.00, vs 12-period average +396.67 (no consensus feed: compared with prior and trend only)"
 us_jobs,2026-09,2026-10-02,2026-10-02,2026-10-08 21:46:05.818621,received,"us_payrolls 2026-09-01: 159,044.00, change vs prior +29.00, vs 12-period average +380.42 (no consensus feed: compared with prior and trend only)"
 wgc_gdt,2026-Q2,2026-07-20,2026-08-09,,enter,Enter figures by hand (data/manual/)
