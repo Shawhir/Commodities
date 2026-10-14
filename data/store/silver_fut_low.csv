@@ -6557,3 +6557,4 @@ silver_fut_low,2026-10-09,2026-10-10,60.66999816894531,https://query2.finance.ya
 silver_fut_low,2026-10-09,2026-10-11,59.45000076293945,https://query2.finance.yahoo.com/v8/finance/chart/SI=F?period1=967593600&period2=1791804106&interval=1d&events=history,2026-10-11
 silver_fut_low,2026-10-09,2026-10-12,60.66999816894531,https://query2.finance.yahoo.com/v8/finance/chart/SI=F?period1=967593600&period2=1791896507&interval=1d&events=history,2026-10-12
 silver_fut_low,2026-10-12,2026-10-13,60.14099884033203,https://query2.finance.yahoo.com/v8/finance/chart/SI=F?period1=967593600&period2=1791981409&interval=1d&events=history,2026-10-13
+silver_fut_low,2026-10-13,2026-10-14,59.1609992980957,https://query2.finance.yahoo.com/v8/finance/chart/SI=F?period1=967593600&period2=1792058623&interval=1d&events=history,2026-10-14

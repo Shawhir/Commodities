@@ -6510,6 +6510,7 @@ silver_fut_volume,2026-07-17,2026-10-09,427.0,https://query2.finance.yahoo.com/v
 silver_fut_volume,2026-07-17,2026-10-09,427.0,https://query2.finance.yahoo.com/v8/finance/chart/SI=F?period1=967593600&period2=1791675656&interval=1d&events=history,2026-10-09
 silver_fut_volume,2026-07-17,2026-10-10,427.0,https://query2.finance.yahoo.com/v8/finance/chart/SI=F?period1=967593600&period2=1791716755&interval=1d&events=history,2026-10-10
 silver_fut_volume,2026-07-17,2026-10-10,1809.0,https://query2.finance.yahoo.com/v8/finance/chart/SI=F?period1=967593600&period2=1791725217&interval=1d&events=history,2026-10-10
+silver_fut_volume,2026-07-17,2026-10-14,1809.0,https://query2.finance.yahoo.com/v8/finance/chart/SI=F?period1=967593600&period2=1792058623&interval=1d&events=history,2026-10-14
 silver_fut_volume,2026-07-20,2026-07-21,1714.0,https://query2.finance.yahoo.com/v8/finance/chart/SI=F?period1=967593600&period2=1791585602&interval=1d&events=history,2026-10-08
 silver_fut_volume,2026-07-21,2026-07-22,124.0,https://query2.finance.yahoo.com/v8/finance/chart/SI=F?period1=967593600&period2=1791585602&interval=1d&events=history,2026-10-08
 silver_fut_volume,2026-07-22,2026-07-23,358.0,https://query2.finance.yahoo.com/v8/finance/chart/SI=F?period1=967593600&period2=1791585602&interval=1d&events=history,2026-10-08
@@ -6576,3 +6577,5 @@ silver_fut_volume,2026-10-09,2026-10-11,35939.0,https://query2.finance.yahoo.com
 silver_fut_volume,2026-10-09,2026-10-12,244.0,https://query2.finance.yahoo.com/v8/finance/chart/SI=F?period1=967593600&period2=1791896507&interval=1d&events=history,2026-10-12
 silver_fut_volume,2026-10-09,2026-10-13,11.0,https://query2.finance.yahoo.com/v8/finance/chart/SI=F?period1=967593600&period2=1791981409&interval=1d&events=history,2026-10-13
 silver_fut_volume,2026-10-12,2026-10-13,11.0,https://query2.finance.yahoo.com/v8/finance/chart/SI=F?period1=967593600&period2=1791981409&interval=1d&events=history,2026-10-13
+silver_fut_volume,2026-10-12,2026-10-14,0.0,https://query2.finance.yahoo.com/v8/finance/chart/SI=F?period1=967593600&period2=1792058623&interval=1d&events=history,2026-10-14
+silver_fut_volume,2026-10-13,2026-10-14,0.0,https://query2.finance.yahoo.com/v8/finance/chart/SI=F?period1=967593600&period2=1792058623&interval=1d&events=history,2026-10-14

@@ -5948,4 +5948,7 @@ usdchf_yf_high,2026-10-08,2026-10-09,0.8318600058555603,https://query2.finance.y
 usdchf_yf_high,2026-10-08,2026-10-09,0.8318600058555603,https://query2.finance.yahoo.com/v8/finance/chart/CHF=X?period1=1070236800&period2=1791675656&interval=1d&events=history,2026-10-09
 usdchf_yf_high,2026-10-08,2026-10-10,0.8318600058555603,https://query2.finance.yahoo.com/v8/finance/chart/CHF=X?period1=1070236800&period2=1791716755&interval=1d&events=history,2026-10-10
 usdchf_yf_high,2026-10-09,2026-10-10,0.8319000005722046,https://query2.finance.yahoo.com/v8/finance/chart/CHF=X?period1=1070236800&period2=1791716755&interval=1d&events=history,2026-10-10
+usdchf_yf_high,2026-10-11,2026-10-12,0.8347700238227844,https://query2.finance.yahoo.com/v8/finance/chart/CHF=X?period1=1070236800&period2=1792058623&interval=1d&events=history,2026-10-14
 usdchf_yf_high,2026-10-12,2026-10-13,0.8346099853515625,https://query2.finance.yahoo.com/v8/finance/chart/CHF=X?period1=1070236800&period2=1791981409&interval=1d&events=history,2026-10-13
+usdchf_yf_high,2026-10-12,2026-10-14,0.8344600200653076,https://query2.finance.yahoo.com/v8/finance/chart/CHF=X?period1=1070236800&period2=1792058623&interval=1d&events=history,2026-10-14
+usdchf_yf_high,2026-10-13,2026-10-14,0.8337500095367432,https://query2.finance.yahoo.com/v8/finance/chart/CHF=X?period1=1070236800&period2=1792058623&interval=1d&events=history,2026-10-14
