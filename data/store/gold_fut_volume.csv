@@ -6563,6 +6563,7 @@ gold_fut_volume,2026-09-28,2026-10-12,229031.0,https://query2.finance.yahoo.com/
 gold_fut_volume,2026-09-28,2026-10-13,140092.0,https://query2.finance.yahoo.com/v8/finance/chart/GC=F?period1=967593600&period2=1791981409&interval=1d&events=history,2026-10-13
 gold_fut_volume,2026-09-28,2026-10-14,229031.0,https://query2.finance.yahoo.com/v8/finance/chart/GC=F?period1=967593600&period2=1792058623&interval=1d&events=history,2026-10-14
 gold_fut_volume,2026-09-28,2026-10-17,140092.0,https://query2.finance.yahoo.com/v8/finance/chart/GC=F?period1=967593600&period2=1792314752&interval=1d&events=history,2026-10-17
+gold_fut_volume,2026-09-28,2026-10-19,229031.0,https://query2.finance.yahoo.com/v8/finance/chart/GC=F?period1=967593600&period2=1792492859&interval=1d&events=history,2026-10-19
 gold_fut_volume,2026-09-29,2026-09-30,149747.0,https://query2.finance.yahoo.com/v8/finance/chart/GC=F?period1=967593600&period2=1791585602&interval=1d&events=history,2026-10-08
 gold_fut_volume,2026-09-30,2026-10-01,156277.0,https://query2.finance.yahoo.com/v8/finance/chart/GC=F?period1=967593600&period2=1791585602&interval=1d&events=history,2026-10-08
 gold_fut_volume,2026-10-01,2026-10-02,130846.0,https://query2.finance.yahoo.com/v8/finance/chart/GC=F?period1=967593600&period2=1791585602&interval=1d&events=history,2026-10-08
@@ -6588,3 +6589,4 @@ gold_fut_volume,2026-10-15,2026-10-16,191279.0,https://query2.finance.yahoo.com/
 gold_fut_volume,2026-10-15,2026-10-17,159510.0,https://query2.finance.yahoo.com/v8/finance/chart/GC=F?period1=967593600&period2=1792314752&interval=1d&events=history,2026-10-17
 gold_fut_volume,2026-10-16,2026-10-17,159510.0,https://query2.finance.yahoo.com/v8/finance/chart/GC=F?period1=967593600&period2=1792314752&interval=1d&events=history,2026-10-17
 gold_fut_volume,2026-10-16,2026-10-18,135074.0,https://query2.finance.yahoo.com/v8/finance/chart/GC=F?period1=967593600&period2=1792402145&interval=1d&events=history,2026-10-18
+gold_fut_volume,2026-10-16,2026-10-19,159510.0,https://query2.finance.yahoo.com/v8/finance/chart/GC=F?period1=967593600&period2=1792492859&interval=1d&events=history,2026-10-19
