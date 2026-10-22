@@ -6560,3 +6560,4 @@ gold_fut_close,2026-10-15,2026-10-16,4170.10009765625,https://query2.finance.yah
 gold_fut_close,2026-10-16,2026-10-17,4181.10009765625,https://query2.finance.yahoo.com/v8/finance/chart/GC=F?period1=967593600&period2=1792314752&interval=1d&events=history,2026-10-17
 gold_fut_close,2026-10-19,2026-10-20,4160.10009765625,https://query2.finance.yahoo.com/v8/finance/chart/GC=F?period1=967593600&period2=1792576659&interval=1d&events=history,2026-10-20
 gold_fut_close,2026-10-20,2026-10-21,4142.60009765625,https://query2.finance.yahoo.com/v8/finance/chart/GC=F?period1=967593600&period2=1792663297&interval=1d&events=history,2026-10-21
+gold_fut_close,2026-10-21,2026-10-22,4150.0,https://query2.finance.yahoo.com/v8/finance/chart/GC=F?period1=967593600&period2=1792749735&interval=1d&events=history,2026-10-22
