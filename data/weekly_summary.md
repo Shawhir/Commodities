@@ -35,7 +35,7 @@ What your rules say and what would change them. Not advice.
 | Interest rates after inflation | 2.84%, up 0.90 points in 6 months | down | This is the return on safe bonds after inflation; when it rises, gold usually struggles |
 | Where markets expect US rates to go | 2-year US yield 4.78%, up 0.98 points in 6 months | down | The 2-year yield moves with what markets expect the Fed to do next; falling expectations usually help gold |
 | Recession warning (yield curve) | 10-year minus 3-month +0.94 points; below zero in 0 of the last 6 months | little effect now | When long rates sit below short rates, a US recession has often followed within 1-2 years; recessions bring rate cuts (good for gold) but can also force selling at first |
-| Swiss interest rates | 10-year Swiss bonds pay 0.59%, up 0.19 points in 6 months; after Swiss inflation +0.12% | little effect now | What a franc saver gives up by holding gold instead of Swiss bonds; low Swiss rates make holding gold cheap in francs |
+| Swiss interest rates | 10-year Swiss bonds pay 0.59%, up 0.19 points in 6 months; after Swiss inflation -0.22% | little effect now | What a franc saver gives up by holding gold instead of Swiss bonds; low Swiss rates make holding gold cheap in francs |
 | US dollar | down 0.6% in 6 months | little effect now | Gold is priced in dollars; a stronger dollar usually means a lower gold price |
 | War and political risk | higher than 85% of the last 10 years | up | People turn to gold as a safe place in times of conflict; the effect often fades when tensions ease |
 | Oil price | up 68% in 12 months | either way | Expensive oil raises inflation, which helps gold, but can make the Fed raise rates, which hurts it |
@@ -182,9 +182,9 @@ _Descriptive, not predictive. This tool does not forecast prices or give instruc
 | cftc_cot | 2026-10 | ok |
 | ch_10y_yield | 2026-09 | ok |
 | ch_cpi_yoy | 2025-04 | ok |
-| ch_cpi_yoy_snb | 2026-08 | stale (86 days) |
+| ch_cpi_yoy_snb | 2026-09 | ok |
 | chf_3m_rate | 2026-09 | ok |
-| copper_monthly | 2026-07 | stale (117 days) |
+| copper_monthly | 2026-09 | ok |
 | dollar_broad | 2026-10 | ok |
 | fed_funds_eff | 2026-10 | ok |
 | fed_target_upper | 2026-10 | ok |
@@ -206,7 +206,7 @@ _Descriptive, not predictive. This tool does not forecast prices or give instruc
 | res_exgold_pl | 2026-09 | ok |
 | res_exgold_ru | 2025-11 | stale (359 days) |
 | res_exgold_tr | 2026-09 | ok |
-| res_exgold_us | 2026-08 | ok |
+| res_exgold_us | 2026-09 | ok |
 | silver_fut_daily | 2026-10 | ok |
 | silver_spot_daily | - | never succeeded |
 | trade_ch_exports | 2026-08 | ok |

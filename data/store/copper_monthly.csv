@@ -233,6 +233,7 @@ copper_monthly,2011-03-01,2011-04-20,9503.358695652174,https://fred.stlouisfed.o
 copper_monthly,2011-04-01,2011-05-20,9482.75,https://fred.stlouisfed.org/graph/fredgraph.csv?id=PCOPPUSDM,2026-10-09
 copper_monthly,2011-05-01,2011-06-20,8931.675,https://fred.stlouisfed.org/graph/fredgraph.csv?id=PCOPPUSDM,2026-10-09
 copper_monthly,2011-06-01,2011-07-20,9066.852272727272,https://fred.stlouisfed.org/graph/fredgraph.csv?id=PCOPPUSDM,2026-10-09
+copper_monthly,2011-06-01,2026-10-26,9066.852272727274,https://fred.stlouisfed.org/graph/fredgraph.csv?id=PCOPPUSDM,2026-10-26
 copper_monthly,2011-07-01,2011-08-20,9650.464285714286,https://fred.stlouisfed.org/graph/fredgraph.csv?id=PCOPPUSDM,2026-10-09
 copper_monthly,2011-08-01,2011-09-20,8997.988636363636,https://fred.stlouisfed.org/graph/fredgraph.csv?id=PCOPPUSDM,2026-10-09
 copper_monthly,2011-09-01,2011-10-20,8300.136363636364,https://fred.stlouisfed.org/graph/fredgraph.csv?id=PCOPPUSDM,2026-10-09
@@ -356,6 +357,7 @@ copper_monthly,2021-06-01,2021-07-20,9631.5,https://fred.stlouisfed.org/graph/fr
 copper_monthly,2021-07-01,2021-08-20,9450.820454545456,https://fred.stlouisfed.org/graph/fredgraph.csv?id=PCOPPUSDM,2026-10-09
 copper_monthly,2021-08-01,2021-09-20,9370.138571428572,https://fred.stlouisfed.org/graph/fredgraph.csv?id=PCOPPUSDM,2026-10-09
 copper_monthly,2021-09-01,2021-10-20,9324.709545454543,https://fred.stlouisfed.org/graph/fredgraph.csv?id=PCOPPUSDM,2026-10-09
+copper_monthly,2021-09-01,2026-10-26,9324.709545454545,https://fred.stlouisfed.org/graph/fredgraph.csv?id=PCOPPUSDM,2026-10-26
 copper_monthly,2021-10-01,2021-11-20,9829.219047619048,https://fred.stlouisfed.org/graph/fredgraph.csv?id=PCOPPUSDM,2026-10-09
 copper_monthly,2021-11-01,2021-12-20,9728.904545454545,https://fred.stlouisfed.org/graph/fredgraph.csv?id=PCOPPUSDM,2026-10-09
 copper_monthly,2021-12-01,2022-01-20,9551.18,https://fred.stlouisfed.org/graph/fredgraph.csv?id=PCOPPUSDM,2026-10-09
@@ -364,9 +366,11 @@ copper_monthly,2022-02-01,2022-03-20,9943.175,https://fred.stlouisfed.org/graph/
 copper_monthly,2022-03-01,2022-04-20,10230.89391304348,https://fred.stlouisfed.org/graph/fredgraph.csv?id=PCOPPUSDM,2026-10-09
 copper_monthly,2022-04-01,2022-05-20,10174.34761904762,https://fred.stlouisfed.org/graph/fredgraph.csv?id=PCOPPUSDM,2026-10-09
 copper_monthly,2022-05-01,2022-06-20,9395.027272727271,https://fred.stlouisfed.org/graph/fredgraph.csv?id=PCOPPUSDM,2026-10-09
+copper_monthly,2022-05-01,2026-10-26,9395.027272727273,https://fred.stlouisfed.org/graph/fredgraph.csv?id=PCOPPUSDM,2026-10-26
 copper_monthly,2022-06-01,2022-07-20,9067.55181818182,https://fred.stlouisfed.org/graph/fredgraph.csv?id=PCOPPUSDM,2026-10-09
 copper_monthly,2022-06-01,2026-10-12,9067.55181818182,https://fred.stlouisfed.org/graph/fredgraph.csv?id=PCOPPUSDM,2026-10-12
 copper_monthly,2022-06-01,2026-10-19,9067.55181818182,https://fred.stlouisfed.org/graph/fredgraph.csv?id=PCOPPUSDM,2026-10-19
+copper_monthly,2022-06-01,2026-10-26,9067.551818181819,https://fred.stlouisfed.org/graph/fredgraph.csv?id=PCOPPUSDM,2026-10-26
 copper_monthly,2022-07-01,2022-08-20,7544.809523809524,https://fred.stlouisfed.org/graph/fredgraph.csv?id=PCOPPUSDM,2026-10-09
 copper_monthly,2022-08-01,2022-09-20,7990.812173913043,https://fred.stlouisfed.org/graph/fredgraph.csv?id=PCOPPUSDM,2026-10-09
 copper_monthly,2022-09-01,2022-10-20,7746.011363636364,https://fred.stlouisfed.org/graph/fredgraph.csv?id=PCOPPUSDM,2026-10-09
@@ -392,14 +396,17 @@ copper_monthly,2024-04-01,2024-05-20,9445.593636363636,https://fred.stlouisfed.o
 copper_monthly,2024-05-01,2024-06-20,10117.16347826087,https://fred.stlouisfed.org/graph/fredgraph.csv?id=PCOPPUSDM,2026-10-09
 copper_monthly,2024-06-01,2024-07-20,9648.167,https://fred.stlouisfed.org/graph/fredgraph.csv?id=PCOPPUSDM,2026-10-09
 copper_monthly,2024-07-01,2024-08-20,9385.31304347826,https://fred.stlouisfed.org/graph/fredgraph.csv?id=PCOPPUSDM,2026-10-09
+copper_monthly,2024-07-01,2026-10-26,9385.313043478262,https://fred.stlouisfed.org/graph/fredgraph.csv?id=PCOPPUSDM,2026-10-26
 copper_monthly,2024-08-01,2024-09-20,8981.117727272727,https://fred.stlouisfed.org/graph/fredgraph.csv?id=PCOPPUSDM,2026-10-09
 copper_monthly,2024-09-01,2024-10-20,9259.128571428571,https://fred.stlouisfed.org/graph/fredgraph.csv?id=PCOPPUSDM,2026-10-09
 copper_monthly,2024-10-01,2024-11-20,9533.991304347826,https://fred.stlouisfed.org/graph/fredgraph.csv?id=PCOPPUSDM,2026-10-09
 copper_monthly,2024-11-01,2024-12-20,9075.727142857144,https://fred.stlouisfed.org/graph/fredgraph.csv?id=PCOPPUSDM,2026-10-09
+copper_monthly,2024-11-01,2026-10-26,9075.727142857142,https://fred.stlouisfed.org/graph/fredgraph.csv?id=PCOPPUSDM,2026-10-26
 copper_monthly,2024-12-01,2025-01-20,8909.907727272726,https://fred.stlouisfed.org/graph/fredgraph.csv?id=PCOPPUSDM,2026-10-09
 copper_monthly,2025-01-01,2025-02-20,8976.68043478261,https://fred.stlouisfed.org/graph/fredgraph.csv?id=PCOPPUSDM,2026-10-09
 copper_monthly,2025-02-01,2025-03-20,9330.975,https://fred.stlouisfed.org/graph/fredgraph.csv?id=PCOPPUSDM,2026-10-09
 copper_monthly,2025-03-01,2025-04-20,9735.823333333332,https://fred.stlouisfed.org/graph/fredgraph.csv?id=PCOPPUSDM,2026-10-09
+copper_monthly,2025-03-01,2026-10-26,9735.823333333334,https://fred.stlouisfed.org/graph/fredgraph.csv?id=PCOPPUSDM,2026-10-26
 copper_monthly,2025-04-01,2025-05-20,9172.69590909091,https://fred.stlouisfed.org/graph/fredgraph.csv?id=PCOPPUSDM,2026-10-09
 copper_monthly,2025-05-01,2025-06-20,9531.200909090909,https://fred.stlouisfed.org/graph/fredgraph.csv?id=PCOPPUSDM,2026-10-09
 copper_monthly,2025-06-01,2025-07-20,9835.068095238095,https://fred.stlouisfed.org/graph/fredgraph.csv?id=PCOPPUSDM,2026-10-09
@@ -416,3 +423,5 @@ copper_monthly,2026-04-01,2026-05-20,12890.68772727273,https://fred.stlouisfed.o
 copper_monthly,2026-05-01,2026-06-20,13512.15619047619,https://fred.stlouisfed.org/graph/fredgraph.csv?id=PCOPPUSDM,2026-10-09
 copper_monthly,2026-06-01,2026-07-20,13552.04090909091,https://fred.stlouisfed.org/graph/fredgraph.csv?id=PCOPPUSDM,2026-10-09
 copper_monthly,2026-07-01,2026-08-20,13542.82086956522,https://fred.stlouisfed.org/graph/fredgraph.csv?id=PCOPPUSDM,2026-10-09
+copper_monthly,2026-08-01,2026-09-20,14331.26476190476,https://fred.stlouisfed.org/graph/fredgraph.csv?id=PCOPPUSDM,2026-10-26
+copper_monthly,2026-09-01,2026-10-20,14473.05590909091,https://fred.stlouisfed.org/graph/fredgraph.csv?id=PCOPPUSDM,2026-10-26
