@@ -6563,3 +6563,4 @@ gold_fut_open,2026-10-20,2026-10-21,4162.39990234375,https://query2.finance.yaho
 gold_fut_open,2026-10-21,2026-10-22,4143.39990234375,https://query2.finance.yahoo.com/v8/finance/chart/GC=F?period1=967593600&period2=1792749735&interval=1d&events=history,2026-10-22
 gold_fut_open,2026-10-22,2026-10-23,4159.0,https://query2.finance.yahoo.com/v8/finance/chart/GC=F?period1=967593600&period2=1792835800&interval=1d&events=history,2026-10-23
 gold_fut_open,2026-10-23,2026-10-24,4042.199951171875,https://query2.finance.yahoo.com/v8/finance/chart/GC=F?period1=967593600&period2=1792920379&interval=1d&events=history,2026-10-24
+gold_fut_open,2026-10-26,2026-10-27,4012.199951171875,https://query2.finance.yahoo.com/v8/finance/chart/GC=F?period1=967593600&period2=1793183037&interval=1d&events=history,2026-10-27
