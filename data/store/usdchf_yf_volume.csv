@@ -5956,3 +5956,4 @@ usdchf_yf_volume,2026-10-20,2026-10-21,0.0,https://query2.finance.yahoo.com/v8/f
 usdchf_yf_volume,2026-10-21,2026-10-22,0.0,https://query2.finance.yahoo.com/v8/finance/chart/CHF=X?period1=1070236800&period2=1792749735&interval=1d&events=history,2026-10-22
 usdchf_yf_volume,2026-10-22,2026-10-23,0.0,https://query2.finance.yahoo.com/v8/finance/chart/CHF=X?period1=1070236800&period2=1792835800&interval=1d&events=history,2026-10-23
 usdchf_yf_volume,2026-10-26,2026-10-27,0.0,https://query2.finance.yahoo.com/v8/finance/chart/CHF=X?period1=1070236800&period2=1793183037&interval=1d&events=history,2026-10-27
+usdchf_yf_volume,2026-10-27,2026-10-28,0.0,https://query2.finance.yahoo.com/v8/finance/chart/CHF=X?period1=1070236800&period2=1793272468&interval=1d&events=history,2026-10-28
