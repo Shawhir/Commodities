@@ -6613,3 +6613,5 @@ silver_fut_volume,2026-10-27,2026-10-29,229.0,https://query2.finance.yahoo.com/v
 silver_fut_volume,2026-10-28,2026-10-29,229.0,https://query2.finance.yahoo.com/v8/finance/chart/SI=F?period1=967593600&period2=1793359635&interval=1d&events=history,2026-10-29
 silver_fut_volume,2026-10-28,2026-10-30,331.0,https://query2.finance.yahoo.com/v8/finance/chart/SI=F?period1=967593600&period2=1793445538&interval=1d&events=history,2026-10-30
 silver_fut_volume,2026-10-29,2026-10-30,331.0,https://query2.finance.yahoo.com/v8/finance/chart/SI=F?period1=967593600&period2=1793445538&interval=1d&events=history,2026-10-30
+silver_fut_volume,2026-10-29,2026-10-31,88.0,https://query2.finance.yahoo.com/v8/finance/chart/SI=F?period1=967593600&period2=1793530278&interval=1d&events=history,2026-10-31
+silver_fut_volume,2026-10-30,2026-10-31,88.0,https://query2.finance.yahoo.com/v8/finance/chart/SI=F?period1=967593600&period2=1793530278&interval=1d&events=history,2026-10-31
