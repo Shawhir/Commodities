@@ -880,3 +880,4 @@ us_10y_yield_monthly,2026-05-01,2026-06-01,4.48,https://raw.githubusercontent.co
 us_10y_yield_monthly,2026-06-01,2026-07-01,4.47,https://raw.githubusercontent.com/datasets/bond-yields-us-10y/main/data/monthly.csv,2026-10-08
 us_10y_yield_monthly,2026-07-01,2026-08-01,4.6,https://raw.githubusercontent.com/datasets/bond-yields-us-10y/main/data/monthly.csv,2026-10-08
 us_10y_yield_monthly,2026-08-01,2026-09-01,4.68,https://raw.githubusercontent.com/datasets/bond-yields-us-10y/main/data/monthly.csv,2026-10-08
+us_10y_yield_monthly,2026-09-01,2026-10-01,4.99,https://raw.githubusercontent.com/datasets/bond-yields-us-10y/main/data/monthly.csv,2026-11-01
