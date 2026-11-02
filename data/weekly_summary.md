@@ -37,7 +37,7 @@ What your rules say and what would change them. Not advice.
 | Recession warning (yield curve) | 10-year minus 3-month +0.90 points; below zero in 0 of the last 6 months | little effect now | When long rates sit below short rates, a US recession has often followed within 1-2 years; recessions bring rate cuts (good for gold) but can also force selling at first |
 | Swiss interest rates | 10-year Swiss bonds pay 0.59%, up 0.19 points in 6 months; after Swiss inflation -0.22% | little effect now | What a franc saver gives up by holding gold instead of Swiss bonds; low Swiss rates make holding gold cheap in francs |
 | US dollar | down 0.6% in 6 months | little effect now | Gold is priced in dollars; a stronger dollar usually means a lower gold price |
-| War and political risk | higher than 85% of the last 10 years | up | People turn to gold as a safe place in times of conflict; the effect often fades when tensions ease |
+| War and political risk | higher than 87% of the last 10 years | up | People turn to gold as a safe place in times of conflict; the effect often fades when tensions ease |
 | Oil price | up 68% in 12 months | either way | Expensive oil raises inflation, which helps gold, but can make the Fed raise rates, which hurts it |
 | Speculators' bets on gold | middling (higher than 51% of the last 3 years), shrinking this month | little effect now | When almost everyone has already bet on gold, a rush to exit can cause sharp drops |
 | Stock market fear | calm (higher than 37% of the last 10 years) | little effect now | Panic can send people to gold, or force them to cash in gold to raise money |
@@ -163,8 +163,8 @@ _Descriptive, not predictive. This tool does not forecast prices or give instruc
 
 | Month | Distance | Key moment | Next 12m USD | Next 12m CHF | Main differences |
 |---|---|---|---|---|---|
-| 2006-07 | 2.75 | ['cftc_mm_pct'] | +4.9% | +2.3% | gold vs its 10-month average: +13% then vs -5% now; oil price change over 12 months: +28% then vs +68% now |
-| 2008-08 | 2.83 |  | +13.1% | +11.5% | war and political risk (0 to 100 scale): 41 then vs 85 now; francs per dollar, change over 12 months: -10% then vs +3% now; US interest rates: falling then, rising now |
+| 2006-07 | 2.76 | ['cftc_mm_pct'] | +4.9% | +2.3% | gold vs its 10-month average: +13% then vs -5% now; oil price change over 12 months: +28% then vs +68% now |
+| 2008-08 | 2.86 |  | +13.1% | +11.5% | war and political risk (0 to 100 scale): 41 then vs 87 now; francs per dollar, change over 12 months: -10% then vs +3% now; US interest rates: falling then, rising now |
 | 1976-03 | 3.07 | ['dollar_chg_6m', 'oil_chg_12m', 'breakeven_10y', 'cftc_mm_pct', 'vix_pct', 'gpr_pct', 'chf_dist_10y_avg'] | +11.3% | +10.6% | distance below its 2-year high: -28% then vs -14% now; change over 3 years: +58% then vs +125% now; US interest rates: falling then, rising now |
 
 ## Not yet available
@@ -194,14 +194,14 @@ _Descriptive, not predictive. This tool does not forecast prices or give instruc
 | gold_spot_daily | - | never succeeded |
 | gold_usd_monthly | 2026-09 | stale (62 days) |
 | gold_vol | 2026-10 | ok |
-| gpr_daily | 2026-10 | ok |
-| gpr_monthly | 2026-09 | stale (62 days) |
+| gpr_daily | 2026-11 | ok |
+| gpr_monthly | 2026-10 | ok |
 | manual_reports | - | ok |
 | real_yield_10y | 2026-10 | ok |
 | res_exgold_ch | - | never succeeded |
 | res_exgold_cn | 2026-06 | stale (154 days) |
 | res_exgold_cz | - | never succeeded |
-| res_exgold_de | 2026-07 | stale (124 days) |
+| res_exgold_de | 2026-09 | ok |
 | res_exgold_in | 2026-08 | ok |
 | res_exgold_jp | 2026-09 | ok |
 | res_exgold_pl | 2026-09 | ok |
@@ -212,16 +212,16 @@ _Descriptive, not predictive. This tool does not forecast prices or give instruc
 | silver_spot_daily | - | never succeeded |
 | trade_ch_exports | 2026-08 | ok |
 | trade_hk_to_cn | 2026-07 | ok |
-| trade_in_imports | 2026-07 | ok |
+| trade_in_imports | 2026-08 | ok |
 | us_10y_yield_monthly | 2026-09 | stale (62 days) |
 | us_2y_yield | 2026-10 | ok |
 | us_core_cpi | 2026-09 | stale (62 days) |
 | us_cpi_fred | 2026-09 | stale (62 days) |
 | us_cpi_mirror | 2026-09 | stale (62 days) |
 | us_curve_10y3m | 2026-10 | ok |
-| us_debt_gdp | 2026-01 | stale (305 days) |
+| us_debt_gdp | 2026-04 | stale (215 days) |
 | us_deficit_gdp | 2025-01 | stale (670 days) |
-| us_m2 | 2026-08 | stale (93 days) |
+| us_m2 | 2026-09 | stale (62 days) |
 | us_payrolls | 2026-09 | stale (62 days) |
 | us_recession | 2026-09 | ok |
 | us_tbill_3m | 2026-09 | stale (62 days) |
