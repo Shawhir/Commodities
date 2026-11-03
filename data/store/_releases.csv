@@ -22,9 +22,9 @@ cn_pmi,2026-10,2026-10-30,2026-11-01,,enter,Enter figures by hand (data/manual/)
 fomc,2026-09-16,2026-09-16,2026-09-16,2026-10-08 21:46:05.818621,happened,fed_target_upper: 3.75% to 3.75% (+0 bp)
 fomc,2026-10-28,2026-10-28,2026-10-28,2026-10-28 18:31:10.291537,happened,fed_target_upper: 4.00% to 4.00% (+0 bp)
 gpr,2026-07,2026-08-01,2026-08-15,2026-10-08 21:39:54.357959,received,"gpr_monthly 2026-07-01: 167.87, change vs prior -10.13, vs 12-period average -1.84 (no consensus feed: compared with prior and trend only)"
-gpr,2026-08,2026-09-01,2026-09-15,2026-10-08 21:39:54.357959,received,"gpr_monthly 2026-08-01: 125.75, change vs prior -42.94, vs 12-period average -47.69 (no consensus feed: compared with prior and trend only); gpr_monthly: 11 earlier values revised"
-gpr,2026-09,2026-10-01,2026-10-15,2026-10-08 21:39:54.357959,received,"gpr_monthly 2026-09-01: 155.94, change vs prior +30.19, vs 12-period average -16.39 (no consensus feed: compared with prior and trend only); gpr_monthly: 11 earlier values revised"
-gpr,2026-10,2026-11-01,2026-11-15,2026-11-02 16:31:12.818542,received,"gpr_monthly 2026-10-01: 150.52, change vs prior -5.42, vs 12-period average -24.24 (no consensus feed: compared with prior and trend only); gpr_monthly: 11 earlier values revised"
+gpr,2026-08,2026-09-01,2026-09-15,2026-10-08 21:39:54.357959,received,"gpr_monthly 2026-08-01: 125.75, change vs prior -42.94, vs 12-period average -47.69 (no consensus feed: compared with prior and trend only)"
+gpr,2026-09,2026-10-01,2026-10-15,2026-10-08 21:39:54.357959,received,"gpr_monthly 2026-09-01: 155.94, change vs prior +30.19, vs 12-period average -16.39 (no consensus feed: compared with prior and trend only)"
+gpr,2026-10,2026-11-01,2026-11-15,2026-11-02 16:31:12.818542,received,"gpr_monthly 2026-10-01: 150.52, change vs prior -5.42, vs 12-period average -24.24 (no consensus feed: compared with prior and trend only)"
 imf_cofer,2026-Q2,2026-09-18,2026-10-08,,enter,Enter figures by hand (data/manual/)
 snb,2026-Q3,2026-09-10,2026-09-24,,enter,Check the publisher's release
 us_cpi,2026-07,2026-08-09,2026-08-16,2026-10-08 20:55:51.969276,received,"us_cpi_mirror 2026-07-01: 333.92, +3.5% y/y (prior +3.9%) (no consensus feed: compared with prior and trend only)"
