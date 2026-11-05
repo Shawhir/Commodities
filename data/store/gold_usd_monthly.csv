@@ -1885,6 +1885,7 @@ gold_usd_monthly,1989-09-01,1989-10-01,362.0,https://raw.githubusercontent.com/d
 gold_usd_monthly,1989-10-01,1989-11-01,367.0,https://raw.githubusercontent.com/datasets/gold-prices/main/data/monthly.csv,2026-10-08
 gold_usd_monthly,1989-11-01,1989-12-01,394.0,https://raw.githubusercontent.com/datasets/gold-prices/main/data/monthly.csv,2026-10-08
 gold_usd_monthly,1989-12-01,1990-01-01,409.39,https://raw.githubusercontent.com/datasets/gold-prices/main/data/monthly.csv,2026-10-08
+gold_usd_monthly,1989-12-01,2026-11-05,409.0,https://raw.githubusercontent.com/datasets/gold-prices/main/data/monthly.csv,2026-11-05
 gold_usd_monthly,1990-01-01,1990-02-01,410.0,https://raw.githubusercontent.com/datasets/gold-prices/main/data/monthly.csv,2026-10-08
 gold_usd_monthly,1990-02-01,1990-03-01,417.0,https://raw.githubusercontent.com/datasets/gold-prices/main/data/monthly.csv,2026-10-08
 gold_usd_monthly,1990-03-01,1990-04-01,393.0,https://raw.githubusercontent.com/datasets/gold-prices/main/data/monthly.csv,2026-10-08

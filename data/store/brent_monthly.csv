@@ -472,3 +472,4 @@ brent_monthly,2026-06-01,2026-07-01,85.4,https://raw.githubusercontent.com/datas
 brent_monthly,2026-07-01,2026-08-01,83.76,https://raw.githubusercontent.com/datasets/oil-prices/main/data/brent-monthly.csv,2026-10-08
 brent_monthly,2026-08-01,2026-09-01,91.08,https://raw.githubusercontent.com/datasets/oil-prices/main/data/brent-monthly.csv,2026-10-08
 brent_monthly,2026-09-01,2026-10-01,114.16,https://raw.githubusercontent.com/datasets/oil-prices/main/data/brent-monthly.csv,2026-10-08
+brent_monthly,2026-10-01,2026-11-01,123.93,https://raw.githubusercontent.com/datasets/oil-prices/main/data/brent-monthly.csv,2026-11-05
