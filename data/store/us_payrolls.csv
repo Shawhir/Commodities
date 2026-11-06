@@ -1051,4 +1051,7 @@ us_payrolls,2026-05-01,2026-06-07,158861.0,https://fred.stlouisfed.org/graph/fre
 us_payrolls,2026-06-01,2026-07-07,158892.0,https://fred.stlouisfed.org/graph/fredgraph.csv?id=PAYEMS,2026-10-08
 us_payrolls,2026-07-01,2026-08-07,158882.0,https://fred.stlouisfed.org/graph/fredgraph.csv?id=PAYEMS,2026-10-08
 us_payrolls,2026-08-01,2026-09-07,159015.0,https://fred.stlouisfed.org/graph/fredgraph.csv?id=PAYEMS,2026-10-08
+us_payrolls,2026-08-01,2026-11-06,159068.0,https://fred.stlouisfed.org/graph/fredgraph.csv?id=PAYEMS,2026-11-06
 us_payrolls,2026-09-01,2026-10-07,159044.0,https://fred.stlouisfed.org/graph/fredgraph.csv?id=PAYEMS,2026-10-08
+us_payrolls,2026-09-01,2026-11-06,159128.0,https://fred.stlouisfed.org/graph/fredgraph.csv?id=PAYEMS,2026-11-06
+us_payrolls,2026-10-01,2026-11-07,159293.0,https://fred.stlouisfed.org/graph/fredgraph.csv?id=PAYEMS,2026-11-06
