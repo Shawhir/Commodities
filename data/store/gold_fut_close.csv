@@ -6571,3 +6571,4 @@ gold_fut_close,2026-10-30,2026-10-31,3898.89990234375,https://query2.finance.yah
 gold_fut_close,2026-11-02,2026-11-03,3969.60009765625,https://query2.finance.yahoo.com/v8/finance/chart/GC=F?period1=967593600&period2=1793796206&interval=1d&events=history,2026-11-03
 gold_fut_close,2026-11-03,2026-11-04,3940.39990234375,https://query2.finance.yahoo.com/v8/finance/chart/GC=F?period1=967593600&period2=1793883320&interval=1d&events=history,2026-11-04
 gold_fut_close,2026-11-04,2026-11-05,4073.0,https://query2.finance.yahoo.com/v8/finance/chart/GC=F?period1=967593600&period2=1793970260&interval=1d&events=history,2026-11-05
+gold_fut_close,2026-11-05,2026-11-06,4113.5,https://query2.finance.yahoo.com/v8/finance/chart/GC=F?period1=967593600&period2=1794055911&interval=1d&events=history,2026-11-06
