@@ -96,10 +96,10 @@ Counts from history, not a forecast. Each line: how often gold was higher a year
 - Momentum gauge (0 to 100): 38. On the low side of normal. Above 70 is often called overbought, below 30 oversold.
 - Short-term trend gauge: pointing up. The short-term trend has pointed up for 0 trading days.
 - Daily range: inside its normal range. Price is inside its normal range for the last 20 days. The range is wide compared with usual, meaning bigger daily swings.
-- 200-day average: 25.8% below. Price is 25.8% below its average of the last 200 trading days ($70), a common long-term trend line.
+- 200-day average: 25.6% below. Price is 25.6% below its average of the last 200 trading days ($70), a common long-term trend line.
 - 50-day vs 200-day average: 50 below 200. The 50-day average is below the 200-day average, and has been for 80 trading days. Traders call this a death cross.
-- Typical daily move: 2.8% a day. The price has been moving about 2.8% a day, more than its usual 1.7%.
-- Past year's range: 55% below the high. Price is 55% below the past year's highest close ($115) and 8% above the lowest ($48).
+- Typical daily move: 2.9% a day. The price has been moving about 2.9% a day, more than its usual 1.7%.
+- Past year's range: 55% below the high. Price is 55% below the past year's highest close ($115) and 9% above the lowest ($48).
 - After "Short-term trend gauge pointing up": higher 3 months later in 54% of 3478 days (97 spells), against 56% for all days. For context only.
 - After "Price below its 200-day average": higher 3 months later in 61% of 2551 days (64 spells), against 56% for all days. For context only.
 - After "50-day average below the 200-day (often called a death cross)": higher 3 months later in 57% of 2591 days (51 spells), against 56% for all days. For context only.
@@ -180,7 +180,7 @@ _Descriptive, not predictive. This tool does not forecast prices or give instruc
 | ch_cpi_yoy | 2025-04 | ok |
 | ch_cpi_yoy_snb | 2026-09 | ok |
 | chf_3m_rate | 2026-09 | ok |
-| copper_monthly | 2026-09 | stale (67 days) |
+| copper_monthly | 2026-09 | stale (68 days) |
 | dollar_broad | 2026-10 | ok |
 | fed_funds_eff | 2026-11 | ok |
 | fed_target_upper | 2026-10 | ok |
@@ -194,13 +194,13 @@ _Descriptive, not predictive. This tool does not forecast prices or give instruc
 | manual_reports | - | ok |
 | real_yield_10y | 2026-11 | ok |
 | res_exgold_ch | - | never succeeded |
-| res_exgold_cn | 2026-06 | stale (159 days) |
+| res_exgold_cn | 2026-06 | stale (160 days) |
 | res_exgold_cz | - | never succeeded |
 | res_exgold_de | 2026-09 | ok |
 | res_exgold_in | 2026-08 | ok |
 | res_exgold_jp | 2026-09 | ok |
 | res_exgold_pl | 2026-09 | ok |
-| res_exgold_ru | 2025-11 | stale (371 days) |
+| res_exgold_ru | 2025-11 | stale (372 days) |
 | res_exgold_tr | 2026-09 | ok |
 | res_exgold_us | 2026-09 | ok |
 | silver_fut_daily | 2026-11 | ok |
@@ -208,15 +208,15 @@ _Descriptive, not predictive. This tool does not forecast prices or give instruc
 | trade_ch_exports | 2026-08 | ok |
 | trade_hk_to_cn | 2026-07 | ok |
 | trade_in_imports | 2026-08 | ok |
-| us_10y_yield_monthly | 2026-09 | stale (67 days) |
+| us_10y_yield_monthly | 2026-09 | stale (68 days) |
 | us_2y_yield | 2026-11 | ok |
-| us_core_cpi | 2026-09 | stale (67 days) |
-| us_cpi_fred | 2026-09 | stale (67 days) |
-| us_cpi_mirror | 2026-09 | stale (67 days) |
+| us_core_cpi | 2026-09 | stale (68 days) |
+| us_cpi_fred | 2026-09 | stale (68 days) |
+| us_cpi_mirror | 2026-09 | stale (68 days) |
 | us_curve_10y3m | 2026-11 | ok |
-| us_debt_gdp | 2026-04 | stale (220 days) |
-| us_deficit_gdp | 2025-01 | stale (675 days) |
-| us_m2 | 2026-09 | stale (67 days) |
+| us_debt_gdp | 2026-04 | stale (221 days) |
+| us_deficit_gdp | 2025-01 | stale (676 days) |
+| us_m2 | 2026-09 | stale (68 days) |
 | us_payrolls | 2026-10 | ok |
 | us_recession | 2026-09 | ok |
 | us_tbill_3m | 2026-10 | ok |
@@ -225,6 +225,6 @@ _Descriptive, not predictive. This tool does not forecast prices or give instruc
 | usdchf_fred | 2026-10 | ok |
 | usdchf_monthly | 2026-10 | ok |
 | usdchf_yahoo_daily | 2026-11 | ok |
-| vix_daily_mirror | 2026-09 | stale (46 days) |
+| vix_daily_mirror | 2026-09 | stale (47 days) |
 | vix_fred | 2026-11 | ok |
 | wti_monthly | 2026-10 | ok |
