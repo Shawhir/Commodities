@@ -35,3 +35,4 @@ trade_ch_x_sg,2026-05-01,2026-08-14,1.717,https://comtradeapi.un.org/public/v1/p
 trade_ch_x_sg,2026-06-01,2026-09-13,0.742,https://comtradeapi.un.org/public/v1/preview/C/M/HS?reporterCode=757&period=<month>&cmdCode=7108&flowCode=X,2026-10-09
 trade_ch_x_sg,2026-07-01,2026-10-14,2.393,https://comtradeapi.un.org/public/v1/preview/C/M/HS?reporterCode=757&period=<month>&cmdCode=7108&flowCode=X,2026-10-09
 trade_ch_x_sg,2026-08-01,2026-11-14,0.536,https://comtradeapi.un.org/public/v1/preview/C/M/HS?reporterCode=757&period=<month>&cmdCode=7108&flowCode=X,2026-10-09
+trade_ch_x_sg,2026-09-01,2026-12-14,0.553,https://comtradeapi.un.org/public/v1/preview/C/M/HS?reporterCode=757&period=<month>&cmdCode=7108&flowCode=X,2026-11-09

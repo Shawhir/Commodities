@@ -174,7 +174,7 @@ _Descriptive, not predictive. This tool does not forecast prices or give instruc
 |---|---|---|
 | breakeven_10y | 2026-11 | ok |
 | brent_monthly | 2026-10 | ok |
-| cb_gold_imf | 2026-09 | ok |
+| cb_gold_imf | 2026-10 | ok |
 | cftc_cot | 2026-11 | ok |
 | ch_10y_yield | 2026-09 | ok |
 | ch_cpi_yoy | 2025-04 | ok |
@@ -197,7 +197,7 @@ _Descriptive, not predictive. This tool does not forecast prices or give instruc
 | res_exgold_cn | 2026-06 | stale (161 days) |
 | res_exgold_cz | - | never succeeded |
 | res_exgold_de | 2026-09 | ok |
-| res_exgold_in | 2026-08 | ok |
+| res_exgold_in | 2026-09 | ok |
 | res_exgold_jp | 2026-09 | ok |
 | res_exgold_pl | 2026-09 | ok |
 | res_exgold_ru | 2025-11 | stale (373 days) |
@@ -205,7 +205,7 @@ _Descriptive, not predictive. This tool does not forecast prices or give instruc
 | res_exgold_us | 2026-09 | ok |
 | silver_fut_daily | 2026-11 | ok |
 | silver_spot_daily | - | never succeeded |
-| trade_ch_exports | 2026-08 | ok |
+| trade_ch_exports | 2026-09 | ok |
 | trade_hk_to_cn | 2026-07 | ok |
 | trade_in_imports | 2026-08 | ok |
 | us_10y_yield_monthly | 2026-09 | stale (69 days) |
@@ -218,7 +218,7 @@ _Descriptive, not predictive. This tool does not forecast prices or give instruc
 | us_deficit_gdp | 2025-01 | stale (677 days) |
 | us_m2 | 2026-09 | stale (69 days) |
 | us_payrolls | 2026-10 | ok |
-| us_recession | 2026-09 | ok |
+| us_recession | 2026-10 | ok |
 | us_tbill_3m | 2026-10 | ok |
 | us_unemployment | 2026-10 | ok |
 | usdchf_daily | 2026-10 | ok |
