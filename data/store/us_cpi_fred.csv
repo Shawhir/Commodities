@@ -1363,3 +1363,4 @@ us_cpi_fred,2026-06-01,2026-07-15,333.952,https://fred.stlouisfed.org/graph/fred
 us_cpi_fred,2026-07-01,2026-08-15,333.918,https://fred.stlouisfed.org/graph/fredgraph.csv?id=CPIAUCNS,2026-10-08
 us_cpi_fred,2026-08-01,2026-09-15,334.98,https://fred.stlouisfed.org/graph/fredgraph.csv?id=CPIAUCNS,2026-10-08
 us_cpi_fred,2026-09-01,2026-10-15,336.94,https://fred.stlouisfed.org/graph/fredgraph.csv?id=CPIAUCNS,2026-10-14
+us_cpi_fred,2026-10-01,2026-11-15,337.511,https://fred.stlouisfed.org/graph/fredgraph.csv?id=CPIAUCNS,2026-11-10
