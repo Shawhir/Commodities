@@ -33,7 +33,7 @@ What your rules say and what would change them. Not advice.
 |---|---|---|---|
 | US interest rates (the Fed) | raising rates, now 3.88% | down | Gold pays no interest, so higher rates make it less attractive to hold |
 | Interest rates after inflation | 2.63%, up 0.59 points in 6 months | down | This is the return on safe bonds after inflation; when it rises, gold usually struggles |
-| Where markets expect US rates to go | 2-year US yield 4.56%, up 0.57 points in 6 months | down | The 2-year yield moves with what markets expect the Fed to do next; falling expectations usually help gold |
+| Where markets expect US rates to go | 2-year US yield 4.55%, up 0.56 points in 6 months | down | The 2-year yield moves with what markets expect the Fed to do next; falling expectations usually help gold |
 | Recession warning (yield curve) | 10-year minus 3-month +0.69 points; below zero in 0 of the last 6 months | little effect now | When long rates sit below short rates, a US recession has often followed within 1-2 years; recessions bring rate cuts (good for gold) but can also force selling at first |
 | Swiss interest rates | 10-year Swiss bonds pay 0.59%, up 0.19 points in 6 months; after Swiss inflation -0.22% | little effect now | What a franc saver gives up by holding gold instead of Swiss bonds; low Swiss rates make holding gold cheap in francs |
 | US dollar | up 2.1% in 6 months | little effect now | Gold is priced in dollars; a stronger dollar usually means a lower gold price |
@@ -80,29 +80,29 @@ Counts from history, not a forecast. Each line: how often gold was higher a year
 
 ## Technical picture (daily prices)
 
-**Gold** (to 2026-11-06, COMEX futures, front month (Yahoo Finance)):
-- Momentum gauge (0 to 100): 47. In the middle. Above 70 is often called overbought, below 30 oversold.
+**Gold** (to 2026-11-09, COMEX futures, front month (Yahoo Finance)):
+- Momentum gauge (0 to 100): 50. In the middle. Above 70 is often called overbought, below 30 oversold.
+- Short-term trend gauge: pointing up. The short-term trend has pointed up for 2 trading days.
+- Daily range: inside its normal range. Price is inside its normal range for the last 20 days. The range is wide compared with usual, meaning bigger daily swings.
+- 200-day average: 8.5% below. Price is 8.5% below its average of the last 200 trading days ($4,497), a common long-term trend line.
+- 50-day vs 200-day average: 50 below 200. The 50-day average is below the 200-day average, and has been for 91 trading days. Traders call this a death cross.
+- Typical daily move: 2.1% a day. The price has been moving about 2.1% a day, more than its usual 1.2%.
+- Past year's range: 23% below the high. Price is 23% below the past year's highest close ($5,318) and 6% above the lowest ($3,899).
+- After "Short-term trend gauge pointing up": higher 3 months later in 62% of 3414 days (97 spells), against 64% for all days. For context only.
+- After "Price below its 200-day average": higher 3 months later in 62% of 1730 days (44 spells), against 64% for all days. For context only.
+- After "50-day average below the 200-day (often called a death cross)": higher 3 months later in 64% of 1703 days (34 spells), against 64% for all days. For context only.
+
+**Silver** (to 2026-11-09, COMEX futures, front month (Yahoo Finance)):
+- Momentum gauge (0 to 100): 41. On the low side of normal. Above 70 is often called overbought, below 30 oversold.
 - Short-term trend gauge: pointing up. The short-term trend has pointed up for 1 trading days.
 - Daily range: inside its normal range. Price is inside its normal range for the last 20 days. The range is wide compared with usual, meaning bigger daily swings.
-- 200-day average: 9.5% below. Price is 9.5% below its average of the last 200 trading days ($4,501), a common long-term trend line.
-- 50-day vs 200-day average: 50 below 200. The 50-day average is below the 200-day average, and has been for 90 trading days. Traders call this a death cross.
-- Typical daily move: 2.1% a day. The price has been moving about 2.1% a day, more than its usual 1.2%.
-- Past year's range: 23% below the high. Price is 23% below the past year's highest close ($5,318) and 5% above the lowest ($3,899).
-- After "Short-term trend gauge pointing up": higher 3 months later in 62% of 3413 days (97 spells), against 64% for all days. For context only.
-- After "Price below its 200-day average": higher 3 months later in 62% of 1729 days (44 spells), against 64% for all days. For context only.
-- After "50-day average below the 200-day (often called a death cross)": higher 3 months later in 64% of 1702 days (34 spells), against 64% for all days. For context only.
-
-**Silver** (to 2026-11-06, COMEX futures, front month (Yahoo Finance)):
-- Momentum gauge (0 to 100): 38. On the low side of normal. Above 70 is often called overbought, below 30 oversold.
-- Short-term trend gauge: pointing up. The short-term trend has pointed up for 0 trading days.
-- Daily range: inside its normal range. Price is inside its normal range for the last 20 days. The range is wide compared with usual, meaning bigger daily swings.
-- 200-day average: 25.8% below. Price is 25.8% below its average of the last 200 trading days ($70), a common long-term trend line.
-- 50-day vs 200-day average: 50 below 200. The 50-day average is below the 200-day average, and has been for 80 trading days. Traders call this a death cross.
-- Typical daily move: 2.8% a day. The price has been moving about 2.8% a day, more than its usual 1.7%.
-- Past year's range: 55% below the high. Price is 55% below the past year's highest close ($115) and 8% above the lowest ($48).
-- After "Short-term trend gauge pointing up": higher 3 months later in 54% of 3478 days (97 spells), against 56% for all days. For context only.
-- After "Price below its 200-day average": higher 3 months later in 61% of 2551 days (64 spells), against 56% for all days. For context only.
-- After "50-day average below the 200-day (often called a death cross)": higher 3 months later in 57% of 2591 days (51 spells), against 56% for all days. For context only.
+- 200-day average: 24.5% below. Price is 24.5% below its average of the last 200 trading days ($70), a common long-term trend line.
+- 50-day vs 200-day average: 50 below 200. The 50-day average is below the 200-day average, and has been for 81 trading days. Traders call this a death cross.
+- Typical daily move: 2.7% a day. The price has been moving about 2.7% a day, more than its usual 1.7%.
+- Past year's range: 54% below the high. Price is 54% below the past year's highest close ($115) and 9% above the lowest ($48).
+- After "Short-term trend gauge pointing up": higher 3 months later in 54% of 3479 days (97 spells), against 56% for all days. For context only.
+- After "Price below its 200-day average": higher 3 months later in 61% of 2552 days (64 spells), against 56% for all days. For context only.
+- After "50-day average below the 200-day (often called a death cross)": higher 3 months later in 57% of 2592 days (51 spells), against 56% for all days. For context only.
 
 
 # Weekly summary (data to 2026-10)
@@ -180,8 +180,8 @@ _Descriptive, not predictive. This tool does not forecast prices or give instruc
 | ch_cpi_yoy | 2025-04 | ok |
 | ch_cpi_yoy_snb | 2026-09 | ok |
 | chf_3m_rate | 2026-09 | ok |
-| copper_monthly | 2026-09 | stale (69 days) |
-| dollar_broad | 2026-10 | ok |
+| copper_monthly | 2026-09 | stale (70 days) |
+| dollar_broad | 2026-11 | ok |
 | fed_funds_eff | 2026-11 | ok |
 | fed_target_upper | 2026-10 | ok |
 | gld_holdings | 2026-11 | ok |
@@ -194,13 +194,13 @@ _Descriptive, not predictive. This tool does not forecast prices or give instruc
 | manual_reports | - | ok |
 | real_yield_10y | 2026-11 | ok |
 | res_exgold_ch | - | never succeeded |
-| res_exgold_cn | 2026-06 | stale (161 days) |
+| res_exgold_cn | 2026-06 | stale (162 days) |
 | res_exgold_cz | - | never succeeded |
 | res_exgold_de | 2026-09 | ok |
 | res_exgold_in | 2026-09 | ok |
 | res_exgold_jp | 2026-09 | ok |
 | res_exgold_pl | 2026-09 | ok |
-| res_exgold_ru | 2025-11 | stale (373 days) |
+| res_exgold_ru | 2025-11 | stale (374 days) |
 | res_exgold_tr | 2026-09 | ok |
 | res_exgold_us | 2026-09 | ok |
 | silver_fut_daily | 2026-11 | ok |
@@ -208,23 +208,23 @@ _Descriptive, not predictive. This tool does not forecast prices or give instruc
 | trade_ch_exports | 2026-09 | ok |
 | trade_hk_to_cn | 2026-07 | ok |
 | trade_in_imports | 2026-08 | ok |
-| us_10y_yield_monthly | 2026-09 | stale (69 days) |
+| us_10y_yield_monthly | 2026-09 | stale (70 days) |
 | us_2y_yield | 2026-11 | ok |
-| us_core_cpi | 2026-09 | stale (69 days) |
-| us_cpi_fred | 2026-09 | stale (69 days) |
-| us_cpi_mirror | 2026-09 | stale (69 days) |
+| us_core_cpi | 2026-09 | stale (70 days) |
+| us_cpi_fred | 2026-09 | stale (70 days) |
+| us_cpi_mirror | 2026-09 | stale (70 days) |
 | us_curve_10y3m | 2026-11 | ok |
-| us_debt_gdp | 2026-04 | stale (222 days) |
-| us_deficit_gdp | 2025-01 | stale (677 days) |
-| us_m2 | 2026-09 | stale (69 days) |
+| us_debt_gdp | 2026-04 | stale (223 days) |
+| us_deficit_gdp | 2025-01 | stale (678 days) |
+| us_m2 | 2026-09 | stale (70 days) |
 | us_payrolls | 2026-10 | ok |
 | us_recession | 2026-10 | ok |
 | us_tbill_3m | 2026-10 | ok |
 | us_unemployment | 2026-10 | ok |
-| usdchf_daily | 2026-10 | ok |
-| usdchf_fred | 2026-10 | ok |
+| usdchf_daily | 2026-11 | ok |
+| usdchf_fred | 2026-11 | ok |
 | usdchf_monthly | 2026-10 | ok |
 | usdchf_yahoo_daily | 2026-11 | ok |
-| vix_daily_mirror | 2026-09 | stale (48 days) |
+| vix_daily_mirror | 2026-09 | stale (49 days) |
 | vix_fred | 2026-11 | ok |
 | wti_monthly | 2026-10 | ok |

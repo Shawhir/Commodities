@@ -6577,3 +6577,4 @@ gold_fut_high,2026-11-03,2026-11-04,3981.699951171875,https://query2.finance.yah
 gold_fut_high,2026-11-04,2026-11-05,4081.199951171875,https://query2.finance.yahoo.com/v8/finance/chart/GC=F?period1=967593600&period2=1793970260&interval=1d&events=history,2026-11-05
 gold_fut_high,2026-11-05,2026-11-06,4155.7998046875,https://query2.finance.yahoo.com/v8/finance/chart/GC=F?period1=967593600&period2=1794055911&interval=1d&events=history,2026-11-06
 gold_fut_high,2026-11-06,2026-11-07,4116.2001953125,https://query2.finance.yahoo.com/v8/finance/chart/GC=F?period1=967593600&period2=1794137941&interval=1d&events=history,2026-11-07
+gold_fut_high,2026-11-09,2026-11-10,4157.7001953125,https://query2.finance.yahoo.com/v8/finance/chart/GC=F?period1=967593600&period2=1794403479&interval=1d&events=history,2026-11-10
