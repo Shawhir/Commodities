@@ -17,6 +17,7 @@ cftc_cot,2026-10-13,2026-10-16,2026-10-19,2026-10-16 21:10:03.006026,received,"c
 cftc_cot,2026-10-20,2026-10-23,2026-10-26,2026-10-23 21:25:15.734612,received,"cftc_gold_mm_net 2026-10-20: 104,206.00, change vs prior -2,883.00, vs 12-period average -24,565.67 (no consensus feed: compared with prior and trend only)"
 cftc_cot,2026-10-27,2026-10-30,2026-11-02,2026-10-30 22:21:23.177916,received,"cftc_gold_mm_net 2026-10-27: 105,562.00, change vs prior +1,356.00, vs 12-period average -21,910.58 (no consensus feed: compared with prior and trend only)"
 cftc_cot,2026-11-03,2026-11-06,2026-11-09,2026-11-06 23:09:40.749027,received,"cftc_gold_mm_net 2026-11-03: 103,614.00, change vs prior -1,948.00, vs 12-period average -21,758.25 (no consensus feed: compared with prior and trend only)"
+cftc_cot,2026-11-10,2026-11-13,2026-11-16,,due,
 cn_pmi,2026-08,2026-08-30,2026-09-01,,enter,Enter figures by hand (data/manual/)
 cn_pmi,2026-09,2026-09-29,2026-10-01,,enter,Enter figures by hand (data/manual/)
 cn_pmi,2026-10,2026-10-30,2026-11-01,,enter,Enter figures by hand (data/manual/)
