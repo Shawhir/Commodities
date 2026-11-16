@@ -198,10 +198,10 @@ _Descriptive, not predictive. This tool does not forecast prices or give instruc
 | res_exgold_cz | - | never succeeded |
 | res_exgold_de | 2026-09 | ok |
 | res_exgold_in | 2026-09 | ok |
-| res_exgold_jp | 2026-09 | ok |
-| res_exgold_pl | 2026-09 | ok |
+| res_exgold_jp | 2026-10 | ok |
+| res_exgold_pl | 2026-10 | ok |
 | res_exgold_ru | 2025-11 | stale (380 days) |
-| res_exgold_tr | 2026-09 | ok |
+| res_exgold_tr | 2026-10 | ok |
 | res_exgold_us | 2026-09 | ok |
 | silver_fut_daily | 2026-11 | ok |
 | silver_spot_daily | - | never succeeded |
