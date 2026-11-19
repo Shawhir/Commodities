@@ -5972,3 +5972,4 @@ usdchf_yf_close,2026-11-12,2026-11-13,0.83228999376297,https://query2.finance.ya
 usdchf_yf_close,2026-11-13,2026-11-14,0.8359299898147583,https://query2.finance.yahoo.com/v8/finance/chart/CHF=X?period1=1070236800&period2=1794744235&interval=1d&events=history,2026-11-14
 usdchf_yf_close,2026-11-16,2026-11-17,0.8391100168228149,https://query2.finance.yahoo.com/v8/finance/chart/CHF=X?period1=1070236800&period2=1795011384&interval=1d&events=history,2026-11-17
 usdchf_yf_close,2026-11-17,2026-11-18,0.8398000001907349,https://query2.finance.yahoo.com/v8/finance/chart/CHF=X?period1=1070236800&period2=1795096140&interval=1d&events=history,2026-11-18
+usdchf_yf_close,2026-11-18,2026-11-19,0.8412899971008301,https://query2.finance.yahoo.com/v8/finance/chart/CHF=X?period1=1070236800&period2=1795184313&interval=1d&events=history,2026-11-19
