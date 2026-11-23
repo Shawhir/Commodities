@@ -35,7 +35,7 @@ What your rules say and what would change them. Not advice.
 | Interest rates after inflation | 2.76%, up 0.72 points in 6 months | down | This is the return on safe bonds after inflation; when it rises, gold usually struggles |
 | Where markets expect US rates to go | 2-year US yield 4.69%, up 0.69 points in 6 months | down | The 2-year yield moves with what markets expect the Fed to do next; falling expectations usually help gold |
 | Recession warning (yield curve) | 10-year minus 3-month +0.71 points; below zero in 0 of the last 6 months | little effect now | When long rates sit below short rates, a US recession has often followed within 1-2 years; recessions bring rate cuts (good for gold) but can also force selling at first |
-| Swiss interest rates | 10-year Swiss bonds pay 0.59%, up 0.19 points in 6 months; after Swiss inflation -0.22% | little effect now | What a franc saver gives up by holding gold instead of Swiss bonds; low Swiss rates make holding gold cheap in francs |
+| Swiss interest rates | 10-year Swiss bonds pay 0.51%, up 0.06 points in 6 months; after Swiss inflation -0.48% | little effect now | What a franc saver gives up by holding gold instead of Swiss bonds; low Swiss rates make holding gold cheap in francs |
 | US dollar | up 2.1% in 6 months | little effect now | Gold is priced in dollars; a stronger dollar usually means a lower gold price |
 | War and political risk | higher than 85% of the last 10 years | up | People turn to gold as a safe place in times of conflict; the effect often fades when tensions ease |
 | Oil price | up 92% in 12 months | either way | Expensive oil raises inflation, which helps gold, but can make the Fed raise rates, which hurts it |
@@ -180,9 +180,9 @@ _Descriptive, not predictive. This tool does not forecast prices or give instruc
 | brent_monthly | 2026-10 | stale (53 days) |
 | cb_gold_imf | 2026-10 | ok |
 | cftc_cot | 2026-11 | ok |
-| ch_10y_yield | 2026-09 | stale (83 days) |
+| ch_10y_yield | 2026-10 | ok |
 | ch_cpi_yoy | 2025-04 | ok |
-| ch_cpi_yoy_snb | 2026-09 | stale (83 days) |
+| ch_cpi_yoy_snb | 2026-10 | ok |
 | chf_3m_rate | 2026-10 | ok |
 | copper_monthly | 2026-09 | stale (83 days) |
 | dollar_broad | 2026-11 | ok |
