@@ -6654,3 +6654,5 @@ gold_fut_volume,2026-11-19,2026-11-21,203702.0,https://query2.finance.yahoo.com/
 gold_fut_volume,2026-11-20,2026-11-21,203702.0,https://query2.finance.yahoo.com/v8/finance/chart/GC=F?period1=967593600&period2=1795353751&interval=1d&events=history,2026-11-21
 gold_fut_volume,2026-11-20,2026-11-22,323896.0,https://query2.finance.yahoo.com/v8/finance/chart/GC=F?period1=967593600&period2=1795439678&interval=1d&events=history,2026-11-22
 gold_fut_volume,2026-11-20,2026-11-23,203702.0,https://query2.finance.yahoo.com/v8/finance/chart/GC=F?period1=967593600&period2=1795535499&interval=1d&events=history,2026-11-23
+gold_fut_volume,2026-11-20,2026-11-24,336479.0,https://query2.finance.yahoo.com/v8/finance/chart/GC=F?period1=967593600&period2=1795621390&interval=1d&events=history,2026-11-24
+gold_fut_volume,2026-11-23,2026-11-24,336479.0,https://query2.finance.yahoo.com/v8/finance/chart/GC=F?period1=967593600&period2=1795621390&interval=1d&events=history,2026-11-24
